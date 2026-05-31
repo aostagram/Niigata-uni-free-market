@@ -1,10 +1,15 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f7f7f8;
+  --background: #f8fbf3; /* ごく淡い緑がかった白(白背景は多めに残す) */
   --foreground: #1a1a1a;
-  --brand: #0b7a4b; /* 新潟大学らしい緑系のブランドカラー */
+  --brand: #0b7a4b; /* 新潟大学らしい緑系のブランドカラー(既存・変更しない) */
   --brand-dark: #075c38;
+  /* ↓ 水彩デザイン用に追加(既存トークンは変えない) */
+  --brand-light: #6fb83a; /* 黄緑 */
+  --brand-lighter: #aed87a; /* 淡い黄緑 */
+  --brand-pale: #e7f4d6; /* ごく淡い緑(にじみ背景) */
+  --brand-mist: #f1f8e6; /* さらに淡いミスト */
 }
 
 @theme inline {
@@ -12,6 +17,10 @@
   --color-foreground: var(--foreground);
   --color-brand: var(--brand);
   --color-brand-dark: var(--brand-dark);
+  --color-brand-light: var(--brand-light);
+  --color-brand-lighter: var(--brand-lighter);
+  --color-brand-pale: var(--brand-pale);
+  --color-brand-mist: var(--brand-mist);
 }
 
 html,
@@ -25,4 +34,38 @@ body {
 
 * {
   box-sizing: border-box;
+}
+
+/* =========================================================
+   水彩(watercolor)ユーティリティ
+   不規則なマスク形状で「にじみ」感を出す。画像アセット不要。
+   ========================================================= */
+
+/* ふんわりした有機的なにじみ形状(カード画像・カテゴリ丸の背景に) */
+.wc-bleed {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg fill='%23fff'%3E%3Cellipse cx='50' cy='50' rx='47' ry='45'/%3E%3Cellipse cx='28' cy='38' rx='27' ry='29'/%3E%3Cellipse cx='72' cy='35' rx='29' ry='27'/%3E%3Cellipse cx='33' cy='70' rx='29' ry='26'/%3E%3Cellipse cx='70' cy='68' rx='27' ry='28'/%3E%3C/g%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg fill='%23fff'%3E%3Cellipse cx='50' cy='50' rx='47' ry='45'/%3E%3Cellipse cx='28' cy='38' rx='27' ry='29'/%3E%3Cellipse cx='72' cy='35' rx='29' ry='27'/%3E%3Cellipse cx='33' cy='70' rx='29' ry='26'/%3E%3Cellipse cx='70' cy='68' rx='27' ry='28'/%3E%3C/g%3E%3C/svg%3E");
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}
+
+/* 別形状(ヒーローや見出しアクセント用) */
+.wc-bleed-2 {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg fill='%23fff'%3E%3Cellipse cx='52' cy='48' rx='46' ry='42'/%3E%3Cellipse cx='24' cy='52' rx='24' ry='30'/%3E%3Cellipse cx='78' cy='44' rx='26' ry='30'/%3E%3Cellipse cx='46' cy='74' rx='32' ry='24'/%3E%3C/g%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg fill='%23fff'%3E%3Cellipse cx='52' cy='48' rx='46' ry='42'/%3E%3Cellipse cx='24' cy='52' rx='24' ry='30'/%3E%3Cellipse cx='78' cy='44' rx='26' ry='30'/%3E%3Cellipse cx='46' cy='74' rx='32' ry='24'/%3E%3C/g%3E%3C/svg%3E");
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}
+
+/* 上部に敷く深緑→黄緑の淡いウォッシュ */
+.wc-wash {
+  background:
+    radial-gradient(120% 90% at 12% 0%, rgba(111, 184, 58, 0.28), transparent 60%),
+    radial-gradient(120% 90% at 92% 6%, rgba(11, 122, 75, 0.22), transparent 58%),
+    radial-gradient(100% 80% at 50% 120%, rgba(174, 216, 122, 0.25), transparent 60%),
+    linear-gradient(180deg, #f4fae9 0%, #ffffff 70%);
 }
