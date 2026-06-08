@@ -83,6 +83,7 @@ function SearchScreen({ nav, initialCat='すべて' }){
         )
       )
     ),
+    React.createElement('button',{className:'btn btn-primary',onClick:()=>nav('sell'),style:{position:'fixed',right:28,bottom:88,zIndex:45,padding:'15px 22px',fontSize:15,boxShadow:'0 12px 28px -10px rgba(95,129,40,.7)'}},React.createElement(Icon,{name:'Plus',size:19}),'出品する'),
     React.createElement(TabBar,{active:'search',nav})
   );
 }
