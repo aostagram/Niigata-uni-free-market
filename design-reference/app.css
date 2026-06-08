@@ -1,0 +1,179 @@
+/* ===== 新大フリマ — Design System ===== */
+:root{
+  --brand:#84ad3f;
+  --brand-grad-from:#9cc659;
+  --brand-grad-to:#79a93a;
+  --brand-deep:#5f8128;
+  --brand-deeper:#4d6a1f;
+  --ink:#3c4a2e;
+  --ink-soft:#74806a;
+  --ink-faint:#9aa48d;
+  --logo:#4d6a1f;
+  --tag-bg:#eaf2d6;
+  --tag-text:#6f9226;
+  --sent:#e3ecce;
+  --card:#ffffff;
+  --page:#fbfdf7;
+  --panel:#f5f8ec;
+  --panel-2:#eef4e0;
+  --line:#e7eed9;
+  --line-soft:#eef2e4;
+  --coral:#db6a4f;
+  --coral-bg:#fbeae6;
+  --coral-line:#f1cabf;
+  --star:#9bb83f;
+  --font-round:'Zen Maru Gothic',system-ui,sans-serif;
+  --font-body:'Zen Kaku Gothic New',system-ui,sans-serif;
+  --font-latin:'Comfortaa',cursive;
+  --radius:18px;
+  --shadow-card:0 10px 30px -16px rgba(95,129,40,.28);
+  --shadow-soft:0 4px 14px -8px rgba(95,129,40,.25);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:var(--font-body);
+  color:var(--ink);
+  background:var(--page);
+  -webkit-font-smoothing:antialiased;
+  letter-spacing:.01em;
+}
+.font-round{font-family:var(--font-round)}
+.font-latin{font-family:var(--font-latin)}
+
+/* watercolor page background */
+.wc-page{
+  position:relative;
+  background:
+    radial-gradient(120% 70% at 100% 0%, rgba(150,190,90,.20), transparent 42%),
+    radial-gradient(95% 60% at 0% 100%, rgba(150,190,90,.18), transparent 45%),
+    radial-gradient(70% 55% at 100% 100%, rgba(150,190,90,.13), transparent 50%),
+    radial-gradient(55% 45% at 0% 0%, rgba(150,190,90,.12), transparent 52%),
+    var(--page);
+}
+.wc-soft{
+  background:
+    radial-gradient(80% 60% at 100% 0%, rgba(150,190,90,.14), transparent 45%),
+    radial-gradient(70% 55% at 0% 100%, rgba(150,190,90,.12), transparent 48%),
+    var(--page);
+}
+/* faint floating leaves layer */
+.wc-leaves::before,.wc-leaves::after{
+  content:"";position:absolute;pointer-events:none;opacity:.5;
+  background-repeat:no-repeat;
+}
+/* card */
+.ds-card{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow-card);
+}
+.ds-panel{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+}
+
+/* buttons */
+.btn{
+  font-family:var(--font-round);
+  font-weight:500;
+  border:none;border-radius:999px;cursor:pointer;
+  display:inline-flex;align-items:center;justify-content:center;gap:.5rem;
+  transition:transform .12s ease, box-shadow .2s ease, filter .2s ease;
+  white-space:nowrap;
+}
+.btn:active{transform:translateY(1px)}
+.btn-primary{
+  background:linear-gradient(135deg,var(--brand-grad-from),var(--brand-grad-to));
+  color:#fff;
+  box-shadow:0 8px 20px -8px rgba(110,150,50,.7);
+}
+.btn-primary:hover{filter:brightness(1.04)}
+.btn-ghost{
+  background:#fff;color:var(--brand-deep);
+  border:1.5px solid var(--line);
+}
+.btn-ghost:hover{border-color:var(--brand);background:var(--panel)}
+.btn-disabled{
+  background:#d7dccb;color:#fff;cursor:not-allowed;box-shadow:none;
+}
+
+/* tag / badge */
+.tag{
+  display:inline-flex;align-items:center;gap:.25rem;
+  background:var(--tag-bg);color:var(--tag-text);
+  font-size:12px;font-weight:500;font-family:var(--font-round);
+  padding:3px 11px;border-radius:999px;line-height:1.6;
+}
+.tag-amber{background:#fdf0d8;color:#b9852b}
+.tag-blue{background:#e3edf7;color:#4d7bb0}
+.tag-gray{background:#edefe9;color:#8a8f80}
+
+/* status badge (index_sheet1 #007出品中/#010取引中 等を CSS で再現) */
+.status-badge{
+  display:inline-flex;align-items:center;gap:5px;
+  font-size:12px;font-weight:700;font-family:var(--font-round);
+  padding:4px 11px 4px 9px;border-radius:999px;line-height:1.5;white-space:nowrap;
+}
+.status-badge::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.status-onsale{background:var(--tag-bg);color:var(--tag-text)}
+.status-dealing{background:#e3edf7;color:#4d7bb0}
+.status-sold{background:#edefe9;color:#8a8f80}
+.status-reserved{background:#fdf0d8;color:#b9852b}
+
+/* inputs */
+.field{
+  width:100%;
+  background:#fff;
+  border:1.5px solid var(--line);
+  border-radius:14px;
+  padding:12px 16px;
+  font-family:var(--font-body);
+  font-size:14px;color:var(--ink);
+  outline:none;transition:border-color .2s, box-shadow .2s;
+}
+.field::placeholder{color:var(--ink-faint)}
+.field:focus{border-color:var(--brand);box-shadow:0 0 0 3px rgba(132,173,63,.15)}
+
+/* section heading with sprig */
+.heading-row{display:flex;align-items:center;gap:.55rem}
+
+/* chat bubbles */
+.bubble{border-radius:16px;padding:11px 15px;font-size:14px;line-height:1.7;max-width:420px;white-space:pre-line}
+.bubble-recv{background:#fff;border:1px solid var(--line);color:var(--ink);border-top-left-radius:5px}
+.bubble-sent{background:var(--sent);color:#3f4a2a;border-top-right-radius:5px}
+
+/* avatar */
+.avatar{border-radius:999px;background:var(--panel-2);display:flex;align-items:center;justify-content:center;color:var(--brand);overflow:hidden;flex:none}
+
+/* scrollbars */
+.thin-scroll::-webkit-scrollbar{width:8px;height:8px}
+.thin-scroll::-webkit-scrollbar-thumb{background:#d8e2c2;border-radius:8px}
+.thin-scroll::-webkit-scrollbar-track{background:transparent}
+
+/* nav link */
+.nav-link{font-size:14px;color:var(--ink-soft);font-family:var(--font-round);cursor:pointer;transition:color .15s}
+.nav-link:hover{color:var(--brand-deep)}
+
+/* tab bar */
+.tab-item{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;color:var(--ink-faint);font-size:12px;font-family:var(--font-round);transition:color .15s;flex:1;padding:6px 0}
+.tab-item.active{color:var(--brand-deep)}
+.tab-item.active .tab-pill{background:var(--panel);}
+
+/* selectable cards */
+.select-card{border:2px solid var(--line);border-radius:16px;cursor:pointer;transition:all .15s;background:#fff}
+.select-card:hover{border-color:var(--brand)}
+.select-card.sel{border-color:var(--brand);background:var(--panel);box-shadow:0 0 0 3px rgba(132,173,63,.12)}
+
+/* entrance */
+@keyframes fadeUp{from{transform:translateY(14px)}to{transform:none}}
+.fade-up{animation:fadeUp .45s cubic-bezier(.22,.9,.3,1) both}
+.fade-in{animation:fadeUp .35s ease both}
+@media (prefers-reduced-motion: reduce){ .fade-up,.fade-in{animation:none} }
+
+/* utility */
+.clamp-2{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.divider{height:1px;background:var(--line-soft)}
+a{color:inherit}
