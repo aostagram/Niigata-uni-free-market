@@ -45,6 +45,20 @@ function HomeScreen({ nav }){
         )
       ),
 
+      /* 取引の流れ（3ステップ） */
+      React.createElement('section',{style:{padding:'18px 0'}},
+        React.createElement('div',{className:'heading-row',style:{marginBottom:16}},React.createElement(Sprig,null),React.createElement('h2',{className:'font-round',style:{fontSize:20,color:'var(--ink)',margin:0,fontWeight:700}},'取引の流れ（3ステップ）')),
+        React.createElement('div',{style:{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:16}},
+          [['Search','01','探す','カテゴリや学部・キャンパスから、ほしい商品を見つけよう。'],
+           ['MessageSquare','02','チャットでやりとり','アプリ内のチャットで、出品者と安心してやりとり。'],
+           ['Handshake','03','手渡しで完了','キャンパス内で待ち合わせて、その場で受け渡し完了！']].map((s,i)=>
+            React.createElement('div',{key:i,className:'ds-card',style:{padding:'24px'}},
+              React.createElement('div',{style:{display:'flex',alignItems:'center',gap:14,marginBottom:12}},
+                React.createElement('div',{style:{width:48,height:48,borderRadius:14,background:'var(--panel)',display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}},React.createElement(Icon,{name:s[0],size:23,color:'var(--brand-deep)'})),
+                React.createElement('span',{className:'font-latin',style:{fontSize:30,fontWeight:700,color:'var(--brand)',opacity:.5}},s[1])),
+              React.createElement('div',{className:'font-round',style:{fontSize:16.5,fontWeight:700,color:'var(--ink)',marginBottom:6}},s[2]),
+              React.createElement('p',{style:{margin:0,fontSize:13.5,color:'var(--ink-soft)',lineHeight:1.7}},s[3])))) ),
+
       /* new arrivals */
       React.createElement('section',{style:{padding:'24px 0'}},
         React.createElement('div',{style:{display:'flex',alignItems:'center',marginBottom:16}},

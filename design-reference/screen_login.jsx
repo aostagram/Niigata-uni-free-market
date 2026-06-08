@@ -12,7 +12,9 @@ function LoginScreen({ nav }){
     React.createElement('div',{className:'fade-up',style:{width:'100%',maxWidth:560,display:'flex',flexDirection:'column',alignItems:'center'}},
       React.createElement('div',{style:{width:230,height:230,borderRadius:'50%',background:'radial-gradient(circle at 50% 42%, #fff 18%, rgba(212,234,191,.55) 55%, rgba(170,205,110,.25) 78%, transparent 82%)',display:'flex',alignItems:'center',justifyContent:'center',marginTop:20}},
         React.createElement('div',{style:{textAlign:'center'}},
-          React.createElement(Icon,{name:'ShoppingBag',size:74,color:'var(--brand-deep)',stroke:1.7}),
+          React.createElement('div',{style:{position:'relative',display:'inline-flex'}},
+            React.createElement(Icon,{name:'ShoppingBag',size:74,color:'var(--brand-deep)',stroke:1.7}),
+            React.createElement(Icon,{name:'Lock',size:25,color:'var(--brand-deep)',stroke:2.2,style:{position:'absolute',left:'50%',top:'56%',transform:'translate(-50%,-50%)'}})),
           React.createElement('div',{className:'font-round',style:{fontSize:38,fontWeight:700,color:'var(--logo)',marginTop:6,letterSpacing:'.04em'}},'新大フリマ'),
           React.createElement('div',{className:'font-latin',style:{fontSize:13,color:'var(--brand)',letterSpacing:'.1em',marginTop:4}},'Niigata univ. Free Market')
         )
