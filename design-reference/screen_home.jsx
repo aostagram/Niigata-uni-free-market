@@ -82,6 +82,18 @@ function HomeScreen({ nav }){
       ),
 
       React.createElement(SafetyBanner,null),
+
+      /* 今すぐはじめよう CTA */
+      React.createElement('section',{style:{padding:'18px 0 6px'}},
+        React.createElement('div',{style:{borderRadius:'var(--radius)',padding:'34px 36px',background:'linear-gradient(135deg,var(--brand-grad-from),var(--brand-grad-to))',display:'grid',gridTemplateColumns:'1.2fr .8fr',gap:24,alignItems:'center',boxShadow:'var(--shadow-card)'}},
+          React.createElement('div',null,
+            React.createElement('h2',{className:'font-round',style:{fontSize:25,color:'#fff',margin:'0 0 8px',fontWeight:700}},'今すぐはじめよう！'),
+            React.createElement('p',{style:{margin:0,color:'rgba(255,255,255,.92)',fontSize:14.5,lineHeight:1.8}},'新大生限定・登録は無料。大学のGoogleアカウントですぐに始められます。')),
+          React.createElement('div',{style:{display:'flex',flexDirection:'column',gap:10}},
+            React.createElement('button',{className:'btn',style:{background:'#fff',color:'var(--brand-deep)',padding:'15px 20px',fontSize:15.5,fontWeight:700,boxShadow:'0 8px 20px -10px rgba(0,0,0,.3)'},onClick:()=>nav('login')},React.createElement(Icon,{name:'Sprout',size:18}),'新大フリマに登録する'),
+            React.createElement('button',{className:'btn',style:{background:'rgba(255,255,255,.18)',color:'#fff',border:'1.5px solid rgba(255,255,255,.5)',padding:'13px 20px',fontSize:14},onClick:()=>nav('search')},'まずは商品を見てみる')))
+      ),
+
       React.createElement(SiteFooter,null)
     ),
     React.createElement(TabBar,{active:'home',nav})
