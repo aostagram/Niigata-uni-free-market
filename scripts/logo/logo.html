@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<style>
+  html,body{margin:0;background:transparent;}
+  #stage{width:512px;height:512px;}
+  svg{display:block;}
+</style>
+</head>
+<body>
+<div id="stage">
+<svg id="logo" width="512" height="512" viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="ガタフィー Niigata Free Market">
+  <defs>
+    <!-- 水彩のにじみ用テクスチャ -->
+    <filter id="paint" x="-20%" y="-20%" width="140%" height="140%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.012 0.016" numOctaves="3" seed="7" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="14" xChannelSelector="R" yChannelSelector="G"/>
+      <feGaussianBlur stdDeviation="1.1"/>
+    </filter>
+    <radialGradient id="wash" cx="46%" cy="40%" r="68%">
+      <stop offset="0%"  stop-color="#ffffff"/>
+      <stop offset="42%" stop-color="#eef6dc"/>
+      <stop offset="72%" stop-color="#c3dd92"/>
+      <stop offset="100%" stop-color="#9cc659"/>
+    </radialGradient>
+    <radialGradient id="wash2" cx="68%" cy="74%" r="50%">
+      <stop offset="0%"  stop-color="#84ad3f" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="#84ad3f" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- 水彩ディスク -->
+  <g filter="url(#paint)">
+    <circle cx="120" cy="116" r="112" fill="url(#wash)"/>
+    <circle cx="120" cy="116" r="112" fill="url(#wash2)"/>
+  </g>
+
+  <!-- 買い物バッグ + 南京錠 -->
+  <g fill="none" stroke="#4f7320" stroke-width="5.2" stroke-linecap="round" stroke-linejoin="round">
+    <!-- バッグ本体 -->
+    <path d="M75 78 h70 l8 70 a10 10 0 0 1 -10 11 H77 a10 10 0 0 1 -10 -11 Z"/>
+    <!-- 取っ手 -->
+    <path d="M93 80 a17 17 0 0 1 34 0"/>
+    <!-- 南京錠 シャックル -->
+    <path d="M104 116 v-6 a6 6 0 0 1 12 0 v6"/>
+  </g>
+  <!-- 南京錠 本体 -->
+  <rect x="98" y="116" width="24" height="20" rx="4.5" fill="#4f7320"/>
+  <circle cx="110" cy="124" r="2.4" fill="#eef6dc"/>
+  <rect x="108.6" y="125" width="2.8" height="6" rx="1.4" fill="#eef6dc"/>
+
+  <!-- 文字 -->
+  <text x="120" y="184" text-anchor="middle"
+        font-family="'Hiragino Maru Gothic ProN','Hiragino Sans','Noto Sans JP',sans-serif"
+        font-size="33" font-weight="800" fill="#3f5b19" letter-spacing="1.5">ガタフィー</text>
+  <text x="120" y="206" text-anchor="middle"
+        font-family="'Helvetica Neue',Arial,sans-serif"
+        font-size="12.5" font-weight="600" fill="#5f8128" letter-spacing="2.3">Niigata Free Market</text>
+</svg>
+</div>
+</body>
+</html>

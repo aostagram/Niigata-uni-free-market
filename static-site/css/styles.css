@@ -369,8 +369,8 @@ p {
   min-height: 720px;
   isolation: isolate;
   overflow: hidden;
-  border-bottom: 1px solid var(--line);
-  background: #fff;
+  border-bottom: none;
+  background: var(--paper);
 }
 
 .hero::before {
@@ -378,7 +378,10 @@ p {
   position: absolute;
   inset: 0;
   z-index: -1;
-  background: url("../assets/top-background-only.png") center top / cover no-repeat;
+  background: url("../assets/campus-hero.png") center top / cover no-repeat;
+  /* 下端をフェードさせ、下に続く水彩背景となめらかに繋ぐ（継ぎ目対策） */
+  -webkit-mask-image: linear-gradient(to bottom, #000 0 52%, rgba(0, 0, 0, 0.4) 80%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 0 52%, rgba(0, 0, 0, 0.4) 80%, transparent 100%);
 }
 
 .hero::after {
