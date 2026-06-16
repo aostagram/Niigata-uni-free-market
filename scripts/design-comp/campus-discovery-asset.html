@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      :root {
+        --brand: #84ad3f;
+        --brand-light: #9cc659;
+        --brand-deep: #5f8128;
+        --ink: #3c4a2e;
+        --ink-soft: #74806a;
+        --page: #fbfdf7;
+        --line: #e7eed9;
+      }
+
+      body {
+        margin: 0;
+        background: var(--page);
+        font-family:
+          "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic",
+          "Noto Sans JP", Meiryo, system-ui, sans-serif;
+      }
+
+      .asset {
+        position: relative;
+        width: 1600px;
+        height: 900px;
+        overflow: hidden;
+        background:
+          radial-gradient(820px 460px at 8% 8%, rgba(156, 198, 89, 0.26), transparent 60%),
+          radial-gradient(620px 420px at 96% 92%, rgba(132, 173, 63, 0.2), transparent 62%),
+          linear-gradient(180deg, #fbfdf7 0%, #ffffff 78%);
+        color: var(--ink);
+      }
+
+      .title {
+        position: absolute;
+        left: 76px;
+        top: 58px;
+        z-index: 3;
+      }
+
+      .kicker {
+        color: var(--brand-deep);
+        font-size: 25px;
+        font-weight: 900;
+      }
+
+      h1 {
+        margin: 8px 0 0;
+        font-size: 56px;
+        line-height: 1.22;
+        letter-spacing: 0.02em;
+      }
+
+      .subtitle {
+        margin-top: 18px;
+        color: var(--ink-soft);
+        font-size: 24px;
+        font-weight: 700;
+      }
+
+      .cards {
+        position: absolute;
+        left: 76px;
+        right: 76px;
+        bottom: 70px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 42px;
+      }
+
+      .card {
+        position: relative;
+        height: 530px;
+        overflow: hidden;
+        border-radius: 34px;
+        border: 1px solid var(--line);
+        box-shadow: 0 28px 70px -36px rgba(77, 106, 31, 0.5);
+        background: white;
+      }
+
+      .card img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        filter: saturate(1.1) brightness(1.05);
+      }
+
+      .overlay {
+        position: absolute;
+        inset: auto 0 0 0;
+        padding: 120px 34px 32px;
+        background: linear-gradient(180deg, transparent, rgba(21, 33, 12, 0.7));
+        color: white;
+      }
+
+      .overlay h2 {
+        margin: 0;
+        font-size: 35px;
+      }
+
+      .overlay p {
+        margin: 10px 0 0;
+        font-size: 19px;
+        font-weight: 700;
+        opacity: 0.94;
+      }
+
+      .tag {
+        position: absolute;
+        right: 26px;
+        top: 26px;
+        z-index: 2;
+        border-radius: 999px;
+        padding: 13px 18px;
+        background: rgba(255, 255, 255, 0.86);
+        color: var(--brand-deep);
+        font-size: 17px;
+        font-weight: 900;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="asset">
+      <div class="title">
+        <div class="kicker">五十嵐キャンパスで探す</div>
+        <h1>人目のある学内スポットで、<br />安心して手渡し。</h1>
+        <div class="subtitle">実際の写真を使ったキャンパス選択ビジュアル</div>
+      </div>
+
+      <div class="cards">
+        <article class="card">
+          <span class="tag">1278</span>
+          <img src="../../public/design-comp/campus-library-1278.png" alt="附属図書館前" />
+          <div class="overlay">
+            <h2>附属図書館前</h2>
+            <p>待ち合わせしやすい、落ち着いた入口まわり。</p>
+          </div>
+        </article>
+        <article class="card">
+          <span class="tag">1279</span>
+          <img src="../../public/design-comp/campus-cafeteria-1279.png" alt="第一食堂前" />
+          <div class="overlay">
+            <h2>第一食堂前</h2>
+            <p>広場があり、手渡し場所として相談しやすい。</p>
+          </div>
+        </article>
+      </div>
+    </main>
+  </body>
+</html>

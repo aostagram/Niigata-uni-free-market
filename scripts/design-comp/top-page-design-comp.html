@@ -1,0 +1,679 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>新大フリマ トップページ デザインカンプ</title>
+    <style>
+      :root {
+        --brand: #84ad3f;
+        --brand-light: #9cc659;
+        --brand-deep: #5f8128;
+        --brand-deeper: #4d6a1f;
+        --page: #fbfdf7;
+        --panel: #f5f8ec;
+        --line: #e7eed9;
+        --ink: #3c4a2e;
+        --ink-soft: #74806a;
+        --white: #fff;
+        --shadow: 0 24px 60px -34px rgba(77, 106, 31, 0.45);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: #eef4e0;
+        color: var(--ink);
+        font-family:
+          "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic",
+          "Noto Sans JP", Meiryo, system-ui, sans-serif;
+      }
+
+      .page {
+        width: 1440px;
+        margin: 0 auto;
+        overflow: hidden;
+        background:
+          radial-gradient(780px 520px at 8% 7%, rgba(156, 198, 89, 0.28), transparent 62%),
+          radial-gradient(660px 460px at 94% 72%, rgba(132, 173, 63, 0.18), transparent 58%),
+          linear-gradient(180deg, #fbfdf7 0%, #fff 44%, #fbfdf7 100%);
+      }
+
+      .hero-photo {
+        position: relative;
+        height: 930px;
+        overflow: hidden;
+        background: #fff;
+      }
+
+      .hero-photo img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center top;
+        display: block;
+      }
+
+      .inner {
+        width: 1280px;
+        margin: 0 auto;
+      }
+
+      .section {
+        padding: 74px 0 0;
+      }
+
+      .section-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: end;
+        margin-bottom: 26px;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--brand-deep);
+        font-weight: 800;
+        font-size: 16px;
+      }
+
+      .eyebrow::before {
+        content: "";
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--brand-light), var(--brand));
+      }
+
+      h2 {
+        margin: 10px 0 0;
+        font-size: 36px;
+        line-height: 1.35;
+        letter-spacing: 0.02em;
+      }
+
+      .lead {
+        margin: 10px 0 0;
+        color: var(--ink-soft);
+        font-size: 17px;
+        line-height: 1.8;
+      }
+
+      .pill-link {
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 12px 18px;
+        color: var(--brand-deep);
+        background: rgba(255, 255, 255, 0.72);
+        font-weight: 800;
+      }
+
+      .campus-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 26px;
+      }
+
+      .campus-card,
+      .panel,
+      .item-card,
+      .trust-card {
+        border: 1px solid var(--line);
+        border-radius: 24px;
+        background: rgba(255, 255, 255, 0.88);
+        box-shadow: var(--shadow);
+      }
+
+      .campus-card {
+        overflow: hidden;
+      }
+
+      .campus-card img {
+        width: 100%;
+        height: 330px;
+        object-fit: cover;
+        display: block;
+        filter: saturate(1.08) brightness(1.04);
+      }
+
+      .campus-body {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 24px 28px 28px;
+      }
+
+      .campus-body h3 {
+        margin: 0;
+        color: var(--brand-deep);
+        font-size: 25px;
+      }
+
+      .campus-body p {
+        margin: 8px 0 0;
+        color: var(--ink-soft);
+        font-size: 15px;
+      }
+
+      .tag {
+        border-radius: 999px;
+        background: #eaf2d6;
+        color: var(--brand-deep);
+        padding: 9px 14px;
+        font-size: 14px;
+        font-weight: 800;
+      }
+
+      .category-panel {
+        margin-top: 30px;
+        padding: 34px;
+      }
+
+      .category-grid {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 18px;
+      }
+
+      .category {
+        display: grid;
+        place-items: center;
+        min-height: 132px;
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        background: linear-gradient(180deg, #fff, #f8fbf0);
+        color: var(--brand-deep);
+        font-weight: 800;
+        text-align: center;
+      }
+
+      .category .icon {
+        display: grid;
+        place-items: center;
+        width: 54px;
+        height: 54px;
+        margin-bottom: 10px;
+        border-radius: 50%;
+        border: 1px solid #dfe8cd;
+        background: #fff;
+        font-size: 24px;
+      }
+
+      .market-layout {
+        display: grid;
+        grid-template-columns: 440px 1fr;
+        gap: 30px;
+        align-items: stretch;
+      }
+
+      .market-visual {
+        overflow: hidden;
+      }
+
+      .market-visual img,
+      .trust-visual img,
+      .flow-visual img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+
+      .items-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 18px;
+      }
+
+      .item-card {
+        overflow: hidden;
+        min-height: 256px;
+      }
+
+      .thumb {
+        height: 150px;
+        background:
+          linear-gradient(135deg, rgba(156, 198, 89, 0.18), transparent),
+          #f6f8ef;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .item-card:nth-child(1) .thumb {
+        background-image: url("../../public/design-comp/market-items.png");
+        background-size: 680px auto;
+        background-position: 10% 16%;
+      }
+
+      .item-card:nth-child(2) .thumb {
+        background-image: url("../../public/design-comp/market-items.png");
+        background-size: 680px auto;
+        background-position: 47% 6%;
+      }
+
+      .item-card:nth-child(3) .thumb {
+        background-image: url("../../public/design-comp/market-items.png");
+        background-size: 680px auto;
+        background-position: 84% 18%;
+      }
+
+      .item-card:nth-child(4) .thumb {
+        background-image: url("../../public/design-comp/market-items.png");
+        background-size: 680px auto;
+        background-position: 14% 82%;
+      }
+
+      .item-card:nth-child(5) .thumb {
+        background-image: url("../../public/design-comp/market-items.png");
+        background-size: 680px auto;
+        background-position: 49% 82%;
+      }
+
+      .item-card:nth-child(6) .thumb {
+        background-image: url("../../public/design-comp/market-items.png");
+        background-size: 680px auto;
+        background-position: 86% 82%;
+      }
+
+      .item-body {
+        padding: 16px;
+      }
+
+      .item-title {
+        font-size: 16px;
+        font-weight: 800;
+      }
+
+      .price {
+        margin-top: 8px;
+        color: #252a20;
+        font-size: 19px;
+        font-weight: 900;
+      }
+
+      .meta {
+        margin-top: 8px;
+        color: var(--ink-soft);
+        font-size: 13px;
+      }
+
+      .trust-layout {
+        display: grid;
+        grid-template-columns: 1fr 440px;
+        gap: 30px;
+        align-items: stretch;
+      }
+
+      .trust-list {
+        display: grid;
+        gap: 18px;
+      }
+
+      .trust-card {
+        display: grid;
+        grid-template-columns: 72px 1fr;
+        gap: 18px;
+        padding: 24px;
+        align-items: center;
+      }
+
+      .trust-icon {
+        display: grid;
+        place-items: center;
+        width: 72px;
+        height: 72px;
+        border-radius: 22px;
+        background: #eaf2d6;
+        color: var(--brand-deep);
+        font-size: 30px;
+        font-weight: 900;
+      }
+
+      .trust-card h3 {
+        margin: 0;
+        font-size: 23px;
+      }
+
+      .trust-card p {
+        margin: 8px 0 0;
+        color: var(--ink-soft);
+        line-height: 1.7;
+      }
+
+      .trust-visual,
+      .flow-visual,
+      .market-visual {
+        border-radius: 24px;
+        border: 1px solid var(--line);
+        background: #fff;
+        box-shadow: var(--shadow);
+        overflow: hidden;
+      }
+
+      .safe-guide {
+        margin-top: 26px;
+        padding: 26px 30px;
+        border-radius: 22px;
+        background: #f0f6df;
+        color: var(--brand-deeper);
+        font-weight: 800;
+        line-height: 1.9;
+      }
+
+      .flow-panel {
+        display: grid;
+        grid-template-columns: 520px 1fr;
+        gap: 34px;
+        padding: 30px;
+        align-items: center;
+      }
+
+      .steps {
+        display: grid;
+        gap: 18px;
+      }
+
+      .step {
+        display: grid;
+        grid-template-columns: 56px 1fr;
+        gap: 18px;
+        align-items: center;
+      }
+
+      .num {
+        display: grid;
+        place-items: center;
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        color: #fff;
+        background: linear-gradient(135deg, var(--brand-light), var(--brand));
+        font-size: 20px;
+        font-weight: 900;
+      }
+
+      .step h3 {
+        margin: 0;
+        font-size: 22px;
+      }
+
+      .step p {
+        margin: 6px 0 0;
+        color: var(--ink-soft);
+        line-height: 1.6;
+      }
+
+      .cta {
+        margin-top: 78px;
+        margin-bottom: 0;
+        padding: 54px 64px;
+        border-radius: 30px 30px 0 0;
+        background:
+          radial-gradient(500px 270px at 90% 40%, rgba(255, 255, 255, 0.35), transparent),
+          linear-gradient(135deg, #9cc659, #79a93a);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .cta h2 {
+        margin: 0;
+        font-size: 40px;
+      }
+
+      .cta p {
+        margin: 10px 0 0;
+        font-size: 17px;
+        opacity: 0.92;
+      }
+
+      .cta-button {
+        border-radius: 999px;
+        padding: 20px 34px;
+        background: #fff;
+        color: var(--brand-deep);
+        font-size: 18px;
+        font-weight: 900;
+      }
+
+      footer {
+        padding: 24px 80px 34px;
+        display: flex;
+        justify-content: space-between;
+        color: var(--ink-soft);
+        font-size: 14px;
+        background: #fff;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <section class="hero-photo" aria-label="ファーストビュー">
+        <img src="../../public/design-comp/hero-real-top.png" alt="新大フリマの本番トップ画像" />
+      </section>
+
+      <section class="section">
+        <div class="inner">
+          <div class="section-head">
+            <div>
+              <div class="eyebrow">新大生に便利な検索</div>
+              <h2>キャンパスとカテゴリから、すぐ探せる。</h2>
+              <p class="lead">
+                受け渡し場所が想像しやすい実写真で、安心して取引を始められる導線に。
+              </p>
+            </div>
+            <div class="pill-link">学内スポットをすべて見る</div>
+          </div>
+
+          <div class="campus-grid">
+            <article class="campus-card">
+              <img src="../../public/design-comp/campus-library-1278.png" alt="附属図書館前" />
+              <div class="campus-body">
+                <div>
+                  <h3>附属図書館前</h3>
+                  <p>1278 / 人目があり待ち合わせしやすい場所</p>
+                </div>
+                <span class="tag">五十嵐キャンパス</span>
+              </div>
+            </article>
+            <article class="campus-card">
+              <img src="../../public/design-comp/campus-cafeteria-1279.png" alt="第一食堂前" />
+              <div class="campus-body">
+                <div>
+                  <h3>第一食堂前</h3>
+                  <p>1279 / 食堂前の開けた広場で手渡し</p>
+                </div>
+                <span class="tag">五十嵐キャンパス</span>
+              </div>
+            </article>
+          </div>
+
+          <div class="panel category-panel">
+            <div class="category-grid">
+              <div class="category"><span class="icon">📚</span>教科書・参考書</div>
+              <div class="category"><span class="icon">🪑</span>家具・家電</div>
+              <div class="category"><span class="icon">☕</span>生活用品</div>
+              <div class="category"><span class="icon">🚲</span>自転車・スポーツ</div>
+              <div class="category"><span class="icon">👕</span>服・雑貨</div>
+              <div class="category"><span class="icon">…</span>その他</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="inner">
+          <div class="section-head">
+            <div>
+              <div class="eyebrow">新着商品</div>
+              <h2>新生活にちょうどいいものを、学内で。</h2>
+            </div>
+            <div class="pill-link">すべて見る</div>
+          </div>
+
+          <div class="market-layout">
+            <div class="market-visual">
+              <img src="../../public/design-comp/market-items.png" alt="学生フリマの商品イメージ" />
+            </div>
+            <div class="items-grid">
+              <article class="item-card">
+                <div class="thumb"></div>
+                <div class="item-body">
+                  <div class="item-title">教科書（微分積分）</div>
+                  <div class="price">¥1,200</div>
+                  <div class="meta">附属図書館前で手渡し</div>
+                </div>
+              </article>
+              <article class="item-card">
+                <div class="thumb"></div>
+                <div class="item-body">
+                  <div class="item-title">デスクチェア</div>
+                  <div class="price">¥800</div>
+                  <div class="meta">第一食堂前で相談</div>
+                </div>
+              </article>
+              <article class="item-card">
+                <div class="thumb"></div>
+                <div class="item-body">
+                  <div class="item-title">小型家電</div>
+                  <div class="price">¥1,500</div>
+                  <div class="meta">五十嵐キャンパス</div>
+                </div>
+              </article>
+              <article class="item-card">
+                <div class="thumb"></div>
+                <div class="item-body">
+                  <div class="item-title">トートバッグ</div>
+                  <div class="price">¥500</div>
+                  <div class="meta">状態良好</div>
+                </div>
+              </article>
+              <article class="item-card">
+                <div class="thumb"></div>
+                <div class="item-body">
+                  <div class="item-title">自転車ロック</div>
+                  <div class="price">¥700</div>
+                  <div class="meta">チャットで場所調整</div>
+                </div>
+              </article>
+              <article class="item-card">
+                <div class="thumb"></div>
+                <div class="item-body">
+                  <div class="item-title">生活雑貨セット</div>
+                  <div class="price">¥600</div>
+                  <div class="meta">当日手渡しOK</div>
+                </div>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="inner">
+          <div class="section-head">
+            <div>
+              <div class="eyebrow">新大生だから安心</div>
+              <h2>決済は挟まず、学内の安全な場所で。</h2>
+              <p class="lead">
+                アプリはマッチングと連絡に徹し、お金と商品の受け渡しは当事者同士で行います。
+              </p>
+            </div>
+          </div>
+
+          <div class="trust-layout">
+            <div>
+              <div class="trust-list">
+                <article class="trust-card">
+                  <div class="trust-icon">✓</div>
+                  <div>
+                    <h3>大学メールで本人確認</h3>
+                    <p>@mail.cc.niigata-u.ac.jp の学生だけが登録できる設計。</p>
+                  </div>
+                </article>
+                <article class="trust-card">
+                  <div class="trust-icon">📍</div>
+                  <div>
+                    <h3>学内の明るい場所で手渡し</h3>
+                    <p>附属図書館前や第一食堂前など、人目のあるスポットを選べます。</p>
+                  </div>
+                </article>
+                <article class="trust-card">
+                  <div class="trust-icon">!</div>
+                  <div>
+                    <h3>ブロック・通報でトラブルを抑える</h3>
+                    <p>不安な相手や禁止商品にすばやく対応できる導線を用意。</p>
+                  </div>
+                </article>
+              </div>
+              <div class="safe-guide">
+                安全な取引ガイド：明るく人目のある場所で取引する / 夜遅い時間を避ける /
+                金銭トラブルは当事者責任であることを明記する
+              </div>
+            </div>
+            <div class="trust-visual">
+              <img src="../../public/design-comp/safety-trust.png" alt="安全と本人確認のイメージ" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="inner">
+          <div class="section-head">
+            <div>
+              <div class="eyebrow">取引の流れ（3ステップ）</div>
+              <h2>探す、チャットする、学内で手渡し。</h2>
+            </div>
+          </div>
+          <div class="panel flow-panel">
+            <div class="flow-visual">
+              <img src="../../public/design-comp/transaction-flow.png" alt="取引の流れイメージ" />
+            </div>
+            <div class="steps">
+              <div class="step">
+                <div class="num">1</div>
+                <div>
+                  <h3>商品を探す</h3>
+                  <p>カテゴリやキーワードから、気になる商品を見つけます。</p>
+                </div>
+              </div>
+              <div class="step">
+                <div class="num">2</div>
+                <div>
+                  <h3>チャットで相談</h3>
+                  <p>状態、価格、手渡し場所をアプリ内メッセージで確認。</p>
+                </div>
+              </div>
+              <div class="step">
+                <div class="num">3</div>
+                <div>
+                  <h3>学内で手渡し</h3>
+                  <p>人目のあるスポットで対面取引。アプリ内決済はありません。</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="inner cta">
+        <div>
+          <h2>新大生だけのフリマを、まずは無料で。</h2>
+          <p>出品・検索・チャット・学内手渡しまで、MVPの核をシンプルに。</p>
+        </div>
+        <div class="cta-button">新大フリマに登録する →</div>
+      </section>
+
+      <footer>
+        <span>© 2026 新大フリマ / 新潟大学生のためのフリマアプリ</span>
+        <span>利用規約　プライバシーポリシー　お問い合わせ　新潟大学非公式</span>
+      </footer>
+    </main>
+  </body>
+</html>

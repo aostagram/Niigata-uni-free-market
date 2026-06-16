@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>新大フリマ | 新潟大学生だけの安心フリマ</title>
+    <meta name="description" content="新潟大学の学生限定。教科書、家具、生活用品を学内で手渡しできるフリマWebサイトです。" />
+    <meta property="og:title" content="新大フリマ | 新潟大学生だけの安心フリマ" />
+    <meta property="og:description" content="新潟大学生だけが使える、対面・手渡し型のフリマWebサイト。" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="assets/top-page-design-comp.png" />
+    <link rel="icon" href="assets/logo.png" type="image/png" />
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="header-inner">
+        <a class="brand-link" href="index.html" aria-label="新大フリマ ホーム">
+          <img src="assets/logo.png" alt="新大フリマのロゴ" />
+          <span><span class="brand-title">新大フリマ</span><span class="brand-sub">Niigata univ. Free Market</span></span>
+        </a>
+        <nav class="site-nav" aria-label="メインナビゲーション">
+          <a href="index.html" data-nav-link>ホーム</a>
+          <a href="search.html" data-nav-link>商品を探す</a>
+          <a href="guide.html" data-nav-link>ガイド</a>
+          <a href="faq.html" data-nav-link>よくある質問</a>
+        </nav>
+        <div class="nav-actions">
+          <a class="icon-pill" href="notifications.html" aria-label="通知">♢</a>
+          <a class="btn btn-primary" href="mypage.html">マイページ</a>
+        </div>
+        <button class="menu-toggle" type="button" data-menu-toggle aria-controls="mobile-menu" aria-expanded="false" aria-label="メニューを開く">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </header>
+    <div class="mobile-panel" data-mobile-panel id="mobile-menu">
+      <nav class="mobile-panel-inner" aria-label="スマートフォンナビゲーション">
+        <a href="index.html">ホーム</a>
+        <a href="search.html">商品を探す</a>
+        <a href="item-detail.html">商品詳細</a>
+        <a href="chat.html">チャット</a>
+        <a href="mypage.html">マイページ</a>
+        <a href="login.html">ログイン</a>
+      </nav>
+    </div>
+
+    <main class="main">
+      <section class="hero">
+        <div class="hero-content reveal">
+          <img class="hero-logo" src="assets/logo.png" alt="新大フリマ" />
+          <p class="eyebrow">新潟大学の学生限定マーケット</p>
+          <h1>新大生だけの、<br />安心・即手に入るフリマ。</h1>
+          <p class="hero-copy">教科書も、家具も、生活用品も。新潟大学の仲間どうしで、学内の明るい場所を選んで手渡しできます。</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="search.html">商品を探す</a>
+            <a class="btn btn-outline" href="login.html">出品を始める</a>
+          </div>
+          <div class="hero-badges" aria-label="サービスの特徴">
+            <span class="badge">学生限定</span>
+            <span class="badge">大学メール認証</span>
+            <span class="badge">学内手渡し</span>
+            <span class="badge">アプリ内決済なし</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container">
+          <div class="section-head reveal">
+            <div>
+              <p class="eyebrow">新大生に便利な検索</p>
+              <h2>キャンパスとカテゴリから、すぐ探せる。</h2>
+              <p class="lead">実際の待ち合わせスポットを見ながら、安心して取引を始められます。</p>
+            </div>
+            <a class="btn btn-outline" href="guide.html#spots">学内スポットを見る</a>
+          </div>
+          <div class="grid-2">
+            <article class="paint-card reveal">
+              <img class="paint-img" src="assets/campus-library-1278.png" alt="新潟大学附属図書館前の写真" />
+              <div class="card-body">
+                <span class="tag">五十嵐キャンパス</span>
+                <h3>附属図書館前</h3>
+                <p class="lead">人目があり、落ち着いて待ち合わせしやすい入口まわり。</p>
+              </div>
+            </article>
+            <article class="paint-card reveal">
+              <img class="paint-img" src="assets/campus-cafeteria-1279.png" alt="新潟大学第一食堂前の写真" />
+              <div class="card-body">
+                <span class="tag">五十嵐キャンパス</span>
+                <h3>第一食堂前</h3>
+                <p class="lead">広場があり、手渡し場所として相談しやすいスポット。</p>
+              </div>
+            </article>
+          </div>
+          <div class="panel category-grid reveal" aria-label="カテゴリ一覧">
+            <a class="category-tile" href="search.html"><span class="category-icon">本</span>教科書・参考書</a>
+            <a class="category-tile" href="search.html"><span class="category-icon">椅</span>家具・家電</a>
+            <a class="category-tile" href="search.html"><span class="category-icon">器</span>生活用品</a>
+            <a class="category-tile" href="search.html"><span class="category-icon">輪</span>自転車・スポーツ</a>
+            <a class="category-tile" href="search.html"><span class="category-icon">衣</span>服・雑貨</a>
+            <a class="category-tile" href="search.html"><span class="category-icon">他</span>その他</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container">
+          <div class="section-head reveal">
+            <div>
+              <p class="eyebrow">新着商品</p>
+              <h2>新生活にちょうどいいものを、学内で。</h2>
+            </div>
+            <a class="btn btn-outline" href="search.html">すべて見る</a>
+          </div>
+          <div class="products-layout">
+            <div class="paint-card visual-fill reveal">
+              <img src="assets/market-items.png" alt="教科書、椅子、生活用品などのフリマ商品イメージ" />
+            </div>
+            <div class="product-grid">
+              <article class="product-card reveal">
+                <img class="product-thumb" src="assets/market-items.png" alt="教科書の出品イメージ" />
+                <div class="card-body"><span class="tag">本・教科書</span><h3>教科書（微分積分）</h3><p class="product-price">¥1,200</p><p class="product-meta">附属図書館前で手渡し</p></div>
+              </article>
+              <article class="product-card reveal">
+                <img class="product-thumb" src="assets/商品詳細.png" alt="オフィスチェアの出品写真" />
+                <div class="card-body"><span class="tag">家具</span><h3>オフィスチェア</h3><p class="product-price">¥2,000</p><p class="product-meta">第一食堂前で相談</p></div>
+              </article>
+              <article class="product-card reveal">
+                <img class="product-thumb" src="assets/market-items.png" alt="生活用品の出品イメージ" />
+                <div class="card-body"><span class="tag">生活用品</span><h3>生活雑貨セット</h3><p class="product-price">¥600</p><p class="product-meta">当日手渡しOK</p></div>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container">
+          <div class="section-head reveal">
+            <div>
+              <p class="eyebrow">新大生だから安心</p>
+              <h2>決済は挟まず、学内の安全な場所で。</h2>
+              <p class="lead">アプリはマッチングと連絡に徹し、お金と商品の受け渡しは当事者同士で行います。</p>
+            </div>
+          </div>
+          <div class="trust-layout">
+            <div class="trust-list">
+              <article class="paint-card trust-item reveal"><div class="trust-icon">認</div><div><h3>大学メールで本人確認</h3><p class="lead">@mail.cc.niigata-u.ac.jp の学生だけが登録できます。</p></div></article>
+              <article class="paint-card trust-item reveal"><div class="trust-icon">所</div><div><h3>学内の明るい場所で手渡し</h3><p class="lead">附属図書館前や第一食堂前など、人目のある場所を選べます。</p></div></article>
+              <article class="paint-card trust-item reveal"><div class="trust-icon">守</div><div><h3>ブロック・通報でトラブルを抑える</h3><p class="lead">不安な相手や禁止商品に対応できる導線を用意します。</p></div></article>
+              <p class="guide-strip reveal">安全な取引ガイド：明るく人目のある場所で取引する / 夜遅い時間を避ける / 金銭トラブルは当事者責任であることを明記する</p>
+            </div>
+            <div class="paint-card visual-fill reveal">
+              <img src="assets/safety-trust.png" alt="大学メール認証と安全な取引を示すイメージ" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container">
+          <div class="section-head reveal">
+            <div>
+              <p class="eyebrow">取引の流れ</p>
+              <h2>探す、チャットする、学内で手渡し。</h2>
+            </div>
+          </div>
+          <div class="flow-layout panel reveal" style="padding: 28px">
+            <div class="paint-card visual-fill"><img src="assets/transaction-flow.png" alt="商品を探してチャットし、学内で手渡しする流れのイメージ" /></div>
+            <div class="steps">
+              <div class="step"><div class="step-num">1</div><div><h3>商品を探す</h3><p class="lead">カテゴリやキーワードから欲しい商品を見つけます。</p></div></div>
+              <div class="step"><div class="step-num">2</div><div><h3>チャットで相談</h3><p class="lead">状態、価格、受け渡し場所をメッセージで確認します。</p></div></div>
+              <div class="step"><div class="step-num">3</div><div><h3>学内で手渡し</h3><p class="lead">人目のあるスポットで対面取引。アプリ内決済はありません。</p></div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="voices">
+        <div class="container">
+          <div class="section-head reveal"><div><p class="eyebrow">お客様の声</p><h2>新大生の声を、少しずつ集めています。</h2></div></div>
+          <div class="grid-3">
+            <article class="voice-card reveal"><p>教科書を学内で受け取れたので、送料も待ち時間もなく助かりました。</p><div class="voice-meta"><span>教育学部 2年</span><span>教科書購入</span></div></article>
+            <article class="voice-card reveal"><p>引っ越し前に椅子を譲れました。チャットで場所を決められるのが安心でした。</p><div class="voice-meta"><span>工学部 4年</span><span>家具出品</span></div></article>
+            <article class="voice-card reveal"><p>同じキャンパス内の人だけなので、初めてでも使いやすい雰囲気でした。</p><div class="voice-meta"><span>人文学部 1年</span><span>生活用品購入</span></div></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="cases">
+        <div class="container">
+          <div class="section-head reveal">
+            <div><p class="eyebrow">取引事例ギャラリー</p><h2>エリア・予算・テイストで絞り込めます。</h2></div>
+          </div>
+          <div class="filter-bar reveal" aria-label="取引事例の絞り込み">
+            <div class="filter-field"><label for="filter-area">エリア</label><select id="filter-area" data-case-filter="area"><option value="all">すべて</option><option value="ikarashi">五十嵐</option><option value="asahimachi">旭町</option></select></div>
+            <div class="filter-field"><label for="filter-budget">予算</label><select id="filter-budget" data-case-filter="budget"><option value="all">すべて</option><option value="under1000">〜1,000円</option><option value="under5000">〜5,000円</option><option value="over10000">10,000円〜</option></select></div>
+            <div class="filter-field"><label for="filter-taste">テイスト</label><select id="filter-taste" data-case-filter="taste"><option value="all">すべて</option><option value="study">学用品</option><option value="interior">家具</option><option value="daily">生活用品</option></select></div>
+          </div>
+          <div class="grid-3">
+            <article class="case-card reveal" data-case-card data-area="ikarashi" data-budget="under1000" data-taste="study"><img src="assets/market-items.png" alt="教科書取引の事例" /><div class="card-body"><h3>教科書を図書館前で受け渡し</h3><p class="lead">エリア：五十嵐 / 予算：〜1,000円</p><div class="case-tags"><span class="tag">学用品</span><span class="tag">手渡し</span></div></div></article>
+            <article class="case-card reveal" data-case-card data-area="ikarashi" data-budget="under5000" data-taste="interior"><img src="assets/商品詳細.png" alt="オフィスチェア取引の事例" /><div class="card-body"><h3>椅子を第一食堂前で相談</h3><p class="lead">エリア：五十嵐 / 予算：〜5,000円</p><div class="case-tags"><span class="tag">家具</span><span class="tag">チャット相談</span></div></div></article>
+            <article class="case-card reveal" data-case-card data-area="asahimachi" data-budget="over10000" data-taste="study"><img src="assets/商品素材.png" alt="ノートPC取引の事例" /><div class="card-body"><h3>ノートPCをキャンパス内で確認</h3><p class="lead">エリア：旭町 / 予算：10,000円〜</p><div class="case-tags"><span class="tag">学用品</span><span class="tag">状態確認</span></div></div></article>
+            <article class="case-card reveal" data-case-card data-area="ikarashi" data-budget="under1000" data-taste="daily"><img src="assets/market-items.png" alt="トートバッグ取引の事例" /><div class="card-body"><h3>トートバッグを講義前に手渡し</h3><p class="lead">エリア：五十嵐 / 予算：〜1,000円</p><div class="case-tags"><span class="tag">生活用品</span><span class="tag">短時間</span></div></div></article>
+            <article class="case-card reveal" data-case-card data-area="asahimachi" data-budget="under5000" data-taste="daily"><img src="assets/market-items.png" alt="小型家電取引の事例" /><div class="card-body"><h3>小型家電を明るい場所で確認</h3><p class="lead">エリア：旭町 / 予算：〜5,000円</p><div class="case-tags"><span class="tag">生活用品</span><span class="tag">安全確認</span></div></div></article>
+            <article class="case-card reveal" data-case-card data-area="ikarashi" data-budget="under1000" data-taste="daily"><img src="assets/campus-library-1278.png" alt="学内スポットでの受け渡し事例" /><div class="card-body"><h3>附属図書館前で生活雑貨を手渡し</h3><p class="lead">エリア：五十嵐 / 予算：〜1,000円</p><div class="case-tags"><span class="tag">生活用品</span><span class="tag">図書館前</span></div></div></article>
+          </div>
+          <p class="no-results panel" data-no-results>条件に合う取引事例がありません。</p>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container">
+          <div class="cta-band reveal">
+            <div><h2>新大生だけのフリマを、まずは無料で。</h2><p>出品・検索・チャット・学内手渡しまで、MVPの核をシンプルに。</p></div>
+            <a class="btn" href="login.html">新大フリマに登録する</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <span>© 2026 新大フリマ / 新潟大学生のためのフリマアプリ</span>
+        <nav class="footer-links" aria-label="フッターナビゲーション">
+          <a href="terms.html">利用規約</a><a href="privacy.html">プライバシーポリシー</a><a href="faq.html">よくある質問</a><a href="guide.html">ガイド</a>
+        </nav>
+      </div>
+    </footer>
+    <script src="js/main.js"></script>
+  </body>
+</html>

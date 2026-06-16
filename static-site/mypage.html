@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>マイページ | 新大フリマ</title>
+    <meta name="description" content="新大フリマのマイページ。プロフィール、出品、取引中の商品、通知設定を確認できます。" />
+    <meta property="og:title" content="マイページ | 新大フリマ" />
+    <meta property="og:description" content="新大フリマの利用状況を確認する静的デモページです。" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="assets/マイページ.png" />
+    <link rel="icon" href="assets/logo.png" type="image/png" />
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <header class="site-header"><div class="header-inner"><a class="brand-link" href="index.html"><img src="assets/logo.png" alt="新大フリマのロゴ" /><span><span class="brand-title">新大フリマ</span><span class="brand-sub">Niigata univ. Free Market</span></span></a><nav class="site-nav"><a href="index.html" data-nav-link>ホーム</a><a href="search.html" data-nav-link>商品を探す</a><a href="guide.html" data-nav-link>ガイド</a><a href="faq.html" data-nav-link>よくある質問</a></nav><div class="nav-actions"><a class="icon-pill" href="notifications.html" aria-label="通知">♢</a><a class="btn btn-primary" href="login.html">出品する</a></div><button class="menu-toggle" type="button" data-menu-toggle aria-controls="mobile-menu" aria-expanded="false" aria-label="メニューを開く"><span></span><span></span><span></span></button></div></header>
+    <div class="mobile-panel" data-mobile-panel id="mobile-menu"><nav class="mobile-panel-inner"><a href="index.html">ホーム</a><a href="search.html">商品を探す</a><a href="my-listings.html">出品した商品</a><a href="notifications.html">通知</a><a href="chat.html">チャット</a></nav></div>
+    <main class="main">
+      <section class="page-hero"><div class="container reveal"><p class="eyebrow">マイページ</p><h1>取引状況を、ひと目で。</h1><p class="lead">プロフィール、出品、メッセージ、通知をまとめて確認できます。</p></div></section>
+      <section class="section"><div class="container content-shell">
+        <aside class="side-nav panel reveal"><a class="is-active" href="mypage.html">マイページ</a><a href="my-listings.html">出品した商品</a><a href="chat.html">メッセージ</a><a href="notifications.html">通知</a><a href="guide.html">ヘルプ・お問い合わせ</a><a href="login.html">ログアウト</a></aside>
+        <div class="list-stack">
+          <section class="paint-card profile-card reveal"><div class="avatar" aria-hidden="true">葉</div><div><p class="eyebrow">プロフィール</p><h2>新大 太郎</h2><p>シンダイ タロウ</p><p class="lead">教育学部 3年 / 五十嵐キャンパス</p><a class="btn btn-outline" href="#">プロフィールを編集</a></div><div class="info-card"><h3>学生認証済み</h3><p class="lead">学生証と大学メールの確認が完了しています。</p></div></section>
+          <div class="stats-grid reveal"><div class="info-card stat-card">出品した商品<strong>12件</strong></div><div class="info-card stat-card">取引完了<strong>8件</strong></div><div class="info-card stat-card">お気に入り<strong>15件</strong></div><div class="info-card stat-card">評価<strong>5.0</strong></div></div>
+          <section class="paint-card reveal"><div class="card-body"><div class="section-head"><div><p class="eyebrow">出品した商品</p><h2>管理中の商品</h2></div><a class="btn btn-outline" href="my-listings.html">すべて見る</a></div><div class="product-grid"><a class="product-card" href="item-detail.html"><img class="product-thumb" src="assets/商品詳細.png" alt="オフィスチェア" /><div class="card-body"><span class="tag">出品中</span><h3>オフィスチェア</h3><p class="product-price">¥2,000</p></div></a><a class="product-card" href="item-detail.html"><img class="product-thumb" src="assets/商品素材.png" alt="教科書" /><div class="card-body"><span class="tag">出品中</span><h3>微分積分学</h3><p class="product-price">¥1,200</p></div></a><a class="product-card" href="item-detail.html"><img class="product-thumb" src="assets/market-items.png" alt="トートバッグ" /><div class="card-body"><span class="tag">取引完了</span><h3>トートバッグ</h3><p class="product-price">¥500</p></div></a></div></div></section>
+          <section class="info-card reveal"><h2>安心・安全にご利用いただくために</h2><p class="lead">新大フリマは、新潟大学の学生限定で利用できる学内向けフリマです。安全で気持ちのよい取引のため、ルールを守ってご利用ください。</p><a class="btn btn-outline" href="guide.html">利用ルールを確認する</a></section>
+        </div>
+      </div></section>
+    </main>
+    <footer class="site-footer"><div class="footer-inner"><span>© 2026 新大フリマ</span><nav class="footer-links"><a href="terms.html">利用規約</a><a href="privacy.html">プライバシーポリシー</a><a href="faq.html">よくある質問</a></nav></div></footer><script src="js/main.js"></script>
+  </body>
+</html>

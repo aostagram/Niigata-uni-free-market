@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>商品を探す | 新大フリマ</title>
+    <meta name="description" content="新大フリマの商品検索ページ。カテゴリ、キャンパス、価格帯で商品を探せます。" />
+    <meta property="og:title" content="商品を探す | 新大フリマ" />
+    <meta property="og:description" content="新潟大学生同士で取引できる商品を探すページです。" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="assets/商品素材.png" />
+    <link rel="icon" href="assets/logo.png" type="image/png" />
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="header-inner">
+        <a class="brand-link" href="index.html"><img src="assets/logo.png" alt="新大フリマのロゴ" /><span><span class="brand-title">新大フリマ</span><span class="brand-sub">Niigata univ. Free Market</span></span></a>
+        <nav class="site-nav" aria-label="メインナビゲーション"><a href="index.html" data-nav-link>ホーム</a><a href="search.html" data-nav-link>商品を探す</a><a href="guide.html" data-nav-link>ガイド</a><a href="faq.html" data-nav-link>よくある質問</a></nav>
+        <div class="nav-actions"><a class="icon-pill" href="notifications.html" aria-label="通知">♢</a><a class="btn btn-primary" href="login.html">出品する</a></div>
+        <button class="menu-toggle" type="button" data-menu-toggle aria-controls="mobile-menu" aria-expanded="false" aria-label="メニューを開く"><span></span><span></span><span></span></button>
+      </div>
+    </header>
+    <div class="mobile-panel" data-mobile-panel id="mobile-menu"><nav class="mobile-panel-inner"><a href="index.html">ホーム</a><a href="search.html">商品を探す</a><a href="item-detail.html">商品詳細</a><a href="chat.html">チャット</a><a href="mypage.html">マイページ</a></nav></div>
+
+    <main class="main">
+      <section class="page-hero">
+        <div class="container reveal">
+          <p class="eyebrow">商品を探す</p>
+          <h1>新大生の「欲しい」がきっと見つかる。</h1>
+          <p class="lead">キーワード、カテゴリ、キャンパスを組み合わせて、学内で受け取れる商品を探せます。</p>
+          <input class="search-input" type="search" placeholder="何をお探しですか？（例：教科書、椅子、パソコン）" aria-label="商品検索" />
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container content-shell">
+          <aside class="side-nav panel reveal" aria-label="検索条件">
+            <a class="is-active" href="#">すべてのカテゴリ</a>
+            <a href="#">本・教科書</a>
+            <a href="#">パソコン・家電</a>
+            <a href="#">家具・インテリア</a>
+            <a href="#">ファッション</a>
+            <a href="#">スポーツ・趣味</a>
+            <hr style="border: 0; border-top: 1px solid var(--line); width: 100%" />
+            <a href="#">五十嵐キャンパス</a>
+            <a href="#">旭町キャンパス</a>
+          </aside>
+          <div>
+            <div class="section-head reveal"><div><p class="eyebrow">全236件</p><h2>新着順の商品</h2></div><a class="btn btn-outline" href="login.html">出品する</a></div>
+            <div class="product-grid">
+              <a class="product-card reveal" href="item-detail.html"><img class="product-thumb" src="assets/商品素材.png" alt="微分積分学の教科書" /><div class="card-body"><span class="tag">本・教科書</span><h3>微分積分学（第4版）</h3><p class="product-price">¥1,200</p><p class="product-meta">五十嵐キャンパス / 経済科学部</p></div></a>
+              <a class="product-card reveal" href="item-detail.html"><img class="product-thumb" src="assets/商品詳細.png" alt="メッシュのオフィスチェア" /><div class="card-body"><span class="tag">家具</span><h3>オフィスチェア（メッシュ）</h3><p class="product-price">¥2,000</p><p class="product-meta">旭町キャンパス / 工学部</p></div></a>
+              <a class="product-card reveal" href="item-detail.html"><img class="product-thumb" src="assets/market-items.png" alt="ノートパソコンの出品イメージ" /><div class="card-body"><span class="tag">パソコン</span><h3>MacBook Air 13インチ</h3><p class="product-price">¥45,000</p><p class="product-meta">五十嵐キャンパス / 法学部</p></div></a>
+              <a class="product-card reveal" href="item-detail.html"><img class="product-thumb" src="assets/market-items.png" alt="トートバッグの出品イメージ" /><div class="card-body"><span class="tag">雑貨</span><h3>トートバッグ</h3><p class="product-price">¥500</p><p class="product-meta">旭町キャンパス / 人文学部</p></div></a>
+              <a class="product-card reveal" href="item-detail.html"><img class="product-thumb" src="assets/market-items.png" alt="生活用品セットの出品イメージ" /><div class="card-body"><span class="tag">生活用品</span><h3>生活雑貨セット</h3><p class="product-price">¥600</p><p class="product-meta">五十嵐キャンパス / 当日手渡しOK</p></div></a>
+              <a class="product-card reveal" href="item-detail.html"><img class="product-thumb" src="assets/market-items.png" alt="サッカーボールの出品イメージ" /><div class="card-body"><span class="tag">スポーツ</span><h3>サッカーボール</h3><p class="product-price">¥600</p><p class="product-meta">旭町キャンパス / 教育学部</p></div></a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer"><div class="footer-inner"><span>© 2026 新大フリマ</span><nav class="footer-links"><a href="terms.html">利用規約</a><a href="privacy.html">プライバシーポリシー</a><a href="faq.html">よくある質問</a></nav></div></footer>
+    <script src="js/main.js"></script>
+  </body>
+</html>
