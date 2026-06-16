@@ -10,6 +10,17 @@
   --brand-lighter: #aed87a; /* 淡い黄緑 */
   --brand-pale: #e7f4d6; /* ごく淡い緑(にじみ背景) */
   --brand-mist: #f1f8e6; /* さらに淡いミスト */
+
+  /* =======================================================
+     水彩アンビエント調整トークン(WatercolorTuner で動的変更)
+     ページ全体に連続する水彩を敷くためのパラメータ。
+     ここを CSS 変数にすることで、サイト上のスライダーから
+     リアルタイムに「濃さ・広がり・なじみ」を調整できる。
+     ======================================================= */
+  --wc-intensity: 1; /* 全体の濃さ(0〜2) */
+  --wc-top: 58%; /* 上の水彩の縦の広がり */
+  --wc-bottom: 40%; /* 下の水彩の縦の広がり */
+  --wc-hero: 0.22; /* ヒーロー下端のフェード量(0=境目くっきり 〜 0.6=しっかり溶ける) */
 }
 
 @theme inline {
@@ -23,13 +34,52 @@
   --color-brand-mist: var(--brand-mist);
 }
 
-html,
-body {
+html {
+  /* ベースの地色は html に持たせる(body は透明にしてアンビエントを透かす) */
   background: var(--background);
+}
+
+body {
+  background: transparent;
   color: var(--foreground);
   font-family:
     "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Yu Gothic",
     Meiryo, system-ui, -apple-system, sans-serif;
+}
+
+/* =========================================================
+   ページ全体に連続する水彩アンビエント
+   position:fixed で画面に固定 → スクロールしても途切れない。
+   上(左右)と下に淡い緑のにじみを置き、中央は地色へなじむ。
+   これで「ヒーローだけ色が付いて本文との境目がくっきり」状態を解消。
+   ========================================================= */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      72% var(--wc-top) at 0% 0%,
+      rgba(111, 184, 58, calc(0.22 * var(--wc-intensity))),
+      transparent 62%
+    ),
+    radial-gradient(
+      72% var(--wc-top) at 100% 0%,
+      rgba(11, 122, 75, calc(0.16 * var(--wc-intensity))),
+      transparent 60%
+    ),
+    radial-gradient(
+      96% var(--wc-bottom) at 50% 100%,
+      rgba(174, 216, 122, calc(0.2 * var(--wc-intensity))),
+      transparent 64%
+    ),
+    radial-gradient(
+      42% 32% at 98% 58%,
+      rgba(111, 184, 58, calc(0.08 * var(--wc-intensity))),
+      transparent 70%
+    );
 }
 
 * {
@@ -61,11 +111,36 @@ body {
   mask-repeat: no-repeat;
 }
 
-/* 上部に敷く深緑→黄緑の淡いウォッシュ */
+/* ヒーローのウォッシュ。
+   以前は最後を不透明な白(#ffffff)で塗っていたため、本文(地色)との境目が
+   くっきり出ていた。白塗りをやめて透明に抜き、さらに下端をマスクでソフトに
+   フェードさせることで、背後の連続アンビエントと溶け合い「途切れ目」を消す。 */
 .wc-wash {
   background:
-    radial-gradient(120% 90% at 12% 0%, rgba(111, 184, 58, 0.28), transparent 60%),
-    radial-gradient(120% 90% at 92% 6%, rgba(11, 122, 75, 0.22), transparent 58%),
-    radial-gradient(100% 80% at 50% 120%, rgba(174, 216, 122, 0.25), transparent 60%),
-    linear-gradient(180deg, #f4fae9 0%, #ffffff 70%);
+    radial-gradient(
+      120% 90% at 12% 0%,
+      rgba(111, 184, 58, calc(0.26 * var(--wc-intensity))),
+      transparent 60%
+    ),
+    radial-gradient(
+      120% 90% at 92% 6%,
+      rgba(11, 122, 75, calc(0.2 * var(--wc-intensity))),
+      transparent 58%
+    ),
+    radial-gradient(
+      100% 80% at 50% 118%,
+      rgba(174, 216, 122, calc(0.24 * var(--wc-intensity))),
+      transparent 60%
+    );
+  /* 下端を徐々に透明へ(--wc-hero=0 で境目くっきり / 大きいほど深く溶ける) */
+  -webkit-mask-image: linear-gradient(
+    180deg,
+    #000 calc(100% - var(--wc-hero) * 100%),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    180deg,
+    #000 calc(100% - var(--wc-hero) * 100%),
+    transparent 100%
+  );
 }

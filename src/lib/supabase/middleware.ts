@@ -2,8 +2,8 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { isAllowedEmail } from "@/lib/constants";
 
-/** ログイン不要でアクセスできるパス */
-const PUBLIC_PATHS = ["/login", "/auth"];
+/** ログイン不要でアクセスできるパス(/preview は水彩デザインの確認用) */
+const PUBLIC_PATHS = ["/login", "/auth", "/preview"];
 
 function isPublicPath(pathname: string): boolean {
   return PUBLIC_PATHS.some(
