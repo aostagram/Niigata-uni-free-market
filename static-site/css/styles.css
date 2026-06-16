@@ -378,10 +378,11 @@ p {
   position: absolute;
   inset: 0;
   z-index: -1;
-  background: url("../assets/campus-hero.png") center top / cover no-repeat;
-  /* 下端をフェードさせ、下に続く水彩背景となめらかに繋ぐ（継ぎ目対策） */
-  -webkit-mask-image: linear-gradient(to bottom, #000 0 52%, rgba(0, 0, 0, 0.4) 80%, transparent 100%);
-  mask-image: linear-gradient(to bottom, #000 0 52%, rgba(0, 0, 0, 0.4) 80%, transparent 100%);
+  /* 本番キャンパス実写。左の白場がテキスト列に重なるよう縦位置を調整 */
+  background: url("../assets/campus-hero.png") center 46% / cover no-repeat;
+  /* 緑の鮮やかさを残しつつ、最下部だけ柔らかくフェードして下の水彩へ繋ぐ */
+  -webkit-mask-image: linear-gradient(to bottom, #000 0 82%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 0 82%, transparent 100%);
 }
 
 .hero::after {
@@ -389,16 +390,20 @@ p {
   position: absolute;
   inset: 0;
   z-index: -1;
-  background:
-    radial-gradient(360px 270px at 4% 9%, rgba(156, 198, 89, 0.28), transparent 62%),
-    radial-gradient(300px 250px at 98% 78%, rgba(132, 173, 63, 0.16), transparent 62%);
+  /* テキスト背後だけ柔らかい白グロー。左端の緑と右の写真は鮮やかなまま残す */
+  background: radial-gradient(
+    660px 560px at 22% 47%,
+    rgba(255, 255, 255, 0.6) 0%,
+    rgba(255, 255, 255, 0.32) 42%,
+    rgba(255, 255, 255, 0) 72%
+  );
 }
 
 .hero-content {
   position: relative;
   z-index: 1;
   width: min(560px, calc(100% - 48px));
-  padding: 136px 0 90px;
+  padding: 112px 0 124px;
   margin-left: max(24px, calc((100vw - var(--container)) / 2));
 }
 
