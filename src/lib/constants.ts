@@ -4,6 +4,13 @@
  */
 export const ALLOWED_EMAIL_DOMAIN = "mail.cc.niigata-u.ac.jp";
 
+/**
+ * 利用規約・プライバシーポリシーの版。本文（src/lib/legal.ts）を実質的に
+ * 変更したら更新する。ログイン時の同意記録(user_consents)に保存され、
+ * 「いつ・どの版に同意したか」の証跡になる。
+ */
+export const CONSENT_VERSION = "2026-06-17";
+
 /** メールアドレスが新潟大学生のものかどうかを判定する */
 export function isAllowedEmail(email: string | undefined | null): boolean {
   if (!email) return false;

@@ -27,7 +27,7 @@ html {
 body {
   margin: 0;
   color: var(--ink);
-  background: #fbfdf7 url("../assets/bottom-background-only.png") center top / 100% auto repeat-y;
+  background-color: #fbfdf7;
   font-family:
     "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro",
     "Noto Serif JP", "Times New Roman", serif;
@@ -37,7 +37,16 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-body::before,
+/* 水彩背景は固定の1枚レイヤーにする（タイル繰り返しの継ぎ目を出さない） */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: url("../assets/bottom-background-only.webp") center center / cover no-repeat;
+  pointer-events: none;
+}
+
 body::after {
   content: none;
 }
@@ -87,11 +96,9 @@ textarea {
 }
 
 .brand-link img {
-  width: 62px;
-  height: 62px;
-  border-radius: 50%;
-  object-fit: cover;
-  box-shadow: 0 12px 26px -18px rgba(64, 88, 25, 0.58);
+  width: auto;
+  height: 48px;
+  object-fit: contain;
 }
 
 .brand-title {
@@ -379,7 +386,7 @@ p {
   inset: 0;
   z-index: -1;
   /* 本番キャンパス実写。左の白場がテキスト列に重なるよう縦位置を調整 */
-  background: url("../assets/campus-hero.png") center 46% / cover no-repeat;
+  background: url("../assets/campus-hero.webp") center 46% / cover no-repeat;
   /* 緑の鮮やかさを残しつつ、最下部だけ柔らかくフェードして下の水彩へ繋ぐ */
   -webkit-mask-image: linear-gradient(to bottom, #000 0 82%, transparent 100%);
   mask-image: linear-gradient(to bottom, #000 0 82%, transparent 100%);
@@ -413,12 +420,11 @@ p {
 }
 
 .hero-logo {
-  width: 154px;
-  height: 154px;
-  margin-bottom: 32px;
-  border-radius: 50%;
-  object-fit: cover;
-  box-shadow: var(--shadow-soft);
+  width: auto;
+  height: 208px;
+  max-width: 92%;
+  margin-bottom: 24px;
+  object-fit: contain;
 }
 
 .hero-copy {
@@ -937,6 +943,47 @@ p {
   margin-top: 16px;
 }
 
+/* 規約・プライバシーは「読むリンク」と一目で分かるよう青文字＋青下線 */
+.check-row a {
+  color: #1a6dff;
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-color: #1a6dff;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 3px;
+}
+
+.check-row a:hover {
+  color: #0b4fd6;
+  text-decoration-color: #0b4fd6;
+}
+
+.login-status {
+  margin-top: 12px;
+  font-size: 13px;
+  line-height: 1.6;
+  min-height: 1em;
+}
+
+.login-status.is-error {
+  color: #b3261e;
+}
+
+.login-status.is-ok {
+  color: var(--brand-darker, #405819);
+  font-weight: 700;
+}
+
+.login-status.is-note {
+  color: #7a7f70;
+}
+
+.btn.is-disabled {
+  opacity: 0.5;
+  pointer-events: auto;
+  cursor: not-allowed;
+}
+
 .check-row input {
   width: 22px;
   height: 22px;
@@ -1052,6 +1099,25 @@ p {
 
 .doc-panel h3 {
   margin-top: 28px;
+}
+
+.doc-panel h2 {
+  margin-top: 30px;
+  font-size: 19px;
+}
+
+.doc-panel h2:first-child {
+  margin-top: 0;
+}
+
+.legal-list {
+  margin: 10px 0 0;
+  padding-left: 1.4em;
+}
+
+.legal-list li {
+  margin-top: 8px;
+  line-height: 1.85;
 }
 
 .faq-list {
@@ -1187,8 +1253,8 @@ p {
   }
 
   .brand-link img {
-    width: 52px;
-    height: 52px;
+    width: auto;
+    height: 42px;
   }
 
   .brand-title {
@@ -1210,7 +1276,7 @@ p {
   }
 
   .section {
-    padding-block: 64px;
+    padding-block: 44px;
   }
 
   .section::before {
@@ -1221,6 +1287,27 @@ p {
     padding-top: 0;
   }
 
+  /* --- スマホの縦長を抑える: 画像・余白をコンパクトに --- */
+  .paint-img {
+    aspect-ratio: 16 / 9;
+  }
+
+  .case-card img {
+    aspect-ratio: 16 / 9;
+  }
+
+  .product-thumb {
+    aspect-ratio: 16 / 10;
+  }
+
+  .visual-fill img {
+    max-height: 200px;
+  }
+
+  .card-body {
+    padding: 16px;
+  }
+
   .section-head,
   .cta-band,
   .footer-inner {
@@ -1229,11 +1316,11 @@ p {
   }
 
   .hero {
-    min-height: 650px;
+    min-height: 520px;
   }
 
   .hero::before {
-    background: url("../assets/top-background-only.png") center top / cover no-repeat;
+    background: url("../assets/top-background-only.webp") center top / cover no-repeat;
   }
 
   .hero-content {
@@ -1243,9 +1330,9 @@ p {
   }
 
   .hero-logo {
-    width: 116px;
-    height: 116px;
-    margin-bottom: 24px;
+    width: auto;
+    height: 152px;
+    margin-bottom: 20px;
   }
 
   .hero-actions {
@@ -1256,7 +1343,6 @@ p {
   .grid-3,
   .grid-4,
   .product-grid,
-  .category-grid,
   .filter-bar,
   .info-grid,
   .profile-card,
@@ -1264,8 +1350,22 @@ p {
     grid-template-columns: 1fr;
   }
 
+  /* カテゴリはスマホでも2列（1列だと縦に長すぎる） */
   .category-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
     padding: 18px;
+  }
+
+  .category-tile {
+    min-height: 104px;
+    font-size: 14px;
+  }
+
+  .category-icon {
+    width: 44px;
+    height: 44px;
+    margin-bottom: 6px;
   }
 
   .listing-row {

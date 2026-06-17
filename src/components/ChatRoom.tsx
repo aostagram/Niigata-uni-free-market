@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { ShieldCheck, Send } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { sendMessage } from "@/app/actions/chat";
 import { SAFETY_GUIDELINE } from "@/lib/constants";
@@ -81,13 +82,14 @@ export function ChatRoom({
   return (
     <div className="flex flex-1 flex-col overflow-hidden">
       {/* 安全な取引ガイドライン(常時表示) */}
-      <div className="shrink-0 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-xs leading-relaxed text-red-800">
-        {SAFETY_GUIDELINE}
+      <div className="flex shrink-0 items-start gap-2 rounded-xl border border-line bg-panel px-3 py-2.5 text-xs leading-relaxed text-ink-soft">
+        <ShieldCheck size={16} className="mt-0.5 shrink-0 text-brand" />
+        <span>{SAFETY_GUIDELINE}</span>
       </div>
 
-      <div className="flex-1 space-y-3 overflow-y-auto py-4">
+      <div className="thin-scroll flex-1 space-y-3.5 overflow-y-auto py-4">
         {messages.length === 0 && (
-          <p className="py-8 text-center text-sm text-gray-400">
+          <p className="py-8 text-center text-sm text-ink-faint">
             最初のメッセージを送ってみましょう。
           </p>
         )}
@@ -98,13 +100,7 @@ export function ChatRoom({
               key={m.id}
               className={`flex ${mine ? "justify-end" : "justify-start"}`}
             >
-              <div
-                className={`max-w-[75%] whitespace-pre-wrap rounded-2xl px-4 py-2 text-sm ${
-                  mine
-                    ? "rounded-br-sm bg-brand text-white"
-                    : "rounded-bl-sm bg-white text-gray-800 shadow-sm"
-                }`}
-              >
+              <div className={`bubble ${mine ? "bubble-sent" : "bubble-recv"}`}>
                 {m.message_text}
               </div>
             </div>
@@ -115,21 +111,22 @@ export function ChatRoom({
 
       <form
         onSubmit={handleSend}
-        className="sticky bottom-0 flex shrink-0 gap-2 border-t border-gray-200 bg-background py-3"
+        className="sticky bottom-0 flex shrink-0 items-center gap-2.5 border-t border-line bg-background py-3"
       >
         <input
           value={text}
           onChange={(e) => setText(e.target.value)}
-          placeholder="メッセージを入力"
+          placeholder="メッセージを入力..."
           maxLength={2000}
-          className="flex-1 rounded-full border border-gray-300 bg-white px-4 py-2.5 text-sm outline-none focus:border-brand"
+          className="flex-1 rounded-full border-[1.5px] border-line bg-white px-4 py-3 text-sm outline-none focus:border-brand"
         />
         <button
           type="submit"
           disabled={sending || !text.trim()}
-          className="shrink-0 rounded-full bg-brand px-5 py-2.5 text-sm font-medium text-white hover:bg-brand-dark disabled:opacity-40"
+          aria-label="送信"
+          className="btn btn-primary h-11 w-11 shrink-0 rounded-full p-0"
         >
-          送信
+          <Send size={19} />
         </button>
       </form>
     </div>

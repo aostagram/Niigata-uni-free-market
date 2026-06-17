@@ -24,8 +24,14 @@ export async function createItem(input: CreateItemInput) {
 
   const title = input.title.trim();
   if (!title) return { error: "商品名を入力してください。" };
+  // DB制約(1〜100文字)に合わせてサーバー側でも検証する(改ざんリクエスト対策)。
+  if (title.length > 100)
+    return { error: "商品名は100文字以内で入力してください。" };
   if (!CATEGORY_VALUES.includes(input.category as CategoryValue))
     return { error: "カテゴリを選択してください。" };
+  const description = input.description.trim();
+  if (description.length > 2000)
+    return { error: "商品説明は2000文字以内で入力してください。" };
   const price = Number.isFinite(input.price)
     ? Math.max(0, Math.floor(input.price))
     : 0;
@@ -35,7 +41,7 @@ export async function createItem(input: CreateItemInput) {
     .insert({
       user_id: user.id,
       title,
-      description: input.description.trim(),
+      description,
       price,
       category: input.category,
       image_url: input.imageUrl,
@@ -43,7 +49,10 @@ export async function createItem(input: CreateItemInput) {
     .select("id")
     .single();
 
-  if (error) return { error: error.message };
+  if (error) {
+    console.error("出品の保存に失敗:", error.message);
+    return { error: "出品の保存に失敗しました。時間をおいて再度お試しください。" };
+  }
 
   revalidatePath("/");
   redirect(`/items/${data.id}`);
@@ -56,7 +65,10 @@ export async function updateItemStatus(itemId: string, status: ItemStatus) {
     .update({ status })
     .eq("id", itemId);
 
-  if (error) return { error: error.message };
+  if (error) {
+    console.error("ステータス更新に失敗:", error.message);
+    return { error: "ステータスの更新に失敗しました。" };
+  }
   revalidatePath(`/items/${itemId}`);
   revalidatePath("/");
   return { ok: true };
@@ -65,7 +77,10 @@ export async function updateItemStatus(itemId: string, status: ItemStatus) {
 export async function deleteItem(itemId: string) {
   const supabase = await createClient();
   const { error } = await supabase.from("items").delete().eq("id", itemId);
-  if (error) return { error: error.message };
+  if (error) {
+    console.error("出品削除に失敗:", error.message);
+    return { error: "削除に失敗しました。" };
+  }
   revalidatePath("/");
   redirect("/");
 }

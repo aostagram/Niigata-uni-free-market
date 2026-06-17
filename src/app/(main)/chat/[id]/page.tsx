@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
+import { ArrowLeft, ExternalLink } from "lucide-react";
 import { requireProfile } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { ChatRoom } from "@/components/ChatRoom";
@@ -43,32 +44,39 @@ export default async function ChatRoomPage({
     avatar_url: string | null;
   } | null;
 
+  // 直近200件に限定して取得(全件フェッチを避ける)。新着はRealtimeで追従。
   const { data: messageData } = await supabase
     .from("messages")
     .select("*")
     .eq("room_id", id)
-    .order("created_at", { ascending: true });
+    .order("created_at", { ascending: false })
+    .limit(200);
 
-  const messages = (messageData ?? []) as Message[];
+  // 取得は新しい順なので、表示用に古い順へ戻す。
+  const messages = ((messageData ?? []) as Message[]).reverse();
 
   return (
-    <div className="flex h-[calc(100dvh-12rem)] flex-col">
+    <div className="flex h-[calc(100dvh-13rem)] flex-col">
       {/* チャット相手 + 対象商品 */}
-      <div className="flex shrink-0 items-center gap-3 border-b border-gray-200 pb-3">
-        <Link href="/chat" className="text-gray-500 hover:text-gray-700">
-          ←
+      <div className="flex shrink-0 items-center gap-3 border-b border-line pb-3">
+        <Link
+          href="/chat"
+          aria-label="メッセージ一覧に戻る"
+          className="text-brand-deep"
+        >
+          <ArrowLeft size={20} />
         </Link>
         <div className="flex-1">
-          <p className="text-sm font-medium">
+          <p className="font-round text-sm font-bold text-ink">
             {partnerProfile?.full_name ?? "退会したユーザー"}
           </p>
         </div>
         {item && (
           <Link
             href={`/items/${item.id}`}
-            className="flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-2 py-1"
+            className="flex items-center gap-2 rounded-xl border border-line bg-white px-2 py-1"
           >
-            <div className="h-8 w-8 overflow-hidden rounded bg-gray-100">
+            <div className="h-9 w-9 overflow-hidden rounded-lg bg-panel-2">
               {item.image_url && (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
@@ -79,9 +87,14 @@ export default async function ChatRoomPage({
               )}
             </div>
             <div className="text-right">
-              <p className="max-w-[8rem] truncate text-xs">{item.title}</p>
-              <p className="text-xs font-bold">{formatPrice(item.price)}</p>
+              <p className="max-w-[8rem] truncate text-xs text-ink">
+                {item.title}
+              </p>
+              <p className="font-round text-xs font-bold text-brand-deep">
+                {formatPrice(item.price)}
+              </p>
             </div>
+            <ExternalLink size={14} className="text-ink-faint" />
           </Link>
         )}
       </div>

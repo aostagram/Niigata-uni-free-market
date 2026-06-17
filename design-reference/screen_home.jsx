@@ -1,8 +1,9 @@
 /* ===== Home / Top landing ===== */
 function HomeScreen({ nav }){
-  return React.createElement('div',{className:'wc-page',style:{minHeight:'100vh',paddingBottom:96}},
+  return React.createElement('div',{className:'wc-page',style:{minHeight:'100vh',paddingBottom:96,position:'relative'}},
+    React.createElement(PaintLayer,null),
     React.createElement(AppHeader,{nav}),
-    React.createElement('main',{style:{maxWidth:1024,margin:'0 auto',padding:'0 22px'}},
+    React.createElement('main',{style:{maxWidth:1024,margin:'0 auto',padding:'0 22px',position:'relative',zIndex:1}},
 
       /* hero */
       React.createElement('section',{className:'fade-up',style:{display:'grid',gridTemplateColumns:'1.05fr .95fr',gap:32,alignItems:'center',padding:'46px 0 36px'}},
@@ -21,7 +22,7 @@ function HomeScreen({ nav }){
         React.createElement('div',{style:{position:'relative'}},
           React.createElement('div',{className:'ds-card',style:{padding:14,transform:'rotate(-1.5deg)'}},
             React.createElement('div',{style:{borderRadius:14,overflow:'hidden'}},
-              React.createElement('img',{src:'assets/campus.png',alt:'新潟大学キャンパス',style:{width:'100%',display:'block'}})),
+              React.createElement('img',{src:'assets/campus_hero.jpg',alt:'新潟大学キャンパス',style:{width:'100%',display:'block'}})),
             React.createElement('div',{style:{display:'flex',alignItems:'center',gap:8,padding:'12px 6px 4px'}},
               React.createElement(Icon,{name:'MapPin',size:16,color:'var(--brand)'}),
               React.createElement('span',{style:{fontSize:13.5,color:'var(--ink-soft)'}},'五十嵐キャンパス・旭町キャンパスで受け渡し'))
@@ -97,6 +98,27 @@ function HomeScreen({ nav }){
       React.createElement(SiteFooter,null)
     ),
     React.createElement(TabBar,{active:'home',nav})
+  );
+}
+
+/* 取り出し１.png から切り抜いた水彩（絵の具）をページ全面に散らす装飾レイヤー。
+   コンテンツ背面・操作透過。assets/wc/ に透過PNGとして配置済み。 */
+function PaintLayer(){
+  const wc='assets/wc/';
+  const items=[
+    ['blob2.png',  {top:'-1%', right:'-4%', width:360, opacity:.55, transform:'rotate(7deg)'}],
+    ['blob1.png',  {top:'5%',  left:'-4%', width:320, opacity:.5,  transform:'rotate(-6deg)'}],
+    ['leaves.png', {top:'8%',  right:'7%', width:210, opacity:.85}],
+    ['splatter.png',{top:'1%', left:'42%', width:150, opacity:.4}],
+    ['blob1.png',  {top:'33%', right:'-5%',width:340, opacity:.42, transform:'scaleX(-1) rotate(9deg)'}],
+    ['blob2.png',  {top:'50%', left:'-6%', width:360, opacity:.4,  transform:'rotate(-9deg)'}],
+    ['leaves.png', {top:'45%', left:'5%',  width:180, opacity:.7,  transform:'scaleX(-1)'}],
+    ['blob1.png',  {top:'70%', right:'1%', width:300, opacity:.4}],
+    ['splatter.png',{top:'85%',left:'-2%', width:180, opacity:.4}],
+    ['leaves.png', {top:'90%', right:'9%', width:190, opacity:.7}],
+  ];
+  return React.createElement('div',{'aria-hidden':true,style:{position:'absolute',inset:0,overflow:'hidden',pointerEvents:'none',zIndex:0}},
+    items.map((it,i)=>React.createElement('img',{key:i,src:wc+it[0],alt:'',style:Object.assign({position:'absolute',display:'block'},it[1])}))
   );
 }
 

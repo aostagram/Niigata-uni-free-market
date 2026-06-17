@@ -1,5 +1,6 @@
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { BottomTabBar } from "@/components/BottomTabBar";
 
 export default function MainLayout({
   children,
@@ -7,12 +8,13 @@ export default function MainLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex min-h-dvh flex-col">
+    <div className="wc-soft flex min-h-dvh flex-col">
       <Header />
-      <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-6">
+      <main className="mx-auto w-full max-w-3xl flex-1 px-4 pb-28 pt-6 md:pb-10">
         {children}
       </main>
       <Footer />
+      <BottomTabBar />
     </div>
   );
 }

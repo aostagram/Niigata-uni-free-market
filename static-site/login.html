@@ -8,9 +8,10 @@
     <meta property="og:title" content="ログイン | ガタフィー" />
     <meta property="og:description" content="新潟大学生限定のフリマへログイン。" />
     <meta property="og:type" content="website" />
-    <meta property="og:image" content="assets/ログイン画面.png" />
+    <meta property="og:image" content="assets/ログイン画面.webp" />
     <link rel="icon" href="assets/logo.png" type="image/png" />
     <link rel="stylesheet" href="css/styles.css" />
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
   </head>
   <body>
     <main class="login-shell">
@@ -20,14 +21,18 @@
         <p class="lead">新潟大学の学生のためのフリマアプリです。</p>
       </section>
       <section class="paint-card login-card reveal">
-        <a class="btn btn-outline" style="width: 100%; justify-content: center" href="mypage.html">新潟大学の Google アカウントでログイン</a>
+        <p class="lead" style="margin-bottom: 16px">新潟大学の Google アカウント（<strong>@mail.cc.niigata-u.ac.jp</strong>）でログインしてください。</p>
+        <div id="gsi-button" style="display: flex; justify-content: center; min-height: 44px"></div>
+        <p class="login-status" data-login-status></p>
         <div class="info-card" style="margin-top: 24px"><h2>学生のみの非公式団体です</h2><p class="lead">ガタフィーは、新潟大学の学生による学生のための非公式サービスです。</p></div>
-        <label class="check-row"><input type="checkbox" /> <span><a href="terms.html">利用規約</a> に同意します</span></label>
-        <label class="check-row"><input type="checkbox" /> <span><a href="privacy.html">プライバシーポリシー</a> に同意します</span></label>
-        <a class="btn btn-primary" style="width: 100%; margin-top: 22px" href="mypage.html">上記に同意してログイン</a>
+        <label class="check-row"><input type="checkbox" data-consent /> <span><a href="terms.html">利用規約</a> を読み、同意します</span></label>
+        <label class="check-row"><input type="checkbox" data-consent /> <span><a href="privacy.html">プライバシーポリシー</a> を読み、同意します</span></label>
+        <a class="btn btn-primary is-disabled" data-login-proceed aria-disabled="true" style="width: 100%; margin-top: 22px" href="mypage.html">ログインを完了する</a>
       </section>
       <p class="lead" style="margin-top: 28px"><a href="index.html">トップページへ戻る</a></p>
     </main>
     <script src="js/main.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/login.js"></script>
   </body>
 </html>

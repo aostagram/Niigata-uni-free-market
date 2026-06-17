@@ -10,7 +10,20 @@
       "Bash(curl -s -o /dev/null -w \"HTTP %{http_code}\\\\n\" http://localhost:3000/)",
       "Bash(curl -s http://localhost:3000/)",
       "Bash(supabase --version)",
-      "Bash(docker info *)"
+      "Bash(docker info *)",
+      "Bash(npx tsc *)",
+      "Bash(echo \"=== tsc exit: $? ===\")",
+      "Bash(curl -s -D - -o /dev/null http://localhost:3939/playground)",
+      "WebFetch(domain:api.anthropic.com)",
+      "Bash(rm -rf /tmp/cdesign)",
+      "Bash(mkdir -p /tmp/cdesign)",
+      "Bash(tar xzf *)",
+      "Read(//tmp/**)",
+      "Read(//private/tmp/cdesign/niigata-uni-free-market/chats/**)",
+      "Skill(design-sync)",
+      "Bash(rm -rf /tmp/cdesign/*)",
+      "Bash(curl -sL \"https://api.anthropic.com/v1/design/h/LfWW-jPaZdZkccZXwZ782Q?open_file=%E6%96%B0%E5%A4%A7%E3%83%95%E3%83%AA%E3%83%9E.html\" -o design-bundle.bin)",
+      "Bash(node -p \"require\\('next/package.json'\\).version\")"
     ]
   }
 }

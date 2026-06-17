@@ -1,61 +1,62 @@
 import Link from "next/link";
-import { formatPrice } from "@/lib/format";
-import { ITEM_STATUS } from "@/lib/constants";
+import { ImageOff, User } from "lucide-react";
+import { formatPrice, formatRelativeTime } from "@/lib/format";
+import { CATEGORY_LABEL, ITEM_STATUS } from "@/lib/constants";
 import type { ItemWithSeller } from "@/lib/types";
 
 export function ItemCard({ item }: { item: ItemWithSeller }) {
   const soldOut = item.status === "sold";
 
   return (
-    <Link href={`/items/${item.id}`} className="group block">
-      {/* 画像エリア:四角い枠は使わず、薄緑の水彩にじみの上に画像を載せる */}
-      <div className="relative aspect-square w-full">
-        {/* 水彩のにじみ背景(不規則マスク) */}
-        <div className="wc-bleed absolute inset-0 bg-gradient-to-br from-brand-lighter/70 via-brand-pale to-brand-mist" />
-        {/* 画像本体は少し内側に置き、にじみが縁から覗くようにする */}
-        <div className="absolute inset-[7%] overflow-hidden rounded-[1.25rem] bg-white shadow-sm ring-1 ring-black/5">
-          {item.image_url ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={item.image_url}
-              alt={item.title}
-              className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
-            />
-          ) : (
-            <div className="flex h-full w-full items-center justify-center text-brand/40">
-              <svg
-                className="h-12 w-12"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={1.5}
-                  d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 5.25h16.5a1.5 1.5 0 011.5 1.5v10.5a1.5 1.5 0 01-1.5 1.5H3.75a1.5 1.5 0 01-1.5-1.5V6.75a1.5 1.5 0 011.5-1.5z"
-                />
-              </svg>
-            </div>
-          )}
-          {soldOut && (
-            <>
-              <div className="absolute inset-0 bg-white/55" />
-              <span className="absolute left-2 top-2 rounded-md bg-brand-dark/80 px-2 py-0.5 text-xs font-medium text-white">
-                {ITEM_STATUS.sold}
-              </span>
-            </>
-          )}
-        </div>
+    <Link
+      href={`/items/${item.id}`}
+      className="ds-card group flex flex-col overflow-hidden transition duration-200 hover:-translate-y-[3px] hover:shadow-[0_16px_34px_-18px_rgba(95,129,40,.4)]"
+    >
+      {/* 画像 */}
+      <div className="relative aspect-square w-full overflow-hidden bg-[#f3f4ef]">
+        {item.image_url ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={item.image_url}
+            alt={item.title}
+            className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
+          />
+        ) : (
+          <div
+            className="flex h-full w-full items-center justify-center text-[#b3c585]"
+            style={{ background: "linear-gradient(135deg,#f3f6ec,#e9efdb)" }}
+          >
+            <ImageOff size={46} strokeWidth={1.5} />
+          </div>
+        )}
+        <span className="tag absolute bottom-2.5 left-2.5 bg-white/90">
+          {CATEGORY_LABEL[item.category]}
+        </span>
+        {soldOut && (
+          <>
+            <div className="absolute inset-0 bg-white/55" />
+            <span className="tag tag-gray absolute left-2.5 top-2.5">
+              {ITEM_STATUS.sold}
+            </span>
+          </>
+        )}
       </div>
 
-      <div className="px-1.5 pt-2">
-        <p className="line-clamp-2 text-sm leading-snug text-gray-800">
+      {/* 本文 */}
+      <div className="flex flex-1 flex-col px-3.5 pb-3.5 pt-3">
+        <p className="clamp-2 min-h-[2.7em] text-sm font-medium leading-snug text-ink">
           {item.title}
         </p>
-        <p className="mt-0.5 font-bold text-brand-dark">
+        <p className="font-round my-1.5 text-lg font-bold text-ink">
           {formatPrice(item.price)}
         </p>
+        <div className="mt-auto flex items-center gap-1.5 text-xs text-ink-soft">
+          <User size={13} className="text-brand" />
+          <span className="truncate">{item.seller.full_name}</span>
+          <span className="ml-auto whitespace-nowrap text-ink-faint">
+            {formatRelativeTime(item.created_at)}
+          </span>
+        </div>
       </div>
     </Link>
   );

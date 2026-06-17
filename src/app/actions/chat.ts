@@ -65,7 +65,10 @@ export async function sendMessage(roomId: string, messageText: string) {
     sender_id: user.id,
     message_text: trimmed.slice(0, 2000),
   });
-  if (error) return { error: error.message };
+  if (error) {
+    console.error("メッセージ送信に失敗:", error.message);
+    return { error: "メッセージの送信に失敗しました。" };
+  }
 
   revalidatePath(`/chat/${roomId}`);
   revalidatePath("/chat");

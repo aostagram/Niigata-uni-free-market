@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Camera, Sprout, ArrowRight } from "lucide-react";
 import { createItem } from "@/app/actions/items";
 import { compressToWebp, uploadWebp, removeItemImage } from "@/lib/upload";
 import { CATEGORIES } from "@/lib/constants";
@@ -78,12 +79,11 @@ export function AddItemForm({ userId }: { userId: string }) {
   const thumbnail = image?.url ?? preview;
 
   return (
-    <form action={handleSubmit} className="space-y-6">
-      {/* 画像 */}
-      <div>
-        <label className="mb-2 block text-sm font-medium">商品画像</label>
+    <form action={handleSubmit} className="space-y-5">
+      {/* 商品写真 */}
+      <Section title="商品写真">
         {thumbnail ? (
-          <div className="relative h-40 w-40 overflow-hidden rounded-lg border border-gray-200">
+          <div className="relative h-44 w-44 overflow-hidden rounded-2xl border border-line">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={thumbnail} alt="" className="h-full w-full object-cover" />
             {busy && (
@@ -98,16 +98,26 @@ export function AddItemForm({ userId }: { userId: string }) {
               <button
                 type="button"
                 onClick={clearImage}
-                className="absolute right-1 top-1 flex h-6 w-6 items-center justify-center rounded-full bg-black/60 text-sm text-white"
+                className="absolute right-1.5 top-1.5 flex h-7 w-7 items-center justify-center rounded-full bg-black/55 text-sm text-white"
               >
                 ×
               </button>
             )}
           </div>
         ) : (
-          <label className="flex h-40 w-40 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 text-gray-400 hover:border-brand hover:text-brand">
-            <span className="text-3xl leading-none">＋</span>
-            <span className="mt-1 text-xs">写真を選ぶ</span>
+          <label
+            className="flex h-44 w-44 cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-brand text-center"
+            style={{ background: "rgba(132,173,63,.04)" }}
+          >
+            <span className="mb-2.5 flex h-14 w-14 items-center justify-center rounded-full bg-panel">
+              <Camera size={26} className="text-brand-deep" />
+            </span>
+            <span className="font-round text-sm font-bold text-brand-deep">
+              写真を追加する
+            </span>
+            <span className="mt-1 text-[11px] text-ink-soft">
+              クリックして選択
+            </span>
             <input
               type="file"
               accept="image/*"
@@ -118,81 +128,83 @@ export function AddItemForm({ userId }: { userId: string }) {
           </label>
         )}
         {image && !busy && (
-          <p className="mt-2 text-xs text-green-700">
+          <p className="mt-2.5 text-xs text-brand-deep">
             最適化完了: WebP / {Math.round(image.size / 1024)}KB に圧縮しました。
           </p>
         )}
-        <p className="mt-1 text-xs text-gray-500">
+        <p className="mt-1 text-xs text-ink-soft">
           ※ 長辺800px・WebP・約100KB以下に自動圧縮されます（通信量・保存容量の節約のため）。
         </p>
-      </div>
+      </Section>
 
-      {/* 商品名 */}
-      <Field label="商品名" required>
-        <input
-          name="title"
-          required
-          maxLength={100}
-          placeholder="例: 微分積分学I 教科書 / Switch ソフト〇〇"
-          className="input"
-        />
-      </Field>
-
-      {/* カテゴリ */}
-      <Field label="カテゴリ" required>
-        <select name="category" required defaultValue="" className="input">
-          <option value="" disabled>
-            選択してください
-          </option>
-          {CATEGORIES.map((c) => (
-            <option key={c.value} value={c.value}>
-              {c.label}
-            </option>
-          ))}
-        </select>
-      </Field>
-
-      {/* 価格 */}
-      <Field label="価格">
-        <label className="mb-2 flex items-center gap-2 text-sm">
-          <input
-            type="checkbox"
-            checked={free}
-            onChange={(e) => setFree(e.target.checked)}
-          />
-          無料で譲る
-        </label>
-        {!free && (
-          <div className="flex items-center gap-2">
-            <span className="text-gray-500">¥</span>
+      {/* 商品情報 */}
+      <Section title="商品情報">
+        <div className="space-y-5">
+          <Field label="商品名" required>
             <input
-              name="price"
-              type="number"
-              min={0}
-              step={10}
-              defaultValue={0}
-              className="input"
+              name="title"
+              required
+              maxLength={100}
+              placeholder="例: 微分積分学I 教科書 / Switch ソフト〇〇"
+              className="field"
             />
-          </div>
-        )}
-        <p className="mt-1 text-xs text-gray-500">
-          ※ お金のやり取りはキャンパスでの対面受け渡し時に行ってください。
-        </p>
-      </Field>
+          </Field>
 
-      {/* 説明 */}
-      <Field label="商品の説明">
-        <textarea
-          name="description"
-          rows={5}
-          maxLength={2000}
-          placeholder="状態、購入時期、受け渡し場所の希望などを書きましょう。"
-          className="input resize-none"
-        />
-      </Field>
+          <Field label="カテゴリ" required>
+            <select name="category" required defaultValue="" className="field">
+              <option value="" disabled>
+                選択してください
+              </option>
+              {CATEGORIES.map((c) => (
+                <option key={c.value} value={c.value}>
+                  {c.label}
+                </option>
+              ))}
+            </select>
+          </Field>
+
+          <Field label="価格">
+            <label className="mb-2 flex items-center gap-2 text-sm text-ink">
+              <input
+                type="checkbox"
+                checked={free}
+                onChange={(e) => setFree(e.target.checked)}
+                className="accent-[color:var(--brand)]"
+              />
+              無料で譲る
+            </label>
+            {!free && (
+              <div className="flex items-center gap-2">
+                <span className="text-ink-soft">¥</span>
+                <input
+                  name="price"
+                  type="number"
+                  min={0}
+                  step={10}
+                  defaultValue={0}
+                  className="field"
+                />
+              </div>
+            )}
+            <p className="mt-1 text-xs text-ink-soft">
+              ※ お金のやり取りはキャンパスでの対面受け渡し時に行ってください。
+            </p>
+          </Field>
+
+          <Field label="商品の説明">
+            <textarea
+              name="description"
+              rows={5}
+              maxLength={2000}
+              placeholder="状態、購入時期、受け渡し場所の希望などを書きましょう。"
+              className="field resize-none"
+            />
+          </Field>
+        </div>
+      </Section>
 
       {error && (
-        <p className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">
+        <p className="rounded-xl border border-coral-line bg-coral-bg px-4 py-3 text-sm text-coral">
           {error}
         </p>
       )}
@@ -200,26 +212,30 @@ export function AddItemForm({ userId }: { userId: string }) {
       <button
         type="submit"
         disabled={submitting || busy}
-        className="w-full rounded-xl bg-brand py-3 font-medium text-white hover:bg-brand-dark disabled:opacity-60"
+        className="btn btn-primary w-full py-4 text-base"
       >
         {submitting ? "出品中…" : "出品する"}
+        {!submitting && <ArrowRight size={18} />}
       </button>
-
-      <style jsx>{`
-        :global(.input) {
-          width: 100%;
-          border-radius: 0.75rem;
-          border: 1px solid #d1d5db;
-          background: #fff;
-          padding: 0.625rem 0.875rem;
-          font-size: 0.875rem;
-          outline: none;
-        }
-        :global(.input:focus) {
-          border-color: var(--brand);
-        }
-      `}</style>
     </form>
+  );
+}
+
+function Section({
+  title,
+  children,
+}: {
+  title: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="ds-card p-6">
+      <div className="heading-row mb-4">
+        <Sprout size={19} className="text-brand" />
+        <h2 className="font-round text-lg font-bold text-ink">{title}</h2>
+      </div>
+      {children}
+    </div>
   );
 }
 
@@ -259,9 +275,9 @@ function Field({
 }) {
   return (
     <div>
-      <label className="mb-2 block text-sm font-medium">
+      <label className="mb-2 block text-sm font-medium text-ink">
         {label}
-        {required && <span className="ml-1 text-red-500">*</span>}
+        {required && <span className="ml-1 text-coral">*</span>}
       </label>
       {children}
     </div>

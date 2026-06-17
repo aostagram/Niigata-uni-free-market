@@ -32,19 +32,21 @@ export function SellerControls({
   }
 
   return (
-    <div className="rounded-xl border border-gray-200 bg-white p-4">
-      <p className="mb-3 text-sm font-medium text-gray-700">出品者メニュー</p>
-      <div className="mb-3 flex flex-wrap gap-2">
+    <div className="ds-card p-5">
+      <p className="font-round mb-3 text-sm font-bold text-brand-deep">
+        出品者メニュー
+      </p>
+      <div className="mb-3 flex flex-wrap gap-2.5">
         {(Object.keys(ITEM_STATUS) as ItemStatus[]).map((s) => (
           <button
             key={s}
             type="button"
             disabled={pending}
             onClick={() => changeStatus(s)}
-            className={`rounded-lg border px-3 py-1.5 text-sm transition ${
+            className={`font-round rounded-full border px-4 py-2 text-sm transition ${
               current === s
-                ? "border-brand bg-brand text-white"
-                : "border-gray-300 bg-white text-gray-700 hover:border-gray-400"
+                ? "border-brand bg-panel font-bold text-brand-deep"
+                : "border-line bg-white text-ink-soft hover:border-brand"
             }`}
           >
             {ITEM_STATUS[s]}
@@ -55,7 +57,7 @@ export function SellerControls({
         type="button"
         onClick={handleDelete}
         disabled={pending}
-        className="text-sm text-red-600 hover:underline"
+        className="text-sm text-coral hover:underline"
       >
         出品を削除する
       </button>

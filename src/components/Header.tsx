@@ -1,78 +1,83 @@
 import Link from "next/link";
+import { Bell, Plus } from "lucide-react";
 import { requireProfile } from "@/lib/auth";
 import { signOut } from "@/app/actions/auth";
+import { Logo } from "@/components/Logo";
 
 export async function Header() {
   const profile = await requireProfile();
 
   return (
-    <header className="sticky top-0 z-20 border-b border-brand/10 bg-white/85 backdrop-blur">
-      {/* 上端の水彩ウォッシュ(淡い深緑→黄緑) */}
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-full bg-gradient-to-r from-brand-pale/60 via-transparent to-brand-lighter/30" />
-      <div className="relative mx-auto flex max-w-3xl items-center gap-3 px-4 py-3">
-        <Link href="/" className="flex items-center gap-2 font-bold">
-          {/* ロゴを水彩のにじみ円に載せる */}
-          <span className="wc-bleed flex h-9 w-9 items-center justify-center bg-gradient-to-br from-brand-lighter to-brand">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo.svg" alt="新大フリマ" className="h-6 w-6" />
-          </span>
-          <span className="flex flex-col leading-none">
-            <span className="text-brand-dark">新大フリマ</span>
-            <span className="hidden text-[9px] font-medium tracking-wide text-brand/60 sm:inline">
-              NIIGATA UNIVERSITY FLEA MARKET
-            </span>
-          </span>
+    <header
+      className="sticky top-0 z-30 border-b border-line-soft"
+      style={{ background: "rgba(251,253,247,.86)", backdropFilter: "blur(10px)" }}
+    >
+      <div className="mx-auto flex max-w-3xl items-center gap-3 px-4 py-3">
+        <Link href="/" aria-label="新大フリマ ホーム">
+          <Logo />
         </Link>
 
-        <nav className="ml-auto flex items-center gap-1 text-sm">
-          <Link
-            href="/chat"
-            className="rounded-lg px-3 py-2 text-gray-700 hover:bg-brand-pale/70"
-          >
-            メッセージ
+        {/* desktop nav */}
+        <nav className="ml-auto hidden items-center gap-7 md:flex">
+          <Link href="/#getting-started" className="nav-link">
+            はじめての方へ
           </Link>
-          <Link
-            href="/items/new"
-            className="rounded-full bg-gradient-to-br from-brand-light to-brand-dark px-4 py-2 font-medium text-white shadow-sm transition hover:brightness-105"
-          >
-            出品する
+          <Link href="/#guide" className="nav-link">
+            ガイド
           </Link>
-          <div className="group relative">
-            <button className="flex items-center rounded-full">
-              {profile.avatar_url ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={profile.avatar_url}
-                  alt={profile.full_name}
-                  className="h-8 w-8 rounded-full object-cover"
-                />
-              ) : (
-                <span className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-200 text-sm font-medium">
-                  {profile.full_name.charAt(0)}
-                </span>
-              )}
-            </button>
-            <div className="invisible absolute right-0 top-full z-10 w-44 rounded-xl border border-gray-200 bg-white py-1 opacity-0 shadow-lg transition group-hover:visible group-hover:opacity-100">
-              <div className="border-b border-gray-100 px-4 py-2 text-xs text-gray-500">
-                {profile.full_name}
-              </div>
-              <Link
-                href="/profile"
-                className="block px-4 py-2 text-sm hover:bg-gray-50"
-              >
-                マイページ
-              </Link>
-              <form action={signOut}>
-                <button
-                  type="submit"
-                  className="block w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-gray-50"
-                >
-                  ログアウト
-                </button>
-              </form>
-            </div>
-          </div>
+          <Link href="/#faq" className="nav-link">
+            よくある質問
+          </Link>
         </nav>
+
+        <Link
+          href="/notifications"
+          aria-label="通知"
+          className="relative ml-auto p-1.5 text-brand-deep md:ml-0"
+        >
+          <Bell size={22} />
+        </Link>
+
+        <Link href="/items/new" className="btn btn-primary px-5 py-2.5 text-sm">
+          <Plus size={17} />
+          <span className="hidden sm:inline">出品する</span>
+        </Link>
+
+        <div className="group relative">
+          <button className="flex items-center rounded-full" aria-label="アカウント">
+            {profile.avatar_url ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={profile.avatar_url}
+                alt={profile.full_name}
+                className="h-9 w-9 rounded-full object-cover ring-2 ring-white"
+              />
+            ) : (
+              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-panel-2 text-sm font-bold text-brand-deep">
+                {profile.full_name.charAt(0)}
+              </span>
+            )}
+          </button>
+          <div className="invisible absolute right-0 top-full z-10 w-44 overflow-hidden rounded-xl border border-line bg-white py-1 opacity-0 shadow-lg transition group-hover:visible group-hover:opacity-100">
+            <div className="border-b border-line-soft px-4 py-2 text-xs text-ink-faint">
+              {profile.full_name}
+            </div>
+            <Link
+              href="/profile"
+              className="block px-4 py-2 text-sm hover:bg-panel"
+            >
+              マイページ
+            </Link>
+            <form action={signOut}>
+              <button
+                type="submit"
+                className="block w-full px-4 py-2 text-left text-sm text-coral hover:bg-panel"
+              >
+                ログアウト
+              </button>
+            </form>
+          </div>
+        </div>
       </div>
     </header>
   );

@@ -1,4 +1,34 @@
 (() => {
+  // 取引に使うGoogleフォーム/スプレッドシートのリンク（正本はここに集約）
+  const LINKS = {
+    sellerListing:
+      "https://docs.google.com/forms/d/e/1FAIpQLScYDNmMtkbsa7-_AXUM2YYeCEsv2PKWHvp3uxKYjuyFcARYag/viewform",
+    buyerInquiry:
+      "https://docs.google.com/forms/d/e/1FAIpQLSfMFlXD-B9aXB3QDq7HK_pfkFrwRBGdqVLn0MROKpnKm2AtTA/viewform",
+    completeSeller: "https://forms.gle/sy2DU1ZaCvJWQQJb6",
+    completeBuyer:
+      "https://docs.google.com/forms/d/e/1FAIpQLSc9PQKQ67HaV1B4d4nLliJy7JpH7B6ib19VoZ_J_LvymQoWhw/viewform",
+    adminSheet:
+      "https://docs.google.com/spreadsheets/d/1raQMxjZ3HGdq0f-CBxsNw1Q27bviHkpxU4SNoxa7bgY/edit",
+  };
+  window.GATAFY_LINKS = LINKS;
+
+  // data-form="<key>" を持つ要素を、対応するフォームを新規タブで開くように配線する
+  document.querySelectorAll("[data-form]").forEach((el) => {
+    const url = LINKS[el.dataset.form];
+    if (!url) return;
+    if (el.tagName === "A") {
+      el.setAttribute("href", url);
+      el.setAttribute("target", "_blank");
+      el.setAttribute("rel", "noopener noreferrer");
+    } else {
+      el.addEventListener("click", () => {
+        window.open(url, "_blank", "noopener");
+      });
+      el.style.cursor = "pointer";
+    }
+  });
+
   const toggle = document.querySelector("[data-menu-toggle]");
   const panel = document.querySelector("[data-mobile-panel]");
 

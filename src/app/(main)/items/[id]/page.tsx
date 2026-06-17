@@ -1,5 +1,14 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import {
+  ArrowLeft,
+  ImageOff,
+  BadgeCheck,
+  Sprout,
+  MapPin,
+  Handshake,
+  TriangleAlert,
+} from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentUser } from "@/lib/auth";
 import { formatPrice, formatRelativeTime } from "@/lib/format";
@@ -28,88 +37,146 @@ export default async function ItemDetailPage({
   const isOwner = user?.id === item.user_id;
 
   return (
-    <div>
-      <Link
-        href="/"
-        className="mb-4 inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700"
-      >
-        ← 一覧にもどる
+    <div className="fade-up">
+      <Link href="/" className="nav-link mb-4 inline-flex items-center gap-2">
+        <ArrowLeft size={18} />
+        商品一覧に戻る
       </Link>
 
-      {/* 画像 */}
-      <div className="overflow-hidden rounded-2xl bg-gray-100">
-        {item.image_url ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={item.image_url}
-            alt={item.title}
-            className="aspect-square w-full object-cover sm:aspect-video"
-          />
-        ) : (
-          <div className="flex aspect-square w-full items-center justify-center text-gray-300">
-            画像なし
-          </div>
-        )}
-      </div>
-
-      {/* 本文 */}
-      <div className="mt-5">
-        {item.status === "sold" && (
-          <span className="mb-2 inline-block rounded-md bg-gray-800 px-2 py-0.5 text-xs font-medium text-white">
-            {ITEM_STATUS.sold}
-          </span>
-        )}
-        <h1 className="text-xl font-bold">{item.title}</h1>
-        <p className="mt-1 text-2xl font-bold text-gray-900">
-          {formatPrice(item.price)}
-        </p>
-
-        <div className="mt-3 flex flex-wrap gap-2 text-xs">
-          <span className="rounded-full bg-gray-100 px-3 py-1 text-gray-600">
-            {CATEGORY_LABEL[item.category]}
-          </span>
-        </div>
-
-        {item.description && (
-          <p className="mt-4 whitespace-pre-wrap text-sm leading-relaxed text-gray-700">
-            {item.description}
-          </p>
-        )}
-
-        {/* 出品者 */}
-        <div className="mt-5 flex items-center gap-3 border-t border-gray-200 pt-4">
-          {item.seller.avatar_url ? (
+      <div className="grid items-start gap-6 sm:grid-cols-2">
+        {/* 画像 */}
+        <div
+          className="relative overflow-hidden rounded-[var(--radius-ds)] border border-line"
+          style={{ boxShadow: "var(--shadow-card)" }}
+        >
+          {item.image_url ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
-              src={item.seller.avatar_url}
-              alt={item.seller.full_name}
-              className="h-9 w-9 rounded-full object-cover"
+              src={item.image_url}
+              alt={item.title}
+              className="aspect-square w-full bg-[#f3f4ef] object-cover"
             />
           ) : (
-            <span className="flex h-9 w-9 items-center justify-center rounded-full bg-gray-200 text-sm font-medium">
-              {item.seller.full_name.charAt(0)}
-            </span>
+            <div
+              className="flex aspect-square w-full items-center justify-center text-[#b3c585]"
+              style={{ background: "linear-gradient(135deg,#f3f6ec,#e9efdb)" }}
+            >
+              <ImageOff size={84} strokeWidth={1.2} />
+            </div>
           )}
-          <div className="text-sm">
-            <p className="font-medium">{item.seller.full_name}</p>
-            <p className="text-xs text-gray-500">
-              {formatRelativeTime(item.created_at)}に出品
+        </div>
+
+        {/* 情報 */}
+        <div>
+          {item.status === "sold" && (
+            <span className="tag tag-gray mb-3">{ITEM_STATUS.sold}</span>
+          )}
+          <span className="tag mb-3 ml-1 align-middle">
+            {CATEGORY_LABEL[item.category]}
+          </span>
+          <h1 className="font-round text-2xl font-bold leading-[1.5] text-ink">
+            {item.title}
+          </h1>
+          <div className="mt-4 flex items-center gap-3">
+            <span className="font-round text-3xl font-bold text-ink">
+              {formatPrice(item.price)}
+            </span>
+            <span className="text-[13px] text-ink-soft">（送料込み）</span>
+          </div>
+
+          {/* 出品者情報 */}
+          <div className="ds-card mt-5 p-5">
+            <div className="heading-row mb-3.5">
+              <Sprout size={18} className="text-brand" />
+              <span className="font-round text-[15px] font-bold text-brand-deep">
+                出品者情報
+              </span>
+            </div>
+            <div className="flex items-center gap-3.5">
+              {item.seller.avatar_url ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={item.seller.avatar_url}
+                  alt={item.seller.full_name}
+                  className="h-14 w-14 rounded-full object-cover"
+                />
+              ) : (
+                <span className="avatar h-14 w-14 text-xl font-bold">
+                  {item.seller.full_name.charAt(0)}
+                </span>
+              )}
+              <div className="min-w-0">
+                <p className="font-round truncate text-[17px] font-bold text-ink">
+                  {item.seller.full_name}
+                </p>
+                <span className="tag mt-1 bg-panel">
+                  <BadgeCheck size={13} />
+                  学生認証済み
+                </span>
+                <p className="mt-1.5 text-xs text-ink-soft">
+                  {formatRelativeTime(item.created_at)}に出品
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* アクション */}
+          <div className="mt-5">
+            {isOwner ? (
+              <SellerControls itemId={item.id} status={item.status} />
+            ) : (
+              <ContactButton itemId={item.id} />
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* 説明 */}
+      {item.description && (
+        <div className="ds-card relative mt-6 p-6">
+          <div className="heading-row mb-3.5">
+            <Sprout size={18} className="text-brand" />
+            <h2 className="font-round text-[17px] font-bold text-brand-deep">
+              商品の説明
+            </h2>
+          </div>
+          <p className="whitespace-pre-wrap text-[14.5px] leading-[1.95] text-ink">
+            {item.description}
+          </p>
+          <Sprout
+            size={26}
+            className="absolute bottom-5 right-6 text-brand opacity-50"
+          />
+        </div>
+      )}
+
+      {/* 受け渡し */}
+      <div className="ds-card mt-6 p-6">
+        <div className="heading-row mb-3">
+          <Sprout size={18} className="text-brand" />
+          <h3 className="font-round text-[16px] font-bold text-brand-deep">
+            受け渡しについて
+          </h3>
+        </div>
+        <div className="flex items-start gap-2.5">
+          <MapPin size={20} className="mt-0.5 shrink-0 text-brand" />
+          <div>
+            <p className="flex items-center gap-2 font-medium text-ink">
+              <Handshake size={18} className="text-brand" />
+              キャンパス内での手渡し
+            </p>
+            <p className="mt-1 text-[13px] leading-[1.7] text-ink-soft">
+              受け渡しはキャンパス内など安全な場所で。日時や詳しい場所は取引メッセージで相談しましょう。支払いは対面で行ってください。
             </p>
           </div>
         </div>
+      </div>
 
-        {/* アクション */}
-        <div className="mt-6">
-          {isOwner ? (
-            <SellerControls itemId={item.id} status={item.status} />
-          ) : (
-            <ContactButton itemId={item.id} />
-          )}
-        </div>
-
-        <p className="mt-4 text-center text-xs text-gray-400">
-          受け渡しはキャンパス内など安全な場所で。支払いは対面で行ってください。
-        </p>
+      <div className="mt-6 text-center">
+        <span className="nav-link inline-flex items-center gap-1.5 text-ink-faint">
+          <TriangleAlert size={15} />
+          この商品を通報する
+        </span>
       </div>
     </div>
   );

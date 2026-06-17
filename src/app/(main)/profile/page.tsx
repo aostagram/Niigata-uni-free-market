@@ -1,3 +1,17 @@
+import Link from "next/link";
+import {
+  Sprout,
+  CheckCircle2,
+  Camera,
+  LogOut,
+  Package,
+  Tag,
+  CircleCheck,
+  Home,
+  MessageSquare,
+  Plus,
+  Bell,
+} from "lucide-react";
 import { requireProfile, getCurrentUser } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { ItemCard } from "@/components/ItemCard";
@@ -17,49 +31,136 @@ export default async function ProfilePage() {
 
   const items = (data ?? []) as unknown as ItemWithSeller[];
 
-  return (
-    <div>
-      <div className="flex items-center gap-4">
-        {profile.avatar_url ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={profile.avatar_url}
-            alt={profile.full_name}
-            className="h-16 w-16 rounded-full object-cover"
-          />
-        ) : (
-          <span className="flex h-16 w-16 items-center justify-center rounded-full bg-gray-200 text-xl font-medium">
-            {profile.full_name.charAt(0)}
-          </span>
-        )}
-        <div className="min-w-0">
-          <h1 className="truncate text-lg font-bold">{profile.full_name}</h1>
-          <p className="truncate text-sm text-gray-500">{user?.email}</p>
-        </div>
-        <form action={signOut} className="ml-auto">
-          <button
-            type="submit"
-            className="rounded-lg border border-gray-300 px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-100"
-          >
-            ログアウト
-          </button>
-        </form>
-      </div>
+  // 実データから集計（ダミー値は使わない）
+  const available = items.filter((i) => i.status === "available").length;
+  const sold = items.filter((i) => i.status === "sold").length;
+  const stats = [
+    { icon: Package, label: "出品した商品", value: `${items.length}` },
+    { icon: Tag, label: "販売中", value: `${available}` },
+    { icon: CircleCheck, label: "取引完了", value: `${sold}` },
+  ];
+  const quickMenu = [
+    { icon: Home, label: "ホーム", href: "/" },
+    { icon: MessageSquare, label: "メッセージ", href: "/chat" },
+    { icon: Plus, label: "出品する", href: "/items/new" },
+    { icon: Bell, label: "通知", href: "/notifications" },
+  ];
 
-      <h2 className="mb-3 mt-8 text-sm font-medium text-gray-700">
-        出品した商品({items.length})
-      </h2>
-      {items.length === 0 ? (
-        <p className="rounded-2xl border border-dashed border-gray-300 py-12 text-center text-sm text-gray-500">
-          まだ出品がありません。
-        </p>
-      ) : (
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-          {items.map((item) => (
-            <ItemCard key={item.id} item={item} />
+  return (
+    <div className="fade-up">
+      {/* プロフィールカード */}
+      <div className="ds-card p-6">
+        <div className="heading-row mb-5">
+          <Sprout size={18} className="text-brand" />
+          <span className="font-round text-[15px] font-bold text-brand-deep">
+            プロフィール
+          </span>
+        </div>
+        <div className="flex items-center gap-5">
+          {profile.avatar_url ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={profile.avatar_url}
+              alt={profile.full_name}
+              className="h-[88px] w-[88px] flex-none rounded-full object-cover"
+            />
+          ) : (
+            <span
+              className="flex h-[88px] w-[88px] flex-none items-center justify-center rounded-full"
+              style={{
+                background: "radial-gradient(circle,#eef5dd,#d6e7b6)",
+              }}
+            >
+              <Sprout size={42} className="text-brand-deep" />
+            </span>
+          )}
+          <div className="min-w-0 flex-1">
+            <h1 className="font-round truncate text-2xl font-bold text-ink">
+              {profile.full_name}
+            </h1>
+            <p className="mt-1 truncate text-sm text-ink-soft">{user?.email}</p>
+          </div>
+          <form action={signOut} className="ml-auto self-start">
+            <button type="submit" className="btn btn-ghost px-4 py-2.5 text-sm">
+              <LogOut size={15} />
+              ログアウト
+            </button>
+          </form>
+        </div>
+
+        <div className="ds-panel mt-5 flex flex-col gap-3.5 p-5 sm:flex-row sm:gap-8">
+          {[
+            ["学生認証済み", "新潟大学アカウントでログインしています"],
+            ["大学メール認証済み", "新潟大学のメールアドレスで登録しています"],
+          ].map(([title, desc]) => (
+            <div key={title} className="flex gap-3">
+              <CheckCircle2 size={24} className="shrink-0 text-brand" />
+              <div>
+                <p className="font-round text-sm font-bold text-brand-deep">
+                  {title}
+                </p>
+                <p className="mt-0.5 text-xs leading-[1.5] text-ink-soft">
+                  {desc}
+                </p>
+              </div>
+            </div>
           ))}
         </div>
-      )}
+      </div>
+
+      {/* 集計（実データ） */}
+      <div className="ds-card mt-6 grid grid-cols-3 divide-x divide-line-soft">
+        {stats.map((s) => (
+          <div key={s.label} className="flex items-center gap-3 p-4 sm:p-5">
+            <s.icon size={24} strokeWidth={1.8} className="text-brand" />
+            <div>
+              <div className="text-[12px] text-ink-soft">{s.label}</div>
+              <div className="font-round text-xl font-bold text-ink">
+                {s.value}
+                <span className="text-[12px] font-normal text-ink-soft">件</span>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* クイックメニュー */}
+      <div className="mt-4 grid grid-cols-4 gap-3">
+        {quickMenu.map((m) => (
+          <Link
+            key={m.label}
+            href={m.href}
+            className="ds-card flex flex-col items-center gap-2 px-2 py-4 text-center transition hover:-translate-y-0.5"
+          >
+            <m.icon size={24} strokeWidth={1.8} className="text-brand" />
+            <span className="font-round text-[12px] font-bold text-ink">
+              {m.label}
+            </span>
+          </Link>
+        ))}
+      </div>
+
+      {/* 出品した商品 */}
+      <div className="mt-6">
+        <div className="heading-row mb-4">
+          <Camera size={20} className="text-brand-deep" />
+          <h2 className="font-round text-lg font-bold text-ink">
+            出品した商品
+          </h2>
+          <span className="tag ml-1">{items.length}件</span>
+        </div>
+        {items.length === 0 ? (
+          <p className="ds-card border-dashed py-12 text-center text-sm text-ink-soft">
+            まだ出品がありません。
+          </p>
+        ) : (
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+            {items.map((item) => (
+              <ItemCard key={item.id} item={item} />
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

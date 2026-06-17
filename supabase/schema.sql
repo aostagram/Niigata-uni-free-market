@@ -53,6 +53,20 @@ create table if not exists public.messages (
 
 create index if not exists messages_room_idx on public.messages (room_id, created_at);
 
+-- ---------- user_consents(規約・プライバシー同意の証跡) ----------
+-- ログイン時に「いつ・どの版に同意したか」を記録する。
+-- (user_id, terms_version, privacy_version) ごとに1行(初回同意時刻を保持)。
+create table if not exists public.user_consents (
+  id              uuid primary key default gen_random_uuid(),
+  user_id         uuid not null references public.profiles (id) on delete cascade,
+  terms_version   text not null,
+  privacy_version text not null,
+  agreed_at       timestamptz not null default now(),
+  unique (user_id, terms_version, privacy_version)
+);
+
+create index if not exists user_consents_user_idx on public.user_consents (user_id);
+
 -- =============================================================
 -- 新規ユーザー登録時に profiles を自動作成するトリガー
 -- ここで新潟大学ドメイン以外のメールは登録を拒否する(サーバー側の最終防壁)。
@@ -90,10 +104,11 @@ create trigger on_auth_user_created
 -- =============================================================
 -- Row Level Security
 -- =============================================================
-alter table public.profiles   enable row level security;
-alter table public.items      enable row level security;
-alter table public.chat_rooms enable row level security;
-alter table public.messages   enable row level security;
+alter table public.profiles      enable row level security;
+alter table public.items         enable row level security;
+alter table public.chat_rooms    enable row level security;
+alter table public.messages      enable row level security;
+alter table public.user_consents enable row level security;
 
 -- ----- profiles -----
 drop policy if exists "profiles are viewable by authenticated users" on public.profiles;
@@ -164,6 +179,17 @@ create policy "participants can send messages"
         and (r.buyer_id = auth.uid() or r.seller_id = auth.uid())
     )
   );
+
+-- ----- user_consents -----
+drop policy if exists "users can view own consents" on public.user_consents;
+create policy "users can view own consents"
+  on public.user_consents for select
+  to authenticated using (auth.uid() = user_id);
+
+drop policy if exists "users can record own consent" on public.user_consents;
+create policy "users can record own consent"
+  on public.user_consents for insert
+  to authenticated with check (auth.uid() = user_id);
 
 -- =============================================================
 -- リアルタイム(チャット用)
