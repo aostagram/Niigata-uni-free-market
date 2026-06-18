@@ -3,7 +3,7 @@ import { LegalDocumentView } from "@/components/LegalDocumentView";
 import { TERMS } from "@/lib/legal";
 
 export const metadata: Metadata = {
-  title: "利用規約 | 新大フリマ",
+  title: "利用規約 | ガタフィー",
 };
 
 export default function TermsPage() {

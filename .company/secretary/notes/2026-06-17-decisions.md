@@ -20,4 +20,26 @@
 - 注記: 静的サイトのGIS方式(Client IDのみ)と、Next.jsのSupabase OAuth方式(Client ID+Secret+リダイレクトURI)は別物。同じGoogleクライアントを使い回す場合はリダイレクトURIを追加するだけでよい。
 - 作業順の方針: まず機能を動かす(Supabase)→出品/プロフィール/チャット動作確認→その後にガタフィーのデザイン移植(美装)。機能優先。
 
+- 作業保全コミット: きょうの未コミット成果（WebP化・法務名称整合・src/デザイン更新・design-reference素材・scripts/static-site検証群）を144ファイルで `2affc70` にコミットし design-reference-night へpush。除外＝`IMG_1171.heic`（リポジトリ直下の紛れ込み写真）, `scripts/nextextbook/`（6/16ログで無関係なGASと明記）。`.env.local` は .gitignore 済みで未追跡を確認。
+
 - ②手順（独自ドメイン）: gatafy.jp等を取得（お名前.com/Cloudflare等）→Vercelのプロジェクト static-site の Settings→Domains に追加→指示されたDNS（A/CNAME）を登録→検証後に公開URLが独自ドメインに。取得後、承認済みオリジンとconfig.jsのコメントURLも更新要。
+
+## 夕方：Next.jsアプリ起動トラブル対応＋src/のガタフィー改称
+- Supabase復活確認: anon keyのJWT内ref=jtobcykyrxitfrluemfn＝旧プロジェクトと同一。「削除」ではなく「一時停止」で、復元したため同refだった（NXDOMAINはpause中の症状）。REST /rest/v1/items がHTTP200で疎通、.env.local は既に正しい値。dev起動成功。
+- schema.sql 完全冪等化: realtime追加(197行 alter publication ... add table)を pg_publication_tables 存在チェックで囲み、再実行エラー(policy already exists等)を解消。オーナーがSQL Editorで適用成功。
+- 「何回も読み込まれる/デザインがクソ」の主因=**Turbopackキャッシュ破損**。ログにFATAL "Next.js package not found"(version 0.0.0誤検出)が連発、/loginが404ループ→ブラウザ無限リロード＆無スタイル表示。`.next`削除＋dev再起動で復旧（/login HTTP200、panic 0件）。next本体は16.2.6で正常、ディスク3GB空き。
+- 第二の主因=**src/アプリだけ旧ブランド「新大フリマ」のまま**。static-siteは改称済みだがNext.js側16箇所が未改称で、見慣れたガタフィーと違う＝「最悪」の正体だった。
+- src/ 全11ファイルを一括改称: 新大フリマ→ガタフィー / "Niigata univ. Free Market"→"Niigata Free Market"。perlは-Mutf8必須（日本語パターンがUTF-8解釈されず最初失敗→付与で解決）。残存ゼロ・tsc --noEmitクリーン。
+- favicon(src/app/icon.svg)も旧「新」グリフ＋濃緑#0b7a4b→ガタフィー頭文字「ガ」＋ブランド緑グラデに刷新。login の©2024→2026。
+- 重要な気づき: src/アプリは元々水彩グリーンの完成度高いデザイン(globals.css: olive/sage配色・ds-card・wc-soft・Zen Maru Gothic)を保有。「デザイン移植が必要」ではなく「クラッシュ＋旧ブランド表示」が問題だった。LP風(static-site)の campus-hero実写・明朝・全面水彩への寄せはオーナー確認後に別途検討。
+
+## 夜：B = src/全画面をガタフィーLPの見た目へ寄せる（デザイン移植）
+- 方針: 個別画面のマークアップ全書き換え(高リスク)ではなく、globals.css のデザインシステムを差し替えて全画面に一括反映＋主要画面(login/home hero/Header/Logo/Footer)を個別調整。
+- globals.css: ①フォントをLP基調の明朝(Yu Mincho/Hiragino Mincho/Noto Serif JP)へ。--font-round/--font-body を --font-serif に統一。--font-latin=Georgia。②body::before に全面固定の水彩背景(/brand/bottom-background-only.webp)。③.wc-page/.wc-soft を透明化し背景を透けさせる。④--card を半透明 rgba(255,255,255,.86)、--radius 18→22、--shadow-card をLPの大きめ影に。
+- layout.tsx: Google Fonts を Zen Maru/Zen Kaku/Comfortaa → Noto Serif JP に差し替え。
+- Logo.tsx: ShoppingBag+テキスト → LPの横長ロックアップ画像 /brand/logo.png（透過PNG）に変更。Header/各所に自動反映。
+- login/page.tsx: 円形ロゴ→logo.pngロックアップ、見出しを明朝大サイズに。未使用 ShoppingBag import 削除。©2026。
+- home (main)/page.tsx: ヒーローをキャンパス実写バナー(/brand/campus-hero.webp)＋下端マスクフェード＋テキスト背後の白グロー＋LPロゴ＋明朝大見出しに刷新。未使用 Truck import 削除。
+- 資産: static-site/assets から bottom-background-only/top-background-only/campus-hero.webp と logo.png を public/brand/ にコピー。
+- 検証: npx tsc --noEmit クリーン。Playwrightで /login・/terms 撮影＝明朝+水彩+半透明カード+LPロゴで統一を確認。保護ルート(/ /items/new /profile)は307でエラーなくコンパイル。認証必須画面(home/items/chat/profile/notifications等)は共有クラス(ds-card/tag/btn/ds-panel/bubble)経由でLPトークンを自動継承。
+- 次=A: オーナーがブラウザでGoogleログイン→home/出品/プロフィール/チャットを実機確認。

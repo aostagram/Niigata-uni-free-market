@@ -1,0 +1,11 @@
+import { chromium } from 'playwright';
+import { pathToFileURL } from 'url';
+const b = await chromium.launch();
+const p = await b.newPage({ viewport:{width:1280,height:900} });
+const url = pathToFileURL(process.cwd()+'/static-site/index.html').href;
+const r = await p.goto(url, {waitUntil:'networkidle'});
+await p.waitForTimeout(1500);
+await p.screenshot({ path:'/tmp/orig-full.png', fullPage:true });
+await p.screenshot({ path:'/tmp/orig-top.png', fullPage:false });
+console.log('status', r.status());
+await b.close();

@@ -27,5 +27,9 @@ export const requireProfile = cache(async (): Promise<Profile> => {
     .single();
 
   if (!profile) redirect("/login");
+
+  // ニックネーム未設定（＝初回ログイン）はプロフィール作成へ誘導する。
+  if (!(profile as Profile).nickname) redirect("/onboarding");
+
   return profile as Profile;
 });

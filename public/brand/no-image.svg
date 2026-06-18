@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" role="img" aria-label="画像準備中">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f5f8ec"/>
+      <stop offset="1" stop-color="#e7f0d6"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="400" fill="url(#bg)"/>
+  <g transform="translate(200 170)" fill="none" stroke="#9cbf66" stroke-width="10" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M0 34 C0 4 -26 -16 -52 -12 C-46 16 -22 34 0 34 Z"/>
+    <path d="M0 34 C0 0 26 -22 56 -20 C50 12 24 34 0 34 Z"/>
+    <line x1="0" y1="34" x2="0" y2="72"/>
+  </g>
+  <text x="200" y="292" font-family="'Hiragino Mincho ProN','Noto Serif JP',serif" font-size="30" font-weight="700" fill="#7d8a68" text-anchor="middle">画像準備中</text>
+</svg>

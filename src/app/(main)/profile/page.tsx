@@ -15,7 +15,9 @@ import {
 import { requireProfile, getCurrentUser } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { ItemCard } from "@/components/ItemCard";
+import { ProfileForm } from "@/components/ProfileForm";
 import { signOut } from "@/app/actions/auth";
+import { FORMS } from "@/lib/links";
 import type { ItemWithSeller } from "@/lib/types";
 
 export default async function ProfilePage() {
@@ -40,10 +42,15 @@ export default async function ProfilePage() {
     { icon: CircleCheck, label: "取引完了", value: `${sold}` },
   ];
   const quickMenu = [
-    { icon: Home, label: "ホーム", href: "/" },
-    { icon: MessageSquare, label: "メッセージ", href: "/chat" },
-    { icon: Plus, label: "出品する", href: "/items/new" },
-    { icon: Bell, label: "通知", href: "/notifications" },
+    { icon: Home, label: "ホーム", href: "/", external: false },
+    { icon: MessageSquare, label: "メッセージ", href: "/chat", external: false },
+    {
+      icon: Plus,
+      label: "出品する",
+      href: FORMS.sellerListing,
+      external: true,
+    },
+    { icon: Bell, label: "通知", href: "/notifications", external: false },
   ];
 
   return (
@@ -76,9 +83,15 @@ export default async function ProfilePage() {
           )}
           <div className="min-w-0 flex-1">
             <h1 className="font-round truncate text-2xl font-bold text-ink">
-              {profile.full_name}
+              {profile.nickname ?? profile.full_name}
             </h1>
-            <p className="mt-1 truncate text-sm text-ink-soft">{user?.email}</p>
+            {(profile.faculty || profile.grade) && (
+              <div className="mt-1.5 flex flex-wrap gap-1.5">
+                {profile.faculty && <span className="tag">{profile.faculty}</span>}
+                {profile.grade && <span className="tag">{profile.grade}</span>}
+              </div>
+            )}
+            <p className="mt-1.5 truncate text-sm text-ink-soft">{user?.email}</p>
           </div>
           <form action={signOut} className="ml-auto self-start">
             <button type="submit" className="btn btn-ghost px-4 py-2.5 text-sm">
@@ -108,6 +121,25 @@ export default async function ProfilePage() {
         </div>
       </div>
 
+      {/* プロフィール編集（ニックネーム・学年・学部） */}
+      <details className="ds-card group mt-6 p-6">
+        <summary className="font-round flex cursor-pointer list-none items-center gap-2.5 text-[15px] font-bold text-brand-deep [&::-webkit-details-marker]:hidden">
+          <Sprout size={18} className="text-brand" />
+          プロフィールを編集する
+          <span className="ml-auto text-xs font-normal text-ink-faint transition group-open:rotate-180">
+            ▼
+          </span>
+        </summary>
+        <div className="mt-5">
+          <ProfileForm
+            defaultNickname={profile.nickname ?? ""}
+            defaultGrade={profile.grade ?? ""}
+            defaultFaculty={profile.faculty ?? ""}
+            submitLabel="プロフィールを更新する"
+          />
+        </div>
+      </details>
+
       {/* 集計（実データ） */}
       <div className="ds-card mt-6 grid grid-cols-3 divide-x divide-line-soft">
         {stats.map((s) => (
@@ -126,18 +158,33 @@ export default async function ProfilePage() {
 
       {/* クイックメニュー */}
       <div className="mt-4 grid grid-cols-4 gap-3">
-        {quickMenu.map((m) => (
-          <Link
-            key={m.label}
-            href={m.href}
-            className="ds-card flex flex-col items-center gap-2 px-2 py-4 text-center transition hover:-translate-y-0.5"
-          >
-            <m.icon size={24} strokeWidth={1.8} className="text-brand" />
-            <span className="font-round text-[12px] font-bold text-ink">
-              {m.label}
-            </span>
-          </Link>
-        ))}
+        {quickMenu.map((m) => {
+          const cls =
+            "ds-card flex flex-col items-center gap-2 px-2 py-4 text-center transition hover:-translate-y-0.5";
+          const inner = (
+            <>
+              <m.icon size={24} strokeWidth={1.8} className="text-brand" />
+              <span className="font-round text-[12px] font-bold text-ink">
+                {m.label}
+              </span>
+            </>
+          );
+          return m.external ? (
+            <a
+              key={m.label}
+              href={m.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={cls}
+            >
+              {inner}
+            </a>
+          ) : (
+            <Link key={m.label} href={m.href} className={cls}>
+              {inner}
+            </Link>
+          );
+        })}
       </div>
 
       {/* 出品した商品 */}

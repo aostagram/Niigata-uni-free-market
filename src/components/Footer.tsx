@@ -2,9 +2,8 @@ import Link from "next/link";
 import { SERVICE_DISCLAIMER } from "@/lib/constants";
 
 const LINKS: { label: string; href: string }[] = [
-  { label: "はじめての方へ", href: "/#getting-started" },
-  { label: "ガイド", href: "/#guide" },
-  { label: "よくある質問", href: "/#faq" },
+  { label: "商品を探す", href: "/#listings" },
+  { label: "お客様の声", href: "/#voices" },
   { label: "利用規約", href: "/terms" },
   { label: "プライバシーポリシー", href: "/privacy" },
 ];
@@ -12,7 +11,7 @@ const LINKS: { label: string; href: string }[] = [
 export function Footer() {
   return (
     <footer className="mt-12 border-t border-line-soft">
-      <div className="mx-auto max-w-3xl px-4 py-7">
+      <div className="mx-auto max-w-[1180px] px-6 py-7">
         <div className="ds-panel px-4 py-3">
           <p className="text-xs leading-relaxed text-ink-soft">
             {SERVICE_DISCLAIMER}
@@ -31,7 +30,7 @@ export function Footer() {
           ))}
         </div>
         <p className="mt-4 text-center text-xs text-ink-faint">
-          © {new Date().getFullYear()} 新大フリマ — Niigata univ. Free Market
+          © {new Date().getFullYear()} ガタフィー — Niigata Free Market
         </p>
       </div>
     </footer>

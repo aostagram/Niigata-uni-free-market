@@ -1,0 +1,14 @@
+import { chromium } from 'playwright';
+const b = await chromium.launch();
+const m = await b.newPage({ viewport:{width:390,height:844} });
+await m.goto('http://localhost:3000/lp-preview',{waitUntil:'networkidle'});
+await m.waitForTimeout(2000);
+await m.screenshot({ path:'/tmp/m-top.png' });
+await m.evaluate(()=>document.getElementById('listings')?.scrollIntoView());
+await m.waitForTimeout(1200);
+await m.screenshot({ path:'/tmp/m-list.png' });
+await m.goto('http://localhost:3000/stock-preview?id=K002',{waitUntil:'networkidle'});
+await m.waitForTimeout(1500);
+await m.screenshot({ path:'/tmp/m-detail.png' });
+console.log('done');
+await b.close();

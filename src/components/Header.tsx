@@ -1,8 +1,9 @@
 import Link from "next/link";
-import { Bell, Plus } from "lucide-react";
+import { Bell, Plus, MessageSquare } from "lucide-react";
 import { requireProfile } from "@/lib/auth";
 import { signOut } from "@/app/actions/auth";
 import { Logo } from "@/components/Logo";
+import { FORMS } from "@/lib/links";
 
 export async function Header() {
   const profile = await requireProfile();
@@ -12,36 +13,61 @@ export async function Header() {
       className="sticky top-0 z-30 border-b border-line-soft"
       style={{ background: "rgba(251,253,247,.86)", backdropFilter: "blur(10px)" }}
     >
-      <div className="mx-auto flex max-w-3xl items-center gap-3 px-4 py-3">
-        <Link href="/" aria-label="新大フリマ ホーム">
+      <div className="mx-auto flex w-full max-w-[1180px] items-center gap-3 px-6 py-3">
+        <Link
+          href="/"
+          aria-label="ガタフィー ホーム"
+          className="flex items-center gap-2.5"
+        >
           <Logo />
+          <span className="hidden leading-tight sm:block">
+            <span className="font-round block text-[17px] font-bold text-brand-deeper">
+              ガタフィー
+            </span>
+            <span className="block text-[11px] text-brand-deep">
+              新潟発のフリマアプリ
+            </span>
+          </span>
         </Link>
 
         {/* desktop nav */}
         <nav className="ml-auto hidden items-center gap-7 md:flex">
-          <Link href="/#getting-started" className="nav-link">
-            はじめての方へ
+          <Link href="/" className="nav-link">
+            ホーム
           </Link>
-          <Link href="/#guide" className="nav-link">
-            ガイド
+          <Link href="/#listings" className="nav-link">
+            商品を探す
           </Link>
-          <Link href="/#faq" className="nav-link">
-            よくある質問
+          <Link href="/#voices" className="nav-link">
+            お客様の声
           </Link>
         </nav>
 
         <Link
+          href="/chat"
+          aria-label="チャット"
+          className="relative ml-auto p-1.5 text-brand-deep md:ml-0"
+        >
+          <MessageSquare size={22} />
+        </Link>
+
+        <Link
           href="/notifications"
           aria-label="通知"
-          className="relative ml-auto p-1.5 text-brand-deep md:ml-0"
+          className="relative p-1.5 text-brand-deep"
         >
           <Bell size={22} />
         </Link>
 
-        <Link href="/items/new" className="btn btn-primary px-5 py-2.5 text-sm">
+        <a
+          href={FORMS.sellerListing}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="btn btn-primary px-5 py-2.5 text-sm"
+        >
           <Plus size={17} />
           <span className="hidden sm:inline">出品する</span>
-        </Link>
+        </a>
 
         <div className="group relative">
           <button className="flex items-center rounded-full" aria-label="アカウント">

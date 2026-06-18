@@ -1,513 +1,456 @@
 import Link from "next/link";
-import {
-  Sprout,
-  Search,
-  Plus,
-  MapPin,
-  ShieldCheck,
-  Truck,
-  MessageSquare,
-  Handshake,
-  LayoutGrid,
-  BookOpen,
-  Gamepad2,
-  Laptop,
-  Armchair,
-  Shirt,
-  Volleyball,
-  HelpCircle,
-  ChevronDown,
-  LogIn,
-  Sparkles,
-} from "lucide-react";
-import type { LucideIcon } from "lucide-react";
+import { CaseGallery } from "@/components/CaseGallery";
+import { FORMS, buyerInquiryUrl } from "@/lib/links";
+import { fetchInventory, formatStockPrice } from "@/lib/inventory";
+import { getCurrentUser } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
-import { ItemCard } from "@/components/ItemCard";
-import { CATEGORIES } from "@/lib/constants";
-import type { ItemWithSeller } from "@/lib/types";
 
+/** ガタフィー LP（vercel.app トップ）を src/ に完全再現したホーム。 */
 export default async function HomePage({
   searchParams,
 }: {
   searchParams: Promise<{ category?: string; q?: string }>;
 }) {
-  const { category, q } = await searchParams;
-  const supabase = await createClient();
+  await searchParams;
 
-  let query = supabase
-    .from("items")
-    .select("*, seller:profiles!items_user_id_fkey(id, full_name, avatar_url)")
-    .eq("status", "available")
-    .order("created_at", { ascending: false })
-    .limit(60);
+  // 管理スプレッドシートの在庫タブから商品一覧を取得（在庫番号付き）。
+  const inventory = await fetchInventory();
 
-  if (category === "textbook" || category === "game")
-    query = query.eq("category", category);
-  if (q) query = query.ilike("title", `%${q}%`);
-
-  const { data, error } = await query;
-  const items = (data ?? []) as unknown as ItemWithSeller[];
-
-  const heading = q
-    ? `「${q}」の検索結果`
-    : category === "textbook"
-      ? "教科書の出品"
-      : category === "game"
-        ? "ゲームの出品"
-        : "新着の商品";
+  // ログイン中ならフォーム自動入力用の名前・メールを取得（未ログインでも動く）。
+  const user = await getCurrentUser();
+  let buyerName: string | undefined;
+  let buyerEmail: string | undefined;
+  if (user) {
+    const supabase = await createClient();
+    const { data: prof } = await supabase
+      .from("profiles")
+      .select("nickname, full_name, email")
+      .eq("id", user.id)
+      .single();
+    buyerName = prof?.nickname ?? prof?.full_name ?? undefined;
+    buyerEmail = prof?.email ?? user.email ?? undefined;
+  }
 
   return (
-    <div>
+    <div className="lp-home">
       {/* ===== ヒーロー ===== */}
-      <section className="fade-up -mx-4 mb-2 grid items-center gap-8 px-4 py-6 sm:grid-cols-2 sm:py-10">
-        <div>
-          <span className="tag mb-4">
-            <Sprout size={14} />
-            新潟大学の学生限定マーケット
-          </span>
-          <h1 className="font-round text-3xl font-bold leading-[1.35] text-ink sm:text-4xl">
-            新大生の「欲しい」が
+      <section className="hero">
+        <div className="hero-content">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img className="hero-logo" src="/brand/logo.png" alt="ガタフィー" />
+          <p className="eyebrow">新潟大学の学生限定マーケット</p>
+          <h1>
+            新大生だけの、
             <br />
-            <span className="text-brand-deep">きっと見つかる。</span>
+            安心して、すぐ手に入るフリマ。
           </h1>
-          <p className="mt-4 text-[15px] leading-[1.9] text-ink-soft">
-            教科書も、家具も、家電も。学内の仲間どうしで、安心してゆずり合い。キャンパスで手渡しできるから、送料もかかりません。
+          <p className="hero-copy">
+            教科書も、家具も、生活用品も。新潟大学の仲間どうしで、学内の明るい場所を選んで手渡しできます。
           </p>
-
-          {/* 検索(実機能) */}
-          <form action="/" className="mt-6">
-            <div
-              className="flex items-center gap-2.5 rounded-full border border-line bg-white px-5 py-3.5"
-              style={{ boxShadow: "var(--shadow-soft)" }}
-            >
-              <Search size={20} className="shrink-0 text-brand" />
-              <input
-                type="search"
-                name="q"
-                defaultValue={q ?? ""}
-                placeholder="何をお探しですか？（例：教科書、椅子、パソコン）"
-                className="w-full bg-transparent text-[15px] text-ink outline-none placeholder:text-ink-faint"
-              />
-            </div>
-            {category && (
-              <input type="hidden" name="category" value={category} />
-            )}
-          </form>
-
-          <div className="mt-5 flex gap-3">
-            <Link href="#listings" className="btn btn-primary px-7 py-3.5 text-[15px]">
-              <Search size={18} />
+          <div className="hero-actions">
+            <Link className="btn btn-primary" href="#listings">
               商品を探す
             </Link>
-            <Link href="/items/new" className="btn btn-ghost px-6 py-3.5 text-[15px]">
-              <Plus size={18} />
-              出品する
-            </Link>
+            <a
+              className="btn btn-outline"
+              href={FORMS.sellerListing}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              出品を始める
+            </a>
+          </div>
+          <div className="hero-badges" aria-label="サービスの特徴">
+            <span className="badge">学生限定</span>
+            <span className="badge">大学メール認証</span>
+            <span className="badge">学内手渡し</span>
+            <span className="badge">アプリ内決済なし</span>
           </div>
         </div>
+      </section>
 
-        {/* ヒーロービジュアル */}
-        <div className="relative hidden sm:block">
-          <div className="ds-card p-3.5" style={{ transform: "rotate(-1.5deg)" }}>
-            <div className="overflow-hidden rounded-[14px]">
+      {/* ===== 検索：キャンパス × カテゴリ ===== */}
+      <section className="section">
+        <div className="container">
+          <div className="section-head">
+            <div>
+              <p className="eyebrow">新大生に便利な検索</p>
+              <h2>キャンパスとカテゴリから、すぐ探せる。</h2>
+              <p className="lead">
+                実際の待ち合わせスポットを見ながら、安心して取引を始められます。
+              </p>
+            </div>
+            <Link className="btn btn-outline" href="#listings">
+              新着を見る
+            </Link>
+          </div>
+          <div className="grid-2">
+            <article className="paint-card">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/campus.png"
-                alt="新潟大学キャンパス"
-                className="block w-full"
+                className="paint-img"
+                src="/brand/library.webp"
+                alt="新潟大学附属図書館前"
               />
-            </div>
-            <div className="flex items-center gap-2 px-1.5 pb-1 pt-3">
-              <MapPin size={16} className="text-brand" />
-              <span className="text-[13.5px] text-ink-soft">
-                五十嵐キャンパス・旭町キャンパスで受け渡し
-              </span>
-            </div>
-          </div>
-          {/* 浮遊チップ */}
-          <div className="ds-card absolute -bottom-4 -left-5 flex items-center gap-2.5 bg-white px-4 py-3">
-            <span className="flex h-[38px] w-[38px] items-center justify-center rounded-[10px] bg-panel">
-              <ShieldCheck size={20} className="text-brand-deep" />
-            </span>
-            <span className="leading-tight">
-              <span className="block text-xs text-ink-faint">学生認証</span>
-              <span className="font-round block text-sm font-bold text-brand-deep">
-                安心の本人確認
-              </span>
-            </span>
-          </div>
-          <div className="ds-card absolute -right-3 -top-3 flex items-center gap-2 whitespace-nowrap bg-white px-3.5 py-2.5">
-            <Truck size={18} className="text-brand" />
-            <span className="font-round text-[13px] font-bold text-ink">
-              送料0円
-            </span>
-          </div>
-        </div>
-      </section>
-
-      {/* ===== カテゴリから探す ===== */}
-      <section className="mb-9 mt-4">
-        <SectionTitle>カテゴリから探す</SectionTitle>
-        <div className="mt-4 grid grid-cols-4 gap-3 sm:grid-cols-7">
-          {CATEGORY_TILES.map((t) => (
-            <CategoryTile key={t.label} tile={t} active={t.value === category} />
-          ))}
-        </div>
-      </section>
-
-      {/* ===== 取引の流れ（3ステップ） ===== */}
-      <section className="mb-9">
-        <SectionTitle>取引の流れ（3ステップ）</SectionTitle>
-        <div className="ds-panel mt-4 grid gap-3 p-6 sm:grid-cols-3 sm:gap-4">
-          {STEPS.map((s, i) => (
-            <div key={s.title} className="flex items-start gap-3">
-              <span className="font-round flex h-9 w-9 flex-none items-center justify-center rounded-full bg-gradient-to-br from-brand-grad-from to-brand-grad-to text-sm font-bold text-white">
-                {i + 1}
-              </span>
-              <div>
-                <p className="font-round flex items-center gap-1.5 text-[15px] font-bold text-brand-deep">
-                  <s.icon size={17} className="text-brand" />
-                  {s.title}
-                </p>
-                <p className="mt-1 text-[13px] leading-[1.7] text-ink-soft">
-                  {s.desc}
+              <div className="card-body">
+                <span className="tag">五十嵐キャンパス</span>
+                <h3>附属図書館前</h3>
+                <p className="lead">
+                  人目があり、落ち着いて待ち合わせしやすい入口まわり。
                 </p>
               </div>
+            </article>
+            <article className="paint-card">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                className="paint-img"
+                src="/brand/cafeteria.webp"
+                alt="新潟大学第一食堂前"
+              />
+              <div className="card-body">
+                <span className="tag">五十嵐キャンパス</span>
+                <h3>第一食堂前</h3>
+                <p className="lead">
+                  広場があり、手渡し場所として相談しやすいスポット。
+                </p>
+              </div>
+            </article>
+          </div>
+          <div className="category-grid" aria-label="カテゴリ一覧">
+            {CATEGORY_TILES.map((c) => (
+              <Link key={c.label} className="category-tile" href={c.href}>
+                <span className="category-icon">{c.icon}</span>
+                {c.label}
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ===== 新着商品（実データ） ===== */}
+      <section className="section" id="listings">
+        <div className="container">
+          <div className="section-head">
+            <div>
+              <p className="eyebrow">新着商品</p>
+              <h2>新生活にちょうどいいものを、学内で。</h2>
+              <p className="lead">
+                購入・取引完了フォームには、各商品の
+                <b>「在庫番号」</b>を入力してください。
+              </p>
             </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ===== 機能フィルタ ===== */}
-      <div className="mb-7 flex flex-wrap gap-2">
-        <CategoryChip label="すべて" href="/" active={!category} />
-        {CATEGORIES.map((c) => (
-          <CategoryChip
-            key={c.value}
-            label={c.label}
-            href={`/?category=${c.value}`}
-            active={category === c.value}
-          />
-        ))}
-      </div>
-
-      {/* ===== 一覧 ===== */}
-      <section id="listings" className="scroll-mt-20">
-        <div className="mb-4 flex items-end justify-between">
-          <SectionTitle>{heading}</SectionTitle>
-        </div>
-
-        {error && (
-          <div className="ds-panel px-4 py-3 text-sm text-ink-soft">
-            出品の読み込みに失敗しました。Supabase
-            の設定（環境変数・スキーマ）をご確認ください。
-          </div>
-        )}
-
-        {!error && items.length === 0 && (
-          <div className="ds-card border-dashed py-16 text-center">
-            <p className="text-ink-soft">まだ出品がありません。</p>
-            <Link
-              href="/items/new"
-              className="btn btn-primary mt-4 inline-flex px-5 py-2.5 text-sm"
+            <a
+              className="btn btn-outline"
+              href={FORMS.sellerListing}
+              target="_blank"
+              rel="noopener noreferrer"
             >
-              <Plus size={16} />
-              最初の出品をする
-            </Link>
+              出品する
+            </a>
           </div>
-        )}
-
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
-          {items.map((item) => (
-            <ItemCard key={item.id} item={item} />
-          ))}
+          <div className="products-layout">
+            <div className="paint-card visual-fill">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/brand/market-items.webp" alt="フリマ商品イメージ" />
+            </div>
+            <div className="product-grid">
+              {inventory.length > 0
+                ? inventory.map((it) => {
+                    const detail = `/stock/${encodeURIComponent(it.stockId)}`;
+                    return (
+                      <article key={it.stockId} className="product-card">
+                        <Link href={detail} aria-label={`${it.title} の詳細`}>
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            className="product-thumb"
+                            src={it.imageUrl || "/brand/no-image.svg"}
+                            alt={it.title}
+                          />
+                        </Link>
+                        <div className="card-body">
+                          <div className="mb-1 flex flex-wrap items-center gap-1.5">
+                            <span className="tag" style={{ background: "#eef6dd" }}>
+                              在庫番号 {it.stockId}
+                            </span>
+                            {it.condition && (
+                              <span className="tag">{it.condition}</span>
+                            )}
+                            {it.reserved && (
+                              <span
+                                className="tag"
+                                style={{ background: "#fbeae6", color: "#c0563f" }}
+                              >
+                                予約済
+                              </span>
+                            )}
+                          </div>
+                          <Link href={detail}>
+                            <h3>{it.title}</h3>
+                          </Link>
+                          <p className="product-price">
+                            {formatStockPrice(it.price)}
+                          </p>
+                          {it.description && (
+                            <p className="product-meta clamp-2">
+                              {it.description}
+                            </p>
+                          )}
+                          <Link
+                            className="btn btn-ghost mt-3 w-full"
+                            href={detail}
+                          >
+                            くわしく見る
+                          </Link>
+                          <a
+                            className="btn btn-primary mt-2 w-full"
+                            href={buyerInquiryUrl({
+                              stockId: it.stockId,
+                              name: buyerName,
+                              email: buyerEmail,
+                            })}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            購入する
+                          </a>
+                        </div>
+                      </article>
+                    );
+                  })
+                : SAMPLE_PRODUCTS.map((p) => (
+                    <article key={p.title} className="product-card">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img className="product-thumb" src={p.img} alt={p.title} />
+                      <div className="card-body">
+                        <span className="tag">{p.tag}</span>
+                        <h3>{p.title}</h3>
+                        <p className="product-price">{p.price}</p>
+                        <p className="product-meta">{p.meta}</p>
+                        <a
+                          className="btn btn-primary mt-3 w-full"
+                          href={FORMS.buyerInquiry}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          購入する
+                        </a>
+                      </div>
+                    </article>
+                  ))}
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* ===== キャンパスで探す ===== */}
-      <section className="mt-10">
-        <div className="ds-panel grid items-center gap-5 p-6 sm:grid-cols-2 sm:p-7">
-          <div>
-            <SectionTitle deep>キャンパスで探す</SectionTitle>
-            <p className="mt-2.5 text-sm leading-[1.8] text-ink-soft">
-              受け渡ししやすいキャンパスから商品を絞り込めます。
-            </p>
-            <div className="mt-4 flex flex-wrap gap-2.5">
-              {["五十嵐キャンパス", "旭町キャンパス"].map((c) => (
-                <Link
-                  key={c}
-                  href="/"
-                  className="btn btn-ghost px-4 py-2.5 text-sm"
-                >
-                  <MapPin size={15} />
-                  {c}
-                </Link>
+      {/* ===== 新大生だから安心 ===== */}
+      <section className="section">
+        <div className="container">
+          <div className="section-head">
+            <div>
+              <p className="eyebrow">新大生だから安心</p>
+              <h2>決済は挟まず、学内の安全な場所で。</h2>
+              <p className="lead">
+                アプリはマッチングと連絡に徹し、お金と商品の受け渡しは当事者同士で行います。
+              </p>
+            </div>
+          </div>
+          <div className="trust-layout">
+            <div className="trust-list">
+              {TRUST.map((t) => (
+                <article key={t.icon} className="paint-card trust-item">
+                  <div className="trust-icon">{t.icon}</div>
+                  <div>
+                    <h3>{t.title}</h3>
+                    <p className="lead">{t.desc}</p>
+                  </div>
+                </article>
               ))}
+              <p className="guide-strip">
+                安全な取引ガイド：明るく人目のある場所で取引する /
+                夜遅い時間を避ける /
+                金銭トラブルは当事者責任であることを明記する
+              </p>
+            </div>
+            <div className="paint-card visual-fill">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/brand/safety-trust.webp" alt="大学メール認証と安全な取引" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ===== 取引の流れ ===== */}
+      <section className="section">
+        <div className="container">
+          <div className="section-head">
+            <div>
+              <p className="eyebrow">取引の流れ</p>
+              <h2>探す、チャットする、学内で手渡し。</h2>
             </div>
           </div>
           <div
-            className="overflow-hidden rounded-[14px]"
-            style={{ boxShadow: "var(--shadow-soft)" }}
+            className="flow-layout panel"
+            style={{ padding: 28 }}
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/campus.png" alt="キャンパス" className="block w-full" />
+            <div className="paint-card visual-fill">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/brand/transaction-flow.webp" alt="取引の流れ" />
+            </div>
+            <div className="steps">
+              {STEPS.map((s, i) => (
+                <div key={s.title} className="step">
+                  <div className="step-num">{i + 1}</div>
+                  <div>
+                    <h3>{s.title}</h3>
+                    <p className="lead">{s.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ===== 安心・安全バナー ===== */}
-      <section className="mt-7">
-        <div className="ds-panel relative flex items-center gap-5 overflow-hidden p-6 sm:p-7">
-          <div className="flex-1">
-            <SectionTitle deep>安心・安全にご利用いただくために</SectionTitle>
-            <p className="mt-2 text-[13.5px] leading-[1.8] text-ink-soft">
-              新大フリマは、新潟大学の学生のみが利用できる学内限定のフリマアプリです。安全で気持ちのよい取引のために、ルールを守ってご利用ください。
-            </p>
+      {/* ===== お客様の声 ===== */}
+      <section className="section" id="voices">
+        <div className="container">
+          <div className="section-head">
+            <div>
+              <p className="eyebrow">お客様の声</p>
+              <h2>新大生の声を、少しずつ集めています。</h2>
+            </div>
           </div>
-          <ShieldCheck
-            size={96}
-            strokeWidth={1}
-            className="hidden shrink-0 text-[#cdddb0] sm:block"
-          />
+          <div className="grid-3">
+            {VOICES.map((v) => (
+              <article key={v.who} className="voice-card">
+                <p>{v.body}</p>
+                <div className="voice-meta">
+                  <span>{v.who}</span>
+                  <span>{v.what}</span>
+                </div>
+              </article>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* ===== はじめての方へ ===== */}
-      <section id="getting-started" className="mt-12 scroll-mt-20">
-        <SectionTitle deep>はじめての方へ</SectionTitle>
-        <p className="mt-2.5 text-sm leading-[1.8] text-ink-soft">
-          新大フリマは、新潟大学の学生だけが使える学内限定のフリマアプリです。大学のGoogleアカウントでログインするだけで、すぐに使いはじめられます。
-        </p>
-        <div className="mt-4 grid gap-3 sm:grid-cols-3">
-          {GETTING_STARTED.map((g, i) => (
-            <div key={g.title} className="ds-card p-5">
-              <span className="flex h-10 w-10 items-center justify-center rounded-[12px] bg-panel">
-                <g.icon size={20} className="text-brand-deep" />
-              </span>
-              <p className="font-round mt-3 flex items-center gap-2 text-[15px] font-bold text-ink">
-                <span className="text-brand">{i + 1}.</span>
-                {g.title}
-              </p>
-              <p className="mt-1.5 text-[13px] leading-[1.7] text-ink-soft">
-                {g.desc}
-              </p>
+      {/* ===== 取引事例ギャラリー ===== */}
+      <section className="section" id="cases">
+        <div className="container">
+          <div className="section-head">
+            <div>
+              <p className="eyebrow">取引事例ギャラリー</p>
+              <h2>エリア・予算・テイストで絞り込めます。</h2>
             </div>
-          ))}
+          </div>
+          <CaseGallery />
         </div>
       </section>
 
-      {/* ===== ガイド(安全に使うために) ===== */}
-      <section id="guide" className="mt-10 scroll-mt-20">
-        <SectionTitle deep>ガイド（安全に使うために）</SectionTitle>
-        <div className="ds-panel mt-4 grid gap-x-6 gap-y-3.5 p-6 sm:grid-cols-2">
-          {GUIDE.map((g) => (
-            <div key={g} className="flex items-start gap-2.5">
-              <Sparkles size={16} className="mt-0.5 flex-none text-brand" />
-              <p className="text-[13.5px] leading-[1.7] text-ink-soft">{g}</p>
+      {/* ===== CTAバンド ===== */}
+      <section className="section">
+        <div className="container">
+          <div className="cta-band">
+            <div>
+              <h2>新大生だけのフリマを、まずは無料で。</h2>
+              <p>出品・検索・チャット・学内手渡しまで、シンプルに。</p>
             </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ===== よくある質問 ===== */}
-      <section id="faq" className="mt-10 scroll-mt-20">
-        <SectionTitle deep>よくある質問</SectionTitle>
-        <div className="mt-4 space-y-2.5">
-          {FAQ.map((f) => (
-            <details key={f.q} className="ds-card group px-5 py-4">
-              <summary className="font-round flex cursor-pointer list-none items-center gap-2.5 text-[14.5px] font-bold text-ink [&::-webkit-details-marker]:hidden">
-                <HelpCircle size={18} className="flex-none text-brand" />
-                <span className="flex-1">{f.q}</span>
-                <ChevronDown
-                  size={18}
-                  className="flex-none text-ink-faint transition group-open:rotate-180"
-                />
-              </summary>
-              <p className="mt-3 pl-7 text-[13.5px] leading-[1.85] text-ink-soft">
-                {f.a}
-              </p>
-            </details>
-          ))}
+            <a
+              className="btn"
+              href={FORMS.sellerListing}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              出品してみる
+            </a>
+          </div>
         </div>
       </section>
     </div>
   );
 }
 
-/* ---------- 見出し ---------- */
-function SectionTitle({
-  children,
-  deep,
-}: {
-  children: React.ReactNode;
-  deep?: boolean;
-}) {
-  return (
-    <h2
-      className={`heading-row font-round text-lg font-bold ${
-        deep ? "text-brand-deep" : "text-ink"
-      }`}
-    >
-      <Sprout size={18} className="text-brand" />
-      {children}
-    </h2>
-  );
-}
+/* ---------- データ ---------- */
+const CATEGORY_TILES = [
+  { label: "教科書・参考書", icon: "本", href: "/?category=textbook" },
+  { label: "家具・家電", icon: "椅", href: "#listings" },
+  { label: "生活用品", icon: "器", href: "#listings" },
+  { label: "自転車・スポーツ", icon: "輪", href: "#listings" },
+  { label: "服・雑貨", icon: "衣", href: "#listings" },
+  { label: "その他", icon: "他", href: "#listings" },
+] as const;
 
-/* ---------- 機能フィルタ用チップ ---------- */
-function CategoryChip({
-  label,
-  href,
-  active,
-}: {
-  label: string;
-  href: string;
-  active: boolean;
-}) {
-  return (
-    <Link
-      href={href}
-      className={`font-round whitespace-nowrap rounded-full border px-4 py-1.5 text-sm transition ${
-        active
-          ? "border-transparent bg-gradient-to-br from-brand-grad-from to-brand-grad-to text-white shadow-sm"
-          : "border-line bg-white text-ink-soft hover:border-brand"
-      }`}
-    >
-      {label}
-    </Link>
-  );
-}
+const SAMPLE_PRODUCTS = [
+  {
+    img: "/brand/market-items.webp",
+    tag: "本・教科書",
+    title: "教科書（微分積分）",
+    price: "¥1,200",
+    meta: "附属図書館前で手渡し",
+  },
+  {
+    img: "/brand/item-detail.webp",
+    tag: "家具",
+    title: "オフィスチェア",
+    price: "¥2,000",
+    meta: "第一食堂前で相談",
+  },
+  {
+    img: "/brand/market-items.webp",
+    tag: "生活用品",
+    title: "生活雑貨セット",
+    price: "¥600",
+    meta: "当日手渡しOK",
+  },
+] as const;
 
-/* ---------- 取引の流れ ---------- */
+const TRUST = [
+  {
+    icon: "認",
+    title: "大学メールで本人確認",
+    desc: "@mail.cc.niigata-u.ac.jp の学生だけが登録できます。",
+  },
+  {
+    icon: "所",
+    title: "学内の明るい場所で手渡し",
+    desc: "附属図書館前や第一食堂前など、人目のある場所を選べます。",
+  },
+  {
+    icon: "守",
+    title: "ブロック・通報でトラブルを抑える",
+    desc: "不安な相手や禁止商品に対応できる導線を用意します。",
+  },
+] as const;
+
 const STEPS = [
   {
-    icon: Search,
-    title: "さがす",
-    desc: "カテゴリやキーワードから、欲しい商品を見つけます。",
+    title: "商品を探す",
+    desc: "カテゴリやキーワードから欲しい商品を見つけます。",
   },
   {
-    icon: MessageSquare,
-    title: "チャットでやりとり",
-    desc: "出品者にアプリ内チャットで連絡。受け渡し場所と日時を相談。",
+    title: "チャットで相談",
+    desc: "状態、価格、受け渡し場所をメッセージで確認します。",
   },
   {
-    icon: Handshake,
-    title: "キャンパスで受け渡し",
-    desc: "学内の安全な場所で手渡し。送料はかかりません。",
+    title: "学内で手渡し",
+    desc: "人目のあるスポットで対面取引。アプリ内決済はありません。",
   },
 ] as const;
 
-/* ---------- はじめての方へ ---------- */
-const GETTING_STARTED = [
+const VOICES = [
   {
-    icon: LogIn,
-    title: "大学アカウントでログイン",
-    desc: "新潟大学のGoogleアカウント（@mail.cc.niigata-u.ac.jp）でログイン。学生だけが使えます。",
+    body: "教科書を学内で受け取れたので、送料も待ち時間もなく助かりました。",
+    who: "教育学部 2年",
+    what: "教科書購入",
   },
   {
-    icon: Search,
-    title: "ほしいものを探す",
-    desc: "カテゴリやキーワードで検索。気になる商品が見つかったら詳細を確認しましょう。",
+    body: "引っ越し前に椅子を譲れました。チャットで場所を決められるのが安心でした。",
+    who: "工学部 4年",
+    what: "家具出品",
   },
   {
-    icon: Handshake,
-    title: "チャットして受け渡し",
-    desc: "出品者とアプリ内チャットで連絡し、学内の安全な場所で手渡し。送料はかかりません。",
-  },
-] as const;
-
-/* ---------- ガイド ---------- */
-const GUIDE = [
-  "受け渡しは、第一学生食堂前や図書館ラウンジなど、日中の人目のある学内の場所で行いましょう。",
-  "中古品は、状態・使用感・付属品の有無を写真と説明でよく確認してから取引しましょう。",
-  "個人情報の入った機器（PC・スマホ等）は、受け渡し前にデータを必ず消去してください。",
-  "転売目的・営利目的での反復出品や、禁止商品の出品はできません。",
-  "不審な出品やトラブルを見つけたら、無理せず取引を中止し、運営に連絡してください。",
-  "教職員・学外者は利用できません。アカウントの貸与もしないでください。",
-] as const;
-
-/* ---------- よくある質問 ---------- */
-const FAQ = [
-  {
-    q: "誰でも使えますか？",
-    a: "新潟大学に在籍する学生限定です。大学発行のGoogleアカウント（@mail.cc.niigata-u.ac.jp）でログインできる方のみご利用いただけます。教職員・学外者・卒業生はご利用いただけません。",
-  },
-  {
-    q: "送料はかかりますか？",
-    a: "かかりません。本サービスは学内での対面手渡しを前提としています。五十嵐キャンパス・旭町キャンパスなど、受け渡ししやすい場所で直接やりとりします。",
-  },
-  {
-    q: "支払いはどうやって行いますか？",
-    a: "代金の支払い方法は利用者どうしで相談して決めます。運営は代金を預かったり決済を仲介したりしません。受け渡しと支払いは、対面で同時に行うことをおすすめします。",
-  },
-  {
-    q: "出品できないものはありますか？",
-    a: "盗品・偽造品、酒類・たばこ、医薬品、危険物、チケットや金券、個人情報を含むものなどは出品できません。詳しくは利用規約の「禁止商品」をご確認ください。",
-  },
-  {
-    q: "トラブルがあったときは？",
-    a: "まずは無理に取引を進めず中止してください。そのうえで運営にご連絡ください。受け渡しは必ず日中の人目のある学内の場所で行い、密室での取引は避けてください。",
+    body: "同じキャンパス内の人だけなので、初めてでも使いやすい雰囲気でした。",
+    who: "人文学部 1年",
+    what: "生活用品購入",
   },
 ] as const;
-
-/* ---------- カテゴリ丸タイル ---------- */
-type Tile = { label: string; value?: "textbook" | "game"; icon: LucideIcon };
-
-const CATEGORY_TILES: Tile[] = [
-  { label: "すべて", icon: LayoutGrid },
-  { label: "本・教科書", value: "textbook", icon: BookOpen },
-  { label: "ゲーム", value: "game", icon: Gamepad2 },
-  { label: "パソコン・家電", icon: Laptop },
-  { label: "家具・インテリア", icon: Armchair },
-  { label: "ファッション", icon: Shirt },
-  { label: "スポーツ・趣味", icon: Volleyball },
-];
-
-function CategoryTile({ tile, active }: { tile: Tile; active?: boolean }) {
-  const Icon = tile.icon;
-  const isAll = tile.label === "すべて";
-  const href = isAll ? "/" : tile.value ? `/?category=${tile.value}` : undefined;
-  const enabled = isAll || !!tile.value;
-
-  const circle = (
-    <span
-      className={`flex aspect-square w-full items-center justify-center rounded-2xl border transition ${
-        active
-          ? "border-brand bg-panel"
-          : "border-line bg-white group-hover:border-brand"
-      } ${enabled ? "" : "opacity-50"}`}
-    >
-      <Icon
-        size={26}
-        strokeWidth={1.7}
-        className={active ? "text-brand-deep" : "text-brand-deep"}
-      />
-    </span>
-  );
-
-  const caption = (
-    <span className="mt-2 text-center text-[11px] leading-tight text-ink-soft">
-      {tile.label}
-      {!enabled && <span className="block text-[9px] text-ink-faint">準備中</span>}
-    </span>
-  );
-
-  if (href) {
-    return (
-      <Link href={href} className="group flex flex-col items-center">
-        {circle}
-        {caption}
-      </Link>
-    );
-  }
-  return (
-    <div
-      aria-disabled
-      title="準備中"
-      className="group flex cursor-default flex-col items-center"
-    >
-      {circle}
-      {caption}
-    </div>
-  );
-}

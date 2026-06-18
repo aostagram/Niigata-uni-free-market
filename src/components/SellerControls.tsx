@@ -4,6 +4,7 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { updateItemStatus, deleteItem } from "@/app/actions/items";
 import { ITEM_STATUS, type ItemStatus } from "@/lib/constants";
+import { FORMS } from "@/lib/links";
 
 export function SellerControls({
   itemId,
@@ -53,6 +54,14 @@ export function SellerControls({
           </button>
         ))}
       </div>
+      <a
+        href={FORMS.completeSeller}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="btn btn-ghost mb-3 w-full py-3 text-sm"
+      >
+        取引完了を報告する（売り手）
+      </a>
       <button
         type="button"
         onClick={handleDelete}

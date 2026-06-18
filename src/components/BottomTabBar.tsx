@@ -4,8 +4,15 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { House, MessageSquare, Plus, User } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import { FORMS } from "@/lib/links";
 
-type Tab = { href: string; label: string; icon: LucideIcon; match: (p: string) => boolean };
+type Tab = {
+  href: string;
+  label: string;
+  icon: LucideIcon;
+  match: (p: string) => boolean;
+  external?: boolean;
+};
 
 /**
  * モバイル用のボトムタブバー(デザイン準拠)。
@@ -21,10 +28,11 @@ const TABS: Tab[] = [
     match: (p) => p.startsWith("/chat"),
   },
   {
-    href: "/items/new",
+    href: FORMS.sellerListing,
     label: "出品",
     icon: Plus,
-    match: (p) => p.startsWith("/items/new"),
+    match: () => false,
+    external: true,
   },
   {
     href: "/profile",
@@ -46,16 +54,31 @@ export function BottomTabBar() {
         {TABS.map((t) => {
           const on = t.match(pathname);
           const Icon = t.icon;
-          return (
+          const inner = (
+            <>
+              <span className="tab-pill flex items-center justify-center rounded-full px-[18px] py-[5px] transition-colors">
+                <Icon size={21} strokeWidth={on ? 2.3 : 2} />
+              </span>
+              <span>{t.label}</span>
+            </>
+          );
+          return t.external ? (
+            <a
+              key={t.href}
+              href={t.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="tab-item"
+            >
+              {inner}
+            </a>
+          ) : (
             <Link
               key={t.href}
               href={t.href}
               className={`tab-item${on ? " active" : ""}`}
             >
-              <span className="tab-pill flex items-center justify-center rounded-full px-[18px] py-[5px] transition-colors">
-                <Icon size={21} strokeWidth={on ? 2.3 : 2} />
-              </span>
-              <span>{t.label}</span>
+              {inner}
             </Link>
           );
         })}

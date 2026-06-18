@@ -3,7 +3,7 @@ import { LegalDocumentView } from "@/components/LegalDocumentView";
 import { PRIVACY } from "@/lib/legal";
 
 export const metadata: Metadata = {
-  title: "プライバシーポリシー | 新大フリマ",
+  title: "プライバシーポリシー | ガタフィー",
 };
 
 export default function PrivacyPage() {

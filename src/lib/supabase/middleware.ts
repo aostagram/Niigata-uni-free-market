@@ -3,7 +3,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { isAllowedEmail } from "@/lib/constants";
 
 /** ログイン不要でアクセスできるパス */
-const PUBLIC_PATHS = ["/login", "/auth", "/terms", "/privacy"];
+const PUBLIC_PATHS = ["/login", "/auth", "/terms", "/privacy", "/lp-preview", "/stock-preview", "/api/drive-image"];
 
 function isPublicPath(pathname: string): boolean {
   return PUBLIC_PATHS.some(

@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 /* =========================================================
-   新大フリマ — 水彩グリーン デザインシステム
-   Claude Design (新大フリマ.html / app.css) のトークンを移植。
+   ガタフィー — 水彩グリーン デザインシステム
+   Claude Design (ガタフィー.html / app.css) のトークンを移植。
    オリーブ/サージュ系の配色＋丸ゴシック(Zen Maru Gothic)。
    ========================================================= */
 :root {
@@ -20,7 +20,7 @@
   --ink-faint: #9aa48d;
 
   /* surfaces */
-  --card: #ffffff;
+  --card: rgba(255, 255, 255, 0.86);
   --page: #fbfdf7;
   --panel: #f5f8ec;
   --panel-2: #eef4e0;
@@ -38,9 +38,9 @@
   --like: #e1607a;
 
   /* shape & shadow */
-  --radius: 18px;
-  --shadow-card: 0 10px 30px -16px rgba(95, 129, 40, 0.28);
-  --shadow-soft: 0 4px 14px -8px rgba(95, 129, 40, 0.25);
+  --radius: 22px;
+  --shadow-card: 0 25px 70px -42px rgba(64, 88, 25, 0.48);
+  --shadow-soft: 0 14px 42px -30px rgba(64, 88, 25, 0.38);
 
   /* legacy aliases (旧・深緑デザインからの後方互換) */
   --background: var(--page);
@@ -51,12 +51,12 @@
   --brand-pale: #e7f4d6;
   --brand-mist: #f1f8e6;
 
-  /* fonts */
-  --font-round: "Zen Maru Gothic", system-ui, sans-serif;
-  --font-body: "Zen Kaku Gothic New", "Hiragino Sans",
-    "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Yu Gothic", Meiryo, system-ui,
-    sans-serif;
-  --font-latin: "Comfortaa", cursive;
+  /* fonts — ガタフィーLP は明朝(serif)が基調 */
+  --font-serif: "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro",
+    "Noto Serif JP", "Times New Roman", serif;
+  --font-round: var(--font-serif);
+  --font-body: var(--font-serif);
+  --font-latin: Georgia, "Times New Roman", serif;
 }
 
 @theme inline {
@@ -101,14 +101,18 @@
   --font-latin: var(--font-latin);
 }
 
-html,
+html {
+  background-color: var(--page);
+}
 body {
-  background: var(--page);
+  background-color: transparent;
   color: var(--ink);
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
-  letter-spacing: 0.01em;
+  letter-spacing: 0.012em;
+  line-height: 1.7;
 }
+
 
 * {
   box-sizing: border-box;
@@ -124,20 +128,11 @@ body {
 /* =========================================================
    水彩(watercolor)背景
    ========================================================= */
-.wc-page {
-  position: relative;
-  background:
-    radial-gradient(120% 70% at 100% 0%, rgba(150, 190, 90, 0.2), transparent 42%),
-    radial-gradient(95% 60% at 0% 100%, rgba(150, 190, 90, 0.18), transparent 45%),
-    radial-gradient(70% 55% at 100% 100%, rgba(150, 190, 90, 0.13), transparent 50%),
-    radial-gradient(55% 45% at 0% 0%, rgba(150, 190, 90, 0.12), transparent 52%),
-    var(--page);
-}
+/* body::before の固定水彩を透けさせるため、ラッパーは透明にする */
+.wc-page,
 .wc-soft {
-  background:
-    radial-gradient(80% 60% at 100% 0%, rgba(150, 190, 90, 0.14), transparent 45%),
-    radial-gradient(70% 55% at 0% 100%, rgba(150, 190, 90, 0.12), transparent 48%),
-    var(--page);
+  position: relative;
+  background: transparent;
 }
 
 /* 上部に敷く深緑→黄緑の淡いウォッシュ(ヒーロー用) */
@@ -428,4 +423,497 @@ body {
   line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+/* =========================================================
+   ガタフィー LP（vercel.app トップ）の完全再現
+   static-site/css/styles.css を .lp-home スコープで移植。
+   ========================================================= */
+.lp-home {
+  --container: 1180px;
+  --lp-radius: 22px;
+  --lp-shadow: 0 25px 70px -42px rgba(64, 88, 25, 0.48);
+  --lp-shadow-soft: 0 14px 42px -30px rgba(64, 88, 25, 0.38);
+  /* (main) レイアウトの max-w-3xl を突き破って全面幅で表示 */
+  position: relative;
+  left: 50%;
+  right: 50%;
+  width: 100vw;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  margin-top: -1.5rem;
+  overflow: hidden;
+  text-align: left;
+}
+
+.lp-home .container {
+  width: min(var(--container), calc(100% - 48px));
+  margin-inline: auto;
+}
+
+.lp-home .section {
+  position: relative;
+  padding-block: 72px;
+}
+.lp-home .section + .section {
+  padding-top: 0;
+}
+
+.lp-home .section-head {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 28px;
+  margin-bottom: 30px;
+}
+
+.lp-home .eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin: 0;
+  color: var(--brand-deep);
+  font-weight: 700;
+}
+.lp-home .eyebrow::before {
+  content: "";
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--brand-grad-from), var(--brand));
+}
+
+.lp-home h1,
+.lp-home h2,
+.lp-home h3 {
+  font-weight: 700;
+  line-height: 1.34;
+  letter-spacing: 0.015em;
+  color: var(--ink);
+}
+.lp-home h1 {
+  margin: 0;
+  font-size: clamp(34px, 5.4vw, 64px);
+}
+.lp-home h2 {
+  margin: 10px 0 0;
+  font-size: clamp(26px, 3vw, 42px);
+}
+.lp-home h3 {
+  margin: 0;
+  font-size: 21px;
+}
+.lp-home p {
+  margin: 0;
+}
+.lp-home .lead {
+  margin-top: 12px;
+  color: var(--ink-soft);
+}
+
+/* ---- ヒーロー ---- */
+.lp-home .hero {
+  position: relative;
+  min-height: 680px;
+  isolation: isolate;
+  overflow: hidden;
+}
+.lp-home .hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  /* 完成版ヒーロー画像（キャンパス＋水彩フレーム）。下端まで見せるため
+     bottom 起点で配置し、フェードマスクは掛けない。 */
+  background: url("/brand/hero-bg.webp") center bottom / cover no-repeat;
+}
+.lp-home .hero::after {
+  content: none;
+}
+.lp-home .hero-content {
+  position: relative;
+  z-index: 1;
+  width: min(560px, calc(100% - 48px));
+  padding: 104px 0 116px;
+  margin-left: max(24px, calc((100vw - var(--container)) / 2));
+}
+.lp-home .hero-logo {
+  width: auto;
+  height: 200px;
+  max-width: 92%;
+  margin-bottom: 22px;
+  object-fit: contain;
+}
+.lp-home .hero-copy {
+  margin-top: 22px;
+  color: var(--ink-soft);
+  font-size: 18px;
+}
+.lp-home .hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 30px;
+}
+.lp-home .hero-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 22px;
+}
+.lp-home .badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border-radius: 999px;
+  padding: 8px 13px;
+  background: #eaf2d6;
+  color: var(--brand-deep);
+  font-weight: 700;
+  font-size: 14px;
+}
+
+/* ---- ボタン（LP仕様） ---- */
+.lp-home .btn {
+  min-height: 46px;
+  padding: 0 22px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.86);
+  color: var(--brand-deep);
+  font-weight: 700;
+  font-family: var(--font-serif);
+}
+.lp-home .btn-primary {
+  border-color: transparent;
+  color: #fff;
+  background: linear-gradient(135deg, var(--brand-grad-from), var(--brand));
+  box-shadow: 0 18px 36px -24px rgba(95, 129, 40, 0.82);
+}
+.lp-home .btn-outline {
+  color: var(--brand-deep);
+  background: rgba(255, 255, 255, 0.74);
+}
+
+/* ---- カード ---- */
+.lp-home .paint-card,
+.lp-home .product-card,
+.lp-home .case-card,
+.lp-home .voice-card {
+  position: relative;
+  border: 1px solid var(--line);
+  border-radius: var(--lp-radius);
+  background: rgba(255, 255, 255, 0.86);
+  box-shadow: var(--lp-shadow);
+}
+.lp-home .paint-card,
+.lp-home .product-card,
+.lp-home .case-card {
+  overflow: hidden;
+}
+.lp-home .paint-img {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+}
+.lp-home .card-body {
+  padding: 20px;
+}
+.lp-home .tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border-radius: 999px;
+  padding: 7px 12px;
+  background: #eaf2d6;
+  color: var(--brand-deep);
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.lp-home .grid-2,
+.lp-home .grid-3 {
+  display: grid;
+  gap: 24px;
+}
+.lp-home .grid-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.lp-home .grid-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+/* ---- カテゴリ ---- */
+.lp-home .category-grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 24px;
+  padding: 28px;
+  border: 1px solid var(--line);
+  border-radius: var(--lp-radius);
+  background: var(--panel);
+}
+.lp-home .category-tile {
+  min-height: 126px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: linear-gradient(180deg, #fff, #f8fbf0);
+  color: var(--brand-deep);
+  font-weight: 700;
+  text-align: center;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+.lp-home .category-tile:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--lp-shadow-soft);
+}
+.lp-home .category-icon {
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  margin-bottom: 8px;
+  border: 1px solid #dde8cc;
+  border-radius: 999px;
+  background: #fff;
+}
+
+/* ---- 商品 / 安心 / 流れ ---- */
+.lp-home .products-layout,
+.lp-home .trust-layout,
+.lp-home .flow-layout {
+  display: grid;
+  grid-template-columns: 0.9fr 1.4fr;
+  gap: 28px;
+  align-items: stretch;
+}
+.lp-home .visual-fill {
+  min-height: 100%;
+  overflow: hidden;
+}
+.lp-home .visual-fill img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.lp-home .product-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+.lp-home .product-thumb {
+  aspect-ratio: 4 / 3;
+  object-fit: contain;
+  background: #f3f6ec;
+}
+.lp-home .product-card .card-body {
+  padding: 16px;
+}
+.lp-home .product-price {
+  margin-top: 6px;
+  font-size: 20px;
+  font-weight: 700;
+}
+.lp-home .product-meta {
+  margin-top: 7px;
+  color: var(--ink-soft);
+  font-size: 13px;
+}
+
+.lp-home .trust-list {
+  display: grid;
+  gap: 16px;
+}
+.lp-home .trust-item {
+  display: grid;
+  grid-template-columns: 58px 1fr;
+  gap: 16px;
+  align-items: start;
+  padding: 21px;
+}
+.lp-home .trust-icon,
+.lp-home .step-num {
+  display: grid;
+  place-items: center;
+  border-radius: 18px;
+  background: #eaf2d6;
+  color: var(--brand-deep);
+  font-weight: 700;
+}
+.lp-home .trust-icon {
+  width: 58px;
+  height: 58px;
+}
+.lp-home .guide-strip {
+  margin-top: 18px;
+  padding: 20px 22px;
+  border-radius: 18px;
+  background: #eef6dd;
+  color: var(--brand-deeper);
+  font-weight: 700;
+}
+
+.lp-home .flow-layout.panel {
+  border: 1px solid var(--line);
+  border-radius: var(--lp-radius);
+  background: var(--panel);
+}
+.lp-home .steps {
+  display: grid;
+  gap: 18px;
+}
+.lp-home .step {
+  display: grid;
+  grid-template-columns: 52px 1fr;
+  gap: 16px;
+  align-items: start;
+}
+.lp-home .step-num {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  color: #fff;
+  background: linear-gradient(135deg, var(--brand-grad-from), var(--brand));
+}
+
+/* ---- お客様の声 ---- */
+.lp-home .voice-card {
+  padding: 26px;
+}
+.lp-home .voice-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  margin-top: 20px;
+  color: var(--brand-deep);
+  font-weight: 700;
+}
+
+/* ---- 取引事例ギャラリー ---- */
+.lp-home .filter-bar {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.lp-home .filter-field label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--brand-deeper);
+  font-weight: 700;
+}
+.lp-home .filter-field select {
+  width: 100%;
+  min-height: 50px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0 18px;
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.9);
+}
+.lp-home .case-card img {
+  width: 100%;
+  aspect-ratio: 16 / 11;
+  object-fit: cover;
+}
+.lp-home .case-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+.lp-home .case-card.is-hidden {
+  display: none;
+}
+.lp-home .no-results {
+  display: none;
+  margin-top: 8px;
+  padding: 24px;
+  text-align: center;
+  color: var(--ink-soft);
+  border: 1px solid var(--line);
+  border-radius: var(--lp-radius);
+  background: var(--panel);
+}
+.lp-home .no-results.is-visible {
+  display: block;
+}
+
+/* ---- CTAバンド ---- */
+.lp-home .cta-band {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 28px;
+  padding: 42px 54px;
+  border-radius: 28px;
+  color: #fff;
+  background:
+    radial-gradient(420px 240px at 92% 36%, rgba(255, 255, 255, 0.26), transparent),
+    linear-gradient(135deg, var(--brand-grad-from), #7eaf37);
+  box-shadow: var(--lp-shadow);
+}
+.lp-home .cta-band h2,
+.lp-home .cta-band p {
+  color: #fff;
+}
+.lp-home .cta-band .btn {
+  background: #fff;
+  color: var(--brand-deep);
+  border-color: transparent;
+}
+
+@media (max-width: 980px) {
+  .lp-home .grid-3,
+  .lp-home .category-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .lp-home .products-layout,
+  .lp-home .trust-layout,
+  .lp-home .flow-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .lp-home .section {
+    padding-block: 44px;
+  }
+  .lp-home .hero {
+    min-height: 520px;
+  }
+  .lp-home .hero::before {
+    background: url("/brand/hero-bg.webp") center bottom / cover no-repeat;
+  }
+  .lp-home .hero-content {
+    width: min(100% - 32px, 560px);
+    margin-inline: auto;
+    padding-top: 80px;
+  }
+  .lp-home .hero-logo {
+    height: 148px;
+  }
+  .lp-home .hero-actions {
+    display: grid;
+  }
+  .lp-home .grid-2,
+  .lp-home .grid-3,
+  .lp-home .product-grid {
+    grid-template-columns: 1fr;
+  }
+  .lp-home .category-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    padding: 18px;
+  }
+  .lp-home .category-tile {
+    min-height: 104px;
+  }
+  .lp-home .section-head,
+  .lp-home .cta-band {
+    display: grid;
+  }
 }

@@ -4,6 +4,14 @@ export type Profile = {
   id: string;
   full_name: string;
   avatar_url: string | null;
+  /** プロフィールで入力するニックネーム（表示名） */
+  nickname: string | null;
+  /** 学年（例: 学部1年） */
+  grade: string | null;
+  /** 学部（例: 工学部） */
+  faculty: string | null;
+  /** 通知メールの宛先（auth のメールを複製。RLSは本人/全体閲覧可） */
+  email: string | null;
   created_at: string;
 };
 

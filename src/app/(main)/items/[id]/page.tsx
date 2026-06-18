@@ -15,6 +15,7 @@ import { formatPrice, formatRelativeTime } from "@/lib/format";
 import { CATEGORY_LABEL, ITEM_STATUS } from "@/lib/constants";
 import { SellerControls } from "@/components/SellerControls";
 import { ContactButton } from "@/components/ContactButton";
+import { FORMS } from "@/lib/links";
 import type { ItemWithSeller } from "@/lib/types";
 
 export default async function ItemDetailPage({
@@ -125,7 +126,25 @@ export default async function ItemDetailPage({
             {isOwner ? (
               <SellerControls itemId={item.id} status={item.status} />
             ) : (
-              <ContactButton itemId={item.id} />
+              <div className="flex flex-col gap-2.5">
+                <a
+                  href={FORMS.buyerInquiry}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn btn-primary w-full py-4 text-base"
+                >
+                  購入する（お問い合わせ）
+                </a>
+                <ContactButton itemId={item.id} />
+                <a
+                  href={FORMS.completeBuyer}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn btn-ghost w-full py-3 text-sm"
+                >
+                  取引完了を報告する（購入者）
+                </a>
+              </div>
             )}
           </div>
         </div>
