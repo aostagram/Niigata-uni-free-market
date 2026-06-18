@@ -10,7 +10,8 @@
       "Bash(curl -s -o /dev/null -w \"HTTP %{http_code}\\\\n\" http://localhost:3000/)",
       "Bash(curl -s http://localhost:3000/)",
       "Bash(supabase --version)",
-      "Bash(docker info *)"
+      "Bash(docker info *)",
+      "mcp__8f6ba843-6602-4737-bd79-c391dfe4ba84__search_files"
     ]
   }
 }
