@@ -761,6 +761,9 @@ body {
   border-radius: var(--lp-radius);
   background: var(--panel);
 }
+.lp-home .flow-panel {
+  padding: 28px;
+}
 .lp-home .steps {
   display: grid;
   gap: 18px;
@@ -866,84 +869,192 @@ body {
   border-color: transparent;
 }
 
-@media (max-width: 980px) {
-  /* タブレット: PC版の段組を維持し（1列に畳まない）、カテゴリのみ4列に。 */
-  .lp-home .category-grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+/* ============================================================
+   スマホ/タブレット: PC(1180px設計)を画面幅へ「比例縮小」する。
+   段組はPCのまま（1列に畳まない）。全px値を calc(N * --lp-scale) で縮小。
+   --lp-scale は 100vw/1180 の長さ（≈0.33px @390）。375pxで下限・1180で1。
+   ============================================================ */
+@media (max-width: 1180px) {
+  .lp-home {
+    --lp-scale: calc(clamp(375px, 100vw, 1180px) / 1180);
+    --lp-radius: calc(22 * var(--lp-scale));
   }
-}
 
-@media (max-width: 768px) {
-  .lp-home .section {
-    padding-block: 44px;
+  .lp-home .container {
+    width: calc(100% - 48 * var(--lp-scale));
   }
+  .lp-home .section {
+    padding-block: calc(72 * var(--lp-scale));
+  }
+  .lp-home .section-head {
+    gap: calc(28 * var(--lp-scale));
+    margin-bottom: calc(30 * var(--lp-scale));
+  }
+
+  .lp-home h1 {
+    font-size: calc(64 * var(--lp-scale));
+  }
+  .lp-home h2 {
+    font-size: calc(42 * var(--lp-scale));
+    margin-top: calc(10 * var(--lp-scale));
+  }
+  .lp-home h3 {
+    font-size: calc(21 * var(--lp-scale));
+  }
+  .lp-home .lead {
+    margin-top: calc(12 * var(--lp-scale));
+  }
+  .lp-home .eyebrow {
+    gap: calc(9 * var(--lp-scale));
+    font-size: calc(15 * var(--lp-scale));
+  }
+  .lp-home .eyebrow::before {
+    width: calc(16 * var(--lp-scale));
+    height: calc(16 * var(--lp-scale));
+  }
+
+  /* ヒーロー: 看板＋水彩フレームを切らずフル表示（100% auto + 画像比率で高さ） */
   .lp-home .hero {
-    min-height: 520px;
+    min-height: calc(100vw * 1079 / 1457);
   }
   .lp-home .hero::before {
-    background: url("/brand/hero-bg.webp") center bottom / cover no-repeat;
+    background: url("/brand/hero-bg.webp") center top / 100% auto no-repeat;
   }
   .lp-home .hero-content {
-    width: min(100% - 32px, 560px);
-    margin-inline: auto;
-    padding-top: 80px;
+    width: min(calc(560 * var(--lp-scale)), calc(100% - 48 * var(--lp-scale)));
+    padding: calc(104 * var(--lp-scale)) 0 calc(116 * var(--lp-scale));
+    margin-left: calc(40 * var(--lp-scale));
   }
   .lp-home .hero-logo {
-    height: 148px;
+    height: calc(200 * var(--lp-scale));
+    margin-bottom: calc(22 * var(--lp-scale));
+  }
+  .lp-home .hero-copy {
+    font-size: calc(18 * var(--lp-scale));
+    margin-top: calc(22 * var(--lp-scale));
   }
   .lp-home .hero-actions {
-    display: grid;
+    gap: calc(16 * var(--lp-scale));
+    margin-top: calc(30 * var(--lp-scale));
   }
-  /* PC版の形をそのまま縮小: 段組は1列に畳まず、余白と文字を小さくする。 */
-  .lp-home .grid-2 {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 12px;
+  .lp-home .hero-badges {
+    gap: calc(10 * var(--lp-scale));
+    margin-top: calc(22 * var(--lp-scale));
   }
-  .lp-home .grid-3,
-  .lp-home .product-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 12px;
+  .lp-home .badge {
+    gap: calc(7 * var(--lp-scale));
+    padding: calc(8 * var(--lp-scale)) calc(13 * var(--lp-scale));
+    font-size: calc(14 * var(--lp-scale));
   }
-  /* 装飾画像はスマホでは上に全幅配置。中のカード(product-grid等)は2列を維持。 */
+
+  .lp-home .btn {
+    min-height: calc(46 * var(--lp-scale));
+    padding: 0 calc(22 * var(--lp-scale));
+    font-size: calc(15 * var(--lp-scale));
+  }
+
+  .lp-home .card-body {
+    padding: calc(20 * var(--lp-scale));
+  }
+  .lp-home .tag {
+    gap: calc(7 * var(--lp-scale));
+    padding: calc(7 * var(--lp-scale)) calc(12 * var(--lp-scale));
+    font-size: calc(13 * var(--lp-scale));
+  }
+
+  .lp-home .grid-2,
+  .lp-home .grid-3 {
+    gap: calc(24 * var(--lp-scale));
+  }
   .lp-home .products-layout,
   .lp-home .trust-layout,
   .lp-home .flow-layout {
-    grid-template-columns: 1fr;
-    gap: 16px;
+    gap: calc(28 * var(--lp-scale));
   }
-  .lp-home .products-layout .visual-fill,
-  .lp-home .trust-layout .visual-fill,
-  .lp-home .flow-layout .visual-fill {
-    max-height: 200px;
-  }
-  .lp-home .category-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 10px;
-    padding: 16px;
-  }
-  .lp-home .category-tile {
-    min-height: 92px;
-    font-size: 12px;
-  }
-  .lp-home .category-icon {
-    width: 42px;
-    height: 42px;
-  }
-  .lp-home .trust-item {
-    grid-template-columns: 46px 1fr;
-    gap: 12px;
-  }
-  .lp-home .product-card .card-body {
-    padding: 11px;
+  .lp-home .product-grid {
+    gap: calc(18 * var(--lp-scale));
   }
   .lp-home .product-price {
-    font-size: 16px;
+    font-size: calc(20 * var(--lp-scale));
   }
   .lp-home .product-meta {
-    font-size: 11px;
+    margin-top: calc(7 * var(--lp-scale));
+    font-size: calc(13 * var(--lp-scale));
   }
-  .lp-home .section-head,
+
+  .lp-home .category-grid {
+    margin-top: calc(24 * var(--lp-scale));
+    gap: calc(16 * var(--lp-scale));
+    padding: calc(28 * var(--lp-scale));
+  }
+  .lp-home .category-tile {
+    min-height: calc(126 * var(--lp-scale));
+    font-size: calc(15 * var(--lp-scale));
+  }
+  .lp-home .category-icon {
+    width: calc(54 * var(--lp-scale));
+    height: calc(54 * var(--lp-scale));
+    margin-bottom: calc(8 * var(--lp-scale));
+  }
+
+  .lp-home .trust-list {
+    gap: calc(16 * var(--lp-scale));
+  }
+  .lp-home .trust-item {
+    grid-template-columns: calc(58 * var(--lp-scale)) 1fr;
+    gap: calc(16 * var(--lp-scale));
+    padding: calc(21 * var(--lp-scale));
+  }
+  .lp-home .trust-icon {
+    width: calc(58 * var(--lp-scale));
+    height: calc(58 * var(--lp-scale));
+    border-radius: calc(18 * var(--lp-scale));
+  }
+  .lp-home .guide-strip {
+    margin-top: calc(18 * var(--lp-scale));
+    padding: calc(20 * var(--lp-scale)) calc(22 * var(--lp-scale));
+    border-radius: calc(18 * var(--lp-scale));
+  }
+
+  .lp-home .flow-panel {
+    padding: calc(28 * var(--lp-scale));
+  }
+  .lp-home .steps {
+    gap: calc(18 * var(--lp-scale));
+  }
+  .lp-home .step {
+    grid-template-columns: calc(52 * var(--lp-scale)) 1fr;
+    gap: calc(16 * var(--lp-scale));
+  }
+  .lp-home .step-num {
+    width: calc(52 * var(--lp-scale));
+    height: calc(52 * var(--lp-scale));
+  }
+
+  .lp-home .voice-card {
+    padding: calc(26 * var(--lp-scale));
+  }
+  .lp-home .voice-meta {
+    gap: calc(14 * var(--lp-scale));
+    margin-top: calc(20 * var(--lp-scale));
+  }
+
+  .lp-home .filter-bar {
+    gap: calc(16 * var(--lp-scale));
+    margin-bottom: calc(24 * var(--lp-scale));
+  }
+  .lp-home .filter-field select {
+    min-height: calc(50 * var(--lp-scale));
+    padding: 0 calc(18 * var(--lp-scale));
+  }
+  .lp-home .case-tags {
+    gap: calc(8 * var(--lp-scale));
+    margin-top: calc(14 * var(--lp-scale));
+  }
+
   .lp-home .cta-band {
-    display: grid;
+    gap: calc(28 * var(--lp-scale));
+    padding: calc(42 * var(--lp-scale)) calc(54 * var(--lp-scale));
+    border-radius: calc(28 * var(--lp-scale));
   }
 }

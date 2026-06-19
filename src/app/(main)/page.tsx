@@ -242,10 +242,7 @@ export default async function HomePage({
               <h2>探す、チャットする、学内で手渡し。</h2>
             </div>
           </div>
-          <div
-            className="flow-layout panel"
-            style={{ padding: 28 }}
-          >
+          <div className="flow-layout panel flow-panel">
             <div className="paint-card visual-fill">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/brand/transaction-flow.webp" alt="取引の流れ" />
