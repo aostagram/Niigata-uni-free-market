@@ -1,12 +1,26 @@
 import Link from "next/link";
 import { Bell, Plus, MessageSquare } from "lucide-react";
-import { requireProfile } from "@/lib/auth";
+import { getCurrentUser } from "@/lib/auth";
+import { createClient } from "@/lib/supabase/server";
 import { signOut } from "@/app/actions/auth";
 import { Logo } from "@/components/Logo";
 import { FORMS } from "@/lib/links";
+import type { Profile } from "@/lib/types";
 
 export async function Header() {
-  const profile = await requireProfile();
+  // 公開ページ（トップ等）でも表示するため、未ログインでも壊れないようにする。
+  // ログイン中ならプロフィールを取得し、未ログインなら「ログイン」導線を出す。
+  const user = await getCurrentUser();
+  let profile: Profile | null = null;
+  if (user) {
+    const supabase = await createClient();
+    const { data } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("id", user.id)
+      .single();
+    profile = (data as Profile) ?? null;
+  }
 
   return (
     <header
@@ -51,13 +65,15 @@ export async function Header() {
           <MessageSquare size={22} />
         </Link>
 
-        <Link
-          href="/notifications"
-          aria-label="通知"
-          className="relative p-1.5 text-brand-deep"
-        >
-          <Bell size={22} />
-        </Link>
+        {profile && (
+          <Link
+            href="/notifications"
+            aria-label="通知"
+            className="relative p-1.5 text-brand-deep"
+          >
+            <Bell size={22} />
+          </Link>
+        )}
 
         <a
           href={FORMS.sellerListing}
@@ -69,7 +85,13 @@ export async function Header() {
           <span className="hidden sm:inline">出品する</span>
         </a>
 
-        <div className="group relative">
+        {!profile && (
+          <Link href="/login" className="btn btn-ghost px-5 py-2.5 text-sm">
+            ログイン
+          </Link>
+        )}
+
+        {profile && <div className="group relative">
           <button className="flex items-center rounded-full" aria-label="アカウント">
             {profile.avatar_url ? (
               // eslint-disable-next-line @next/next/no-img-element
@@ -103,7 +125,7 @@ export async function Header() {
               </button>
             </form>
           </div>
-        </div>
+        </div>}
       </div>
     </header>
   );

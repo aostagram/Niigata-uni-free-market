@@ -2,10 +2,14 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { isAllowedEmail } from "@/lib/constants";
 
-/** ログイン不要でアクセスできるパス */
+/** ログイン不要でアクセスできるパス（トップLPはSEO/集客のため公開） */
 const PUBLIC_PATHS = ["/login", "/auth", "/terms", "/privacy", "/api/drive-image"];
 
+/** 完全一致でのみ公開するパス（前方一致だと配下を巻き込むもの） */
+const PUBLIC_EXACT_PATHS = ["/", "/robots.txt", "/sitemap.xml"];
+
 function isPublicPath(pathname: string): boolean {
+  if (PUBLIC_EXACT_PATHS.includes(pathname)) return true;
   return PUBLIC_PATHS.some(
     (p) => pathname === p || pathname.startsWith(`${p}/`),
   );
