@@ -867,14 +867,9 @@ body {
 }
 
 @media (max-width: 980px) {
-  .lp-home .grid-3,
+  /* タブレット: PC版の段組を維持し（1列に畳まない）、カテゴリのみ4列に。 */
   .lp-home .category-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-  .lp-home .products-layout,
-  .lp-home .trust-layout,
-  .lp-home .flow-layout {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
 
@@ -899,18 +894,47 @@ body {
   .lp-home .hero-actions {
     display: grid;
   }
-  .lp-home .grid-2,
-  .lp-home .grid-3,
-  .lp-home .product-grid {
-    grid-template-columns: 1fr;
-  }
-  .lp-home .category-grid {
+  /* PC版の形をそのまま縮小: 段組は1列に畳まず、余白と文字を小さくする。 */
+  .lp-home .grid-2 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 12px;
-    padding: 18px;
+  }
+  .lp-home .grid-3,
+  .lp-home .product-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+  .lp-home .products-layout,
+  .lp-home .trust-layout,
+  .lp-home .flow-layout {
+    grid-template-columns: 0.85fr 1.5fr;
+    gap: 14px;
+  }
+  .lp-home .category-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    padding: 16px;
   }
   .lp-home .category-tile {
-    min-height: 104px;
+    min-height: 92px;
+    font-size: 12px;
+  }
+  .lp-home .category-icon {
+    width: 42px;
+    height: 42px;
+  }
+  .lp-home .trust-item {
+    grid-template-columns: 46px 1fr;
+    gap: 12px;
+  }
+  .lp-home .product-card .card-body {
+    padding: 11px;
+  }
+  .lp-home .product-price {
+    font-size: 16px;
+  }
+  .lp-home .product-meta {
+    font-size: 11px;
   }
   .lp-home .section-head,
   .lp-home .cta-band {
