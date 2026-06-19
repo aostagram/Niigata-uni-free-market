@@ -1,7 +1,15 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Sprout, GraduationCap } from "lucide-react";
 import { LoginButton } from "@/components/LoginButton";
 import { ALLOWED_EMAIL_DOMAIN, SERVICE_DISCLAIMER } from "@/lib/constants";
+
+export const metadata: Metadata = {
+  title: "ログイン",
+  description:
+    "新潟大学のメールアドレスでログインして、ガタフィーで学内フリマを始めましょう。",
+  alternates: { canonical: "/login" },
+};
 
 const ERROR_MESSAGES: Record<string, string> = {
   domain: `新潟大学のメールアドレス（@${ALLOWED_EMAIL_DOMAIN}）のアカウントでログインしてください。`,
