@@ -69,64 +69,6 @@ export default async function HomePage({
         </div>
       </section>
 
-      {/* ===== 検索：キャンパス × カテゴリ ===== */}
-      <section className="section">
-        <div className="container">
-          <div className="section-head">
-            <div>
-              <p className="eyebrow">新大生に便利な検索</p>
-              <h2>キャンパスとカテゴリから、すぐ探せる。</h2>
-              <p className="lead">
-                実際の待ち合わせスポットを見ながら、安心して取引を始められます。
-              </p>
-            </div>
-            <Link className="btn btn-outline" href="#listings">
-              新着を見る
-            </Link>
-          </div>
-          <div className="grid-2">
-            <article className="paint-card">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                className="paint-img"
-                src="/brand/library.webp"
-                alt="新潟大学附属図書館前"
-              />
-              <div className="card-body">
-                <span className="tag">五十嵐キャンパス</span>
-                <h3>附属図書館前</h3>
-                <p className="lead">
-                  人目があり、落ち着いて待ち合わせしやすい入口まわり。
-                </p>
-              </div>
-            </article>
-            <article className="paint-card">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                className="paint-img"
-                src="/brand/cafeteria.webp"
-                alt="新潟大学第一食堂前"
-              />
-              <div className="card-body">
-                <span className="tag">五十嵐キャンパス</span>
-                <h3>第一食堂前</h3>
-                <p className="lead">
-                  広場があり、手渡し場所として相談しやすいスポット。
-                </p>
-              </div>
-            </article>
-          </div>
-          <div className="category-grid" aria-label="カテゴリ一覧">
-            {CATEGORY_TILES.map((c) => (
-              <Link key={c.label} className="category-tile" href={c.href}>
-                <span className="category-icon">{c.icon}</span>
-                {c.label}
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* ===== 新着商品（実データ） ===== */}
       <section className="section" id="listings">
         <div className="container">
@@ -238,6 +180,64 @@ export default async function HomePage({
                     </article>
                   ))}
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ===== 検索：キャンパス × カテゴリ ===== */}
+      <section className="section">
+        <div className="container">
+          <div className="section-head">
+            <div>
+              <p className="eyebrow">新大生に便利な検索</p>
+              <h2>キャンパスとカテゴリから、すぐ探せる。</h2>
+              <p className="lead">
+                実際の待ち合わせスポットを見ながら、安心して取引を始められます。
+              </p>
+            </div>
+            <Link className="btn btn-outline" href="#listings">
+              新着を見る
+            </Link>
+          </div>
+          <div className="grid-2">
+            <article className="paint-card">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                className="paint-img"
+                src="/brand/library.webp"
+                alt="新潟大学附属図書館前"
+              />
+              <div className="card-body">
+                <span className="tag">五十嵐キャンパス</span>
+                <h3>附属図書館前</h3>
+                <p className="lead">
+                  人目があり、落ち着いて待ち合わせしやすい入口まわり。
+                </p>
+              </div>
+            </article>
+            <article className="paint-card">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                className="paint-img"
+                src="/brand/cafeteria.webp"
+                alt="新潟大学第一食堂前"
+              />
+              <div className="card-body">
+                <span className="tag">五十嵐キャンパス</span>
+                <h3>第一食堂前</h3>
+                <p className="lead">
+                  広場があり、手渡し場所として相談しやすいスポット。
+                </p>
+              </div>
+            </article>
+          </div>
+          <div className="category-grid" aria-label="カテゴリ一覧">
+            {CATEGORY_TILES.map((c) => (
+              <Link key={c.label} className="category-tile" href={c.href}>
+                <span className="category-icon">{c.icon}</span>
+                {c.label}
+              </Link>
+            ))}
           </div>
         </div>
       </section>
