@@ -904,11 +904,17 @@ body {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 12px;
   }
+  /* 装飾画像はスマホでは上に全幅配置。中のカード(product-grid等)は2列を維持。 */
   .lp-home .products-layout,
   .lp-home .trust-layout,
   .lp-home .flow-layout {
-    grid-template-columns: 0.85fr 1.5fr;
-    gap: 14px;
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .lp-home .products-layout .visual-fill,
+  .lp-home .trust-layout .visual-fill,
+  .lp-home .flow-layout .visual-fill {
+    max-height: 200px;
   }
   .lp-home .category-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
