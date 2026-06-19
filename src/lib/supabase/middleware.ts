@@ -6,7 +6,12 @@ import { isAllowedEmail } from "@/lib/constants";
 const PUBLIC_PATHS = ["/login", "/auth", "/terms", "/privacy", "/api/drive-image"];
 
 /** 完全一致でのみ公開するパス（前方一致だと配下を巻き込むもの） */
-const PUBLIC_EXACT_PATHS = ["/", "/robots.txt", "/sitemap.xml"];
+const PUBLIC_EXACT_PATHS = [
+  "/",
+  "/robots.txt",
+  "/sitemap.xml",
+  "/manifest.webmanifest",
+];
 
 function isPublicPath(pathname: string): boolean {
   if (PUBLIC_EXACT_PATHS.includes(pathname)) return true;
