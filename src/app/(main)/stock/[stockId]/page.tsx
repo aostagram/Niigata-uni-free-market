@@ -8,13 +8,20 @@ import {
   TriangleAlert,
   MessageSquare,
   CheckCircle2,
+  Store,
+  Package,
 } from "lucide-react";
 import {
   fetchInventoryItem,
+  fetchSellerListingStats,
   formatStockPrice,
   categoryLabel,
 } from "@/lib/inventory";
+import { fetchSellerReview } from "@/lib/reviews";
+import { isFollowing } from "@/lib/follows";
 import { StockGallery } from "@/components/StockGallery";
+import { StarRating } from "@/components/StarRating";
+import { FollowButton } from "@/components/FollowButton";
 import { getCurrentUser } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { buyerInquiryUrl, completeBuyerUrl } from "@/lib/links";
@@ -45,6 +52,33 @@ export default async function StockDetailPage({
   }
   const buyUrl = buyerInquiryUrl({ stockId: item.stockId, name, email });
   const doneUrl = completeBuyerUrl({ stockId: item.stockId, email });
+
+  // 出品者情報（在庫の出品者gmailで集計）。
+  const sellerEmail = item.sellerEmail;
+  const [sellerReview, sellerStats, following] = await Promise.all([
+    sellerEmail
+      ? fetchSellerReview(sellerEmail)
+      : Promise.resolve({ average: 0, count: 0 }),
+    sellerEmail
+      ? fetchSellerListingStats(sellerEmail)
+      : Promise.resolve({ total: 0, available: 0, sold: 0 }),
+    isFollowing(user?.id ?? null, sellerEmail || null),
+  ]);
+  // 出品者のアプリ内プロフィール（公開されていれば表示名/アバターを使う）。
+  let sellerName = "新大生の出品者";
+  let sellerAvatar: string | null = null;
+  if (sellerEmail) {
+    const supabase = await createClient();
+    const { data: sp } = await supabase
+      .from("profiles")
+      .select("nickname, full_name, avatar_url")
+      .eq("email", sellerEmail)
+      .maybeSingle();
+    const nm = sp?.nickname ?? sp?.full_name;
+    if (nm) sellerName = nm;
+    sellerAvatar = sp?.avatar_url ?? null;
+  }
+  const isOwnItem = (user?.email ?? "").toLowerCase() === sellerEmail;
 
   return (
     <div className="fade-up">
@@ -144,6 +178,58 @@ export default async function StockDetailPage({
           )}
         </div>
       </div>
+
+      {/* 出品者（メルカリ風: 評価・出品数・フォロー） */}
+      {sellerEmail && (
+        <div className="ds-card mt-6 p-6">
+          <div className="heading-row mb-3">
+            <Store size={18} className="text-brand" />
+            <h3 className="font-round text-[16px] font-bold text-brand-deep">
+              出品者
+            </h3>
+          </div>
+          <div className="flex items-center gap-4">
+            {sellerAvatar ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={sellerAvatar}
+                alt={sellerName}
+                className="h-14 w-14 flex-none rounded-full object-cover"
+              />
+            ) : (
+              <span
+                className="flex h-14 w-14 flex-none items-center justify-center rounded-full"
+                style={{ background: "radial-gradient(circle,#eef5dd,#d6e7b6)" }}
+              >
+                <Sprout size={26} className="text-brand-deep" />
+              </span>
+            )}
+            <div className="min-w-0 flex-1">
+              <p className="font-round truncate text-[15px] font-bold text-ink">
+                {sellerName}
+              </p>
+              <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1">
+                <StarRating
+                  average={sellerReview.average}
+                  count={sellerReview.count}
+                  size={15}
+                />
+                <span className="inline-flex items-center gap-1 text-[12px] text-ink-soft">
+                  <Package size={13} /> 出品 {sellerStats.total}・取引完了{" "}
+                  {sellerStats.sold}
+                </span>
+              </div>
+            </div>
+            {!isOwnItem && (
+              <FollowButton
+                stockId={item.stockId}
+                initialFollowing={following}
+                loggedIn={!!user}
+              />
+            )}
+          </div>
+        </div>
+      )}
 
       {/* 受け渡し */}
       <div className="ds-card mt-6 p-6">
