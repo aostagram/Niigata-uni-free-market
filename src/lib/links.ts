@@ -24,6 +24,16 @@ export const ADMIN_SHEET_URL = `https://docs.google.com/spreadsheets/d/${ADMIN_S
 /** 在庫マスターとして読む売り手回答タブの gid */
 export const INVENTORY_SHEET_GID = "989667529";
 
+/**
+ * 取引完了（レビュー）タブの gid。両タブとも
+ *   A:タイムスタンプ / B:学内gmail / C:在庫ID / D:感想(1〜5の5段階評価)
+ * の列構成。在庫ID→出品者gmail で出品者のレビュー平均を集計する。
+ */
+export const REVIEW_SHEET_GIDS = {
+  buyer: "1779151945", // 完了_購入者（購入者が評価）
+  seller: "1634127472", // 完了_出品者（出品者が評価）
+} as const;
+
 /** ガタフィー公式 Gmail（通知メールの送信元） */
 export const OFFICIAL_EMAIL = "gatafeefurima@gmail.com";
 

@@ -9,7 +9,11 @@ import {
   MessageSquare,
   CheckCircle2,
 } from "lucide-react";
-import { fetchInventoryItem, formatStockPrice } from "@/lib/inventory";
+import {
+  fetchInventoryItem,
+  formatStockPrice,
+  categoryLabel,
+} from "@/lib/inventory";
 import { StockGallery } from "@/components/StockGallery";
 import { getCurrentUser } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
@@ -58,6 +62,9 @@ export default async function StockDetailPage({
           <div className="mb-2 flex flex-wrap items-center gap-1.5">
             <span className="tag" style={{ background: "#eef6dd" }}>
               在庫番号 {item.stockId}
+            </span>
+            <span className="tag" style={{ background: "#e7f0fb", color: "#3a5a86" }}>
+              {categoryLabel(item.category)}
             </span>
             {item.condition && <span className="tag">{item.condition}</span>}
             {!item.sold && item.reserved && (

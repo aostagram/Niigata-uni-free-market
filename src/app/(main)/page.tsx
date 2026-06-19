@@ -1,9 +1,13 @@
 import Link from "next/link";
 import { CaseGallery } from "@/components/CaseGallery";
-import { FORMS, buyerInquiryUrl } from "@/lib/links";
-import { fetchInventory, formatStockPrice } from "@/lib/inventory";
+import { StockCard } from "@/components/StockCard";
+import { FORMS } from "@/lib/links";
+import { fetchInventory } from "@/lib/inventory";
 import { getCurrentUser } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
+
+/** ホーム新着に出す件数（これ以上は「もっと見る」→ /stock）。 */
+const HOME_NEW_LIMIT = 6;
 
 /** ガタフィー LP（vercel.app トップ）を src/ に完全再現したホーム。 */
 export default async function HomePage({
@@ -81,14 +85,9 @@ export default async function HomePage({
                 <b>「在庫番号」</b>を入力してください。
               </p>
             </div>
-            <a
-              className="btn btn-outline"
-              href={FORMS.sellerListing}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              出品する
-            </a>
+            <Link className="btn btn-outline" href="/stock">
+              もっと見る
+            </Link>
           </div>
           <div className="products-layout">
             <div className="paint-card visual-fill">
@@ -97,68 +96,16 @@ export default async function HomePage({
             </div>
             <div className="product-grid">
               {inventory.length > 0
-                ? inventory.map((it) => {
-                    const detail = `/stock/${encodeURIComponent(it.stockId)}`;
-                    return (
-                      <article key={it.stockId} className="product-card">
-                        <Link href={detail} aria-label={`${it.title} の詳細`}>
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img
-                            className="product-thumb"
-                            src={it.imageUrl || "/brand/no-image.svg"}
-                            alt={it.title}
-                          />
-                        </Link>
-                        <div className="card-body">
-                          <div className="mb-1 flex flex-wrap items-center gap-1.5">
-                            <span className="tag" style={{ background: "#eef6dd" }}>
-                              在庫番号 {it.stockId}
-                            </span>
-                            {it.condition && (
-                              <span className="tag">{it.condition}</span>
-                            )}
-                            {it.reserved && (
-                              <span
-                                className="tag"
-                                style={{ background: "#fbeae6", color: "#c0563f" }}
-                              >
-                                予約済
-                              </span>
-                            )}
-                          </div>
-                          <Link href={detail}>
-                            <h3>{it.title}</h3>
-                          </Link>
-                          <p className="product-price">
-                            {formatStockPrice(it.price)}
-                          </p>
-                          {it.description && (
-                            <p className="product-meta clamp-2">
-                              {it.description}
-                            </p>
-                          )}
-                          <Link
-                            className="btn btn-ghost mt-3 w-full"
-                            href={detail}
-                          >
-                            くわしく見る
-                          </Link>
-                          <a
-                            className="btn btn-primary mt-2 w-full"
-                            href={buyerInquiryUrl({
-                              stockId: it.stockId,
-                              name: buyerName,
-                              email: buyerEmail,
-                            })}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            購入する
-                          </a>
-                        </div>
-                      </article>
-                    );
-                  })
+                ? inventory
+                    .slice(0, HOME_NEW_LIMIT)
+                    .map((it) => (
+                      <StockCard
+                        key={it.stockId}
+                        item={it}
+                        buyerName={buyerName}
+                        buyerEmail={buyerEmail}
+                      />
+                    ))
                 : SAMPLE_PRODUCTS.map((p) => (
                     <article key={p.title} className="product-card">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -181,6 +128,13 @@ export default async function HomePage({
                   ))}
             </div>
           </div>
+          {inventory.length > HOME_NEW_LIMIT && (
+            <div className="mt-7 text-center">
+              <Link className="btn btn-primary px-8 py-3" href="/stock">
+                すべての商品を見る（{inventory.length}件）
+              </Link>
+            </div>
+          )}
         </div>
       </section>
 
@@ -372,12 +326,12 @@ export default async function HomePage({
 
 /* ---------- データ ---------- */
 const CATEGORY_TILES = [
-  { label: "教科書・参考書", icon: "本", href: "/?category=textbook" },
-  { label: "家具・家電", icon: "椅", href: "#listings" },
-  { label: "生活用品", icon: "器", href: "#listings" },
-  { label: "自転車・スポーツ", icon: "輪", href: "#listings" },
-  { label: "服・雑貨", icon: "衣", href: "#listings" },
-  { label: "その他", icon: "他", href: "#listings" },
+  { label: "教科書・参考書", icon: "本", href: "/stock?category=textbook" },
+  { label: "家具・家電", icon: "椅", href: "/stock?category=appliance" },
+  { label: "生活用品", icon: "器", href: "/stock?category=daily" },
+  { label: "自転車・スポーツ", icon: "輪", href: "/stock?category=sports" },
+  { label: "服・雑貨", icon: "衣", href: "/stock?category=fashion" },
+  { label: "その他", icon: "他", href: "/stock?category=other" },
 ] as const;
 
 const SAMPLE_PRODUCTS = [

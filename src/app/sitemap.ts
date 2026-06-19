@@ -12,6 +12,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1,
     },
     {
+      url: `${SITE_URL}/stock`,
+      changeFrequency: "daily",
+      priority: 0.8,
+    },
+    {
       url: `${SITE_URL}/login`,
       changeFrequency: "monthly",
       priority: 0.5,

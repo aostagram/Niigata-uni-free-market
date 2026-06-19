@@ -23,6 +23,10 @@ export type InventoryItem = {
   price: string;
   condition: string;
   description: string;
+  /** 商品カテゴリー（フォームの「商品のカテゴリー」列。無ければ空文字）。 */
+  category: string;
+  /** 出品者の学内gmail（出品数・レビュー紐付け用。UIには表示しない）。 */
+  sellerEmail: string;
   /** 1枚目の画像（カード表示用）。無ければ空文字。 */
   imageUrl: string;
   /** 全画像（詳細ページのギャラリー用、1〜3枚） */
@@ -31,6 +35,34 @@ export type InventoryItem = {
   /** 取引完了（売却済）。一覧では除外、詳細では「取引完了」表示に使う。 */
   sold: boolean;
 };
+
+/** ホーム/一覧で使うカテゴリー定義（フォームの選択肢に対応）。 */
+export const CATEGORIES = [
+  { key: "textbook", label: "教科書・参考書", icon: "本" },
+  { key: "appliance", label: "家具・家電", icon: "椅" },
+  { key: "daily", label: "生活用品", icon: "器" },
+  { key: "sports", label: "自転車・スポーツ", icon: "輪" },
+  { key: "fashion", label: "服・雑貨", icon: "衣" },
+  { key: "other", label: "その他", icon: "他" },
+] as const;
+
+export type CategoryKey = (typeof CATEGORIES)[number]["key"];
+
+/** フォーム回答のカテゴリ文字列を内部キーに正規化（部分一致）。 */
+export function categoryKeyFromText(text: string): CategoryKey {
+  const t = (text ?? "").trim();
+  if (/教科書|参考書|本/.test(t)) return "textbook";
+  if (/家具|家電/.test(t)) return "appliance";
+  if (/生活/.test(t)) return "daily";
+  if (/自転車|スポーツ/.test(t)) return "sports";
+  if (/服|雑貨|ファッション/.test(t)) return "fashion";
+  return "other";
+}
+
+/** 内部キー→表示ラベル。 */
+export function categoryLabel(key: string): string {
+  return CATEGORIES.find((c) => c.key === key)?.label ?? "その他";
+}
 
 /**
  * Google ドライブの共有リンクを、サイトの画像プロキシ経由URLへ変換する。
@@ -101,6 +133,8 @@ async function fetchAllItems(): Promise<InventoryItem[]> {
       condition: find((h) => h.includes("商品の状態") && !h.includes("画像")),
       description: find((h) => h === "説明"),
       status: find((h) => h.includes("ステータス")),
+      category: find((h) => h.includes("カテゴリ")),
+      sellerEmail: find((h) => h.includes("出品者") && h.includes("gmail")),
     };
     const imageCols = header
       .map((h, i) => (h.includes("画像") ? i : -1))
@@ -123,6 +157,8 @@ async function fetchAllItems(): Promise<InventoryItem[]> {
           price: get(r, ci.price),
           condition: get(r, ci.condition),
           description: get(r, ci.description),
+          category: categoryKeyFromText(get(r, ci.category)),
+          sellerEmail: get(r, ci.sellerEmail).toLowerCase(),
           imageUrl: images[0] ?? "",
           images,
           reserved: /予約/.test(status),
@@ -145,6 +181,32 @@ export async function fetchInventoryItem(
   stockId: string,
 ): Promise<InventoryItem | null> {
   return (await fetchAllItems()).find((it) => it.stockId === stockId) ?? null;
+}
+
+/** 全在庫を取得（売却済も含む。出品数の集計用）。 */
+export async function fetchAllInventory(): Promise<InventoryItem[]> {
+  return fetchAllItems();
+}
+
+/** 在庫ID→出品者gmail の対応表（レビュー紐付け用）。 */
+export async function fetchStockSellerMap(): Promise<Map<string, string>> {
+  const all = await fetchAllItems();
+  const m = new Map<string, string>();
+  for (const it of all) {
+    if (it.stockId && it.sellerEmail) m.set(it.stockId, it.sellerEmail);
+  }
+  return m;
+}
+
+/** ある出品者(gmail)の出品集計（販売中・取引完了・合計）。 */
+export async function fetchSellerListingStats(
+  email: string,
+): Promise<{ total: number; available: number; sold: number }> {
+  const e = (email ?? "").trim().toLowerCase();
+  if (!e) return { total: 0, available: 0, sold: 0 };
+  const mine = (await fetchAllItems()).filter((it) => it.sellerEmail === e);
+  const sold = mine.filter((it) => it.sold).length;
+  return { total: mine.length, available: mine.length - sold, sold };
 }
 
 /** 価格表示（数値なら¥整形、0/無料はそのまま、その他は原文）。 */

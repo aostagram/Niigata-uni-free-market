@@ -3,7 +3,14 @@ import { NextResponse, type NextRequest } from "next/server";
 import { isAllowedEmail } from "@/lib/constants";
 
 /** ログイン不要でアクセスできるパス（トップLPはSEO/集客のため公開） */
-const PUBLIC_PATHS = ["/login", "/auth", "/terms", "/privacy", "/api/drive-image"];
+const PUBLIC_PATHS = [
+  "/login",
+  "/auth",
+  "/terms",
+  "/privacy",
+  "/stock", // 商品一覧・商品詳細（未ログインでも閲覧可。購入はフォーム）
+  "/api/drive-image",
+];
 
 /** 完全一致でのみ公開するパス（前方一致だと配下を巻き込むもの） */
 const PUBLIC_EXACT_PATHS = [

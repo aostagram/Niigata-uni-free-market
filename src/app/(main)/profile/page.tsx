@@ -4,43 +4,34 @@ import {
   CheckCircle2,
   Camera,
   LogOut,
-  Package,
-  Tag,
-  CircleCheck,
   Home,
   MessageSquare,
   Plus,
   Bell,
 } from "lucide-react";
 import { requireProfile, getCurrentUser } from "@/lib/auth";
-import { createClient } from "@/lib/supabase/server";
-import { ItemCard } from "@/components/ItemCard";
 import { ProfileForm } from "@/components/ProfileForm";
+import { StockCard } from "@/components/StockCard";
+import { StarRating } from "@/components/StarRating";
 import { signOut } from "@/app/actions/auth";
 import { FORMS } from "@/lib/links";
-import type { ItemWithSeller } from "@/lib/types";
+import { fetchAllInventory, fetchSellerListingStats } from "@/lib/inventory";
+import { fetchSellerReview } from "@/lib/reviews";
+import { fetchFollowCounts } from "@/lib/follows";
 
 export default async function ProfilePage() {
   const profile = await requireProfile();
   const user = await getCurrentUser();
-  const supabase = await createClient();
+  const email = (profile.email ?? user?.email ?? "").toLowerCase();
 
-  const { data } = await supabase
-    .from("items")
-    .select("*, seller:profiles!items_user_id_fkey(id, full_name, avatar_url)")
-    .eq("user_id", profile.id)
-    .order("created_at", { ascending: false });
-
-  const items = (data ?? []) as unknown as ItemWithSeller[];
-
-  // 実データから集計（ダミー値は使わない）
-  const available = items.filter((i) => i.status === "available").length;
-  const sold = items.filter((i) => i.status === "sold").length;
-  const stats = [
-    { icon: Package, label: "出品した商品", value: `${items.length}` },
-    { icon: Tag, label: "販売中", value: `${available}` },
-    { icon: CircleCheck, label: "取引完了", value: `${sold}` },
-  ];
+  // 出品（在庫スプレッドシートを出品者gmailで集計）・レビュー・フォローを並列取得。
+  const [allInv, listing, review, follow] = await Promise.all([
+    fetchAllInventory(),
+    fetchSellerListingStats(email),
+    fetchSellerReview(email),
+    fetchFollowCounts(profile.id, email),
+  ]);
+  const myItems = allInv.filter((it) => it.sellerEmail === email && !it.sold);
   const quickMenu = [
     { icon: Home, label: "ホーム", href: "/", external: false },
     { icon: MessageSquare, label: "メッセージ", href: "/chat", external: false },
@@ -140,20 +131,35 @@ export default async function ProfilePage() {
         </div>
       </details>
 
-      {/* 集計（実データ） */}
-      <div className="ds-card mt-6 grid grid-cols-3 divide-x divide-line-soft">
-        {stats.map((s) => (
-          <div key={s.label} className="flex items-center gap-3 p-4 sm:p-5">
-            <s.icon size={24} strokeWidth={1.8} className="text-brand" />
-            <div>
-              <div className="text-[12px] text-ink-soft">{s.label}</div>
-              <div className="font-round text-xl font-bold text-ink">
-                {s.value}
-                <span className="text-[12px] font-normal text-ink-soft">件</span>
-              </div>
+      {/* メルカリ風スタッツ（出品数・フォロワー・フォロー中・評価） */}
+      <div className="ds-card mt-6 p-5">
+        <div className="grid grid-cols-3 divide-x divide-line-soft text-center">
+          <div className="px-2">
+            <div className="font-round text-2xl font-bold text-ink">
+              {listing.total}
             </div>
+            <div className="text-[12px] text-ink-soft">出品</div>
           </div>
-        ))}
+          <div className="px-2">
+            <div className="font-round text-2xl font-bold text-ink">
+              {follow.followers}
+            </div>
+            <div className="text-[12px] text-ink-soft">フォロワー</div>
+          </div>
+          <div className="px-2">
+            <div className="font-round text-2xl font-bold text-ink">
+              {follow.following}
+            </div>
+            <div className="text-[12px] text-ink-soft">フォロー中</div>
+          </div>
+        </div>
+        <div className="mt-4 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 border-t border-line-soft pt-4">
+          <span className="text-[13px] text-ink-soft">評価</span>
+          <StarRating average={review.average} count={review.count} />
+          <span className="text-[12px] text-ink-faint">
+            ・販売中 {listing.available}・取引完了 {listing.sold}
+          </span>
+        </div>
       </div>
 
       {/* クイックメニュー */}
@@ -187,24 +193,31 @@ export default async function ProfilePage() {
         })}
       </div>
 
-      {/* 出品した商品 */}
+      {/* 出品中の商品（在庫スプレッドシートから、自分のgmailの出品） */}
       <div className="mt-6">
         <div className="heading-row mb-4">
           <Camera size={20} className="text-brand-deep" />
           <h2 className="font-round text-lg font-bold text-ink">
-            出品した商品
+            出品中の商品
           </h2>
-          <span className="tag ml-1">{items.length}件</span>
+          <span className="tag ml-1">{myItems.length}件</span>
         </div>
-        {items.length === 0 ? (
+        {myItems.length === 0 ? (
           <p className="ds-card border-dashed py-12 text-center text-sm text-ink-soft">
-            まだ出品がありません。
+            まだ出品がありません。出品フォームから登録すると、ここと商品一覧に表示されます。
           </p>
         ) : (
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
-            {items.map((item) => (
-              <ItemCard key={item.id} item={item} />
-            ))}
+          <div className="lp-home">
+            <div className="product-grid">
+              {myItems.map((it) => (
+                <StockCard
+                  key={it.stockId}
+                  item={it}
+                  buyerName={profile.nickname ?? undefined}
+                  buyerEmail={email}
+                />
+              ))}
+            </div>
           </div>
         )}
       </div>
