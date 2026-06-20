@@ -954,10 +954,12 @@ body {
     margin-bottom: 18px;
   }
 
-  /* ---- ヒーロー: スマホ専用の縦長キャンパス画像。横長を圧縮せず、
-         画像本来の縦横比のまま全幅で表示し、バッジ群の下まで背景が届く ---- */
+  /* ---- ヒーロー: スマホ専用の縦長画像。上部の白い水彩エリアに見出しが乗り、
+         下部にキャンパス。画像本来の縦横比で全幅表示し、題名〜バッジが画像内に収まる。
+         はみ出しても下端が青くならないようクリーム色をフォールバックに敷く ---- */
   .lp-home .hero {
-    min-height: calc(100vw * 1719 / 1100);
+    min-height: calc(100vw * 1766 / 1024);
+    background-color: #f4f7eb;
   }
   .lp-home .hero::before {
     background: url("/brand/hero-bg-mobile.webp") center top / 100% auto no-repeat;
