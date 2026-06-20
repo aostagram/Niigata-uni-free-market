@@ -124,15 +124,7 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-dvh antialiased relative">
-        <div
-          className="fixed inset-0 -z-50 pointer-events-none"
-          style={{
-            backgroundImage: "url('/brand/page-bg.png')",
-            backgroundPosition: "center center",
-            backgroundSize: "100% 100%",
-            backgroundRepeat: "no-repeat",
-          }}
-        />
+        <div className="page-bg-layer fixed inset-0 -z-50 pointer-events-none" />
         {children}
       </body>
     </html>

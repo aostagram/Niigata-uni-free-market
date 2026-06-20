@@ -118,6 +118,12 @@ body {
   box-sizing: border-box;
 }
 
+/* 全ページ共通の固定背景レイヤー（body 直下の div）。
+   PC は従来どおり横長の水彩を全面に敷く。スマホは @media で縦長へ差し替え。 */
+.page-bg-layer {
+  background: url("/brand/page-bg.png") center center / 100% 100% no-repeat;
+}
+
 .font-round {
   font-family: var(--font-round);
 }
@@ -898,6 +904,11 @@ body {
    可読性・タップしやすさ最優先。横並びは縦積み、サムネは正方形。
    ============================================================ */
 @media (max-width: 768px) {
+  /* ---- スクロール後の一律背景: 縦長の水彩を画面に合わせて表示（圧縮しない） ---- */
+  .page-bg-layer {
+    background: url("/brand/page-bg-mobile.webp") center top / cover no-repeat;
+  }
+
   /* ---- フォント: 極端な縮小を廃止し読みやすいサイズに ---- */
   .lp-home h1 {
     font-size: clamp(26px, 7.6vw, 34px);
@@ -943,12 +954,13 @@ body {
     margin-bottom: 18px;
   }
 
-  /* ---- ヒーロー: 看板を切らず全表示しつつ文字を読みやすく ---- */
+  /* ---- ヒーロー: スマホ専用の縦長キャンパス画像。横長を圧縮せず、
+         画像本来の縦横比のまま全幅で表示し、バッジ群の下まで背景が届く ---- */
   .lp-home .hero {
-    min-height: calc(100vw * 1079 / 1457);
+    min-height: calc(100vw * 1719 / 1100);
   }
   .lp-home .hero::before {
-    background: url("/brand/hero-bg.webp") center top / 100% auto no-repeat;
+    background: url("/brand/hero-bg-mobile.webp") center top / 100% auto no-repeat;
   }
   .lp-home .hero-content {
     width: min(100% - 36px, 520px);
