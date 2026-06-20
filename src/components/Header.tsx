@@ -82,16 +82,20 @@ export async function Header() {
             </Link>
           )}
 
-          {/* 出品: スマホはボトムタブに集約するため PC のみ表示 */}
-          <a
-            href={FORMS.sellerListing}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn btn-primary hidden px-5 py-2.5 text-sm md:inline-flex"
-          >
-            <Plus size={17} />
-            <span>出品する</span>
-          </a>
+          {/* 出品: スマホはボトムタブに集約するため PC のみ表示。
+             .btn{display:inline-flex} が hidden を上書きするため、
+             .btn ではないラッパー側で表示制御する。 */}
+          <span className="hidden md:inline-flex">
+            <a
+              href={FORMS.sellerListing}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-primary px-5 py-2.5 text-sm"
+            >
+              <Plus size={17} />
+              <span>出品する</span>
+            </a>
+          </span>
 
           {!profile && (
             <Link href="/login" className="btn btn-ghost px-5 py-2.5 text-sm">
