@@ -31,21 +31,25 @@ export async function Header() {
         <Link
           href="/"
           aria-label="ガタフィー ホーム"
-          className="flex items-center gap-2.5"
+          className="flex min-w-0 items-center gap-2.5"
         >
           <Logo />
-          {/* ブランド表記（ロゴの右）。スマホでも常に表示する。 */}
-          <span className="leading-tight">
-            <span className="font-round block text-[15px] font-bold text-brand-deeper sm:text-[17px]">
+          {/* ブランド表記（ロゴの右）。スマホでも常に表示。1行・縦棒区切り。
+             狭い画面では説明文が省略されるが、ロゴ名とボタンは崩れない。 */}
+          <span className="flex min-w-0 items-baseline gap-1.5">
+            <span className="font-round shrink-0 text-[15px] font-bold text-brand-deeper sm:text-[17px]">
               ガタフィー
             </span>
-            <span className="block text-[10px] text-brand-deep sm:text-[11px]">
+            <span className="shrink-0 text-[11px] text-brand-deep/50 sm:text-[12px]">
+              |
+            </span>
+            <span className="truncate text-[10px] text-brand-deep sm:text-[11px]">
               新潟発のフリマアプリ
             </span>
           </span>
         </Link>
 
-        <div className="ml-auto flex items-center gap-3 md:gap-5">
+        <div className="ml-auto flex shrink-0 items-center gap-3 md:gap-5">
           {/* desktop nav */}
           <nav className="hidden items-center gap-7 md:flex">
             <Link href="/" className="nav-link">
