@@ -686,6 +686,17 @@ body {
   border-radius: 999px;
   background: #fff;
 }
+/* カテゴリロゴ画像（アイコン＋名称が一体の画像）でタイル面を差し替える */
+.lp-home .category-tile.has-img {
+  padding: 6px;
+  overflow: hidden;
+  background: #fff;
+}
+.lp-home .category-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
 
 /* ---- 商品 / 安心 / 流れ ---- */
 .lp-home .products-layout,

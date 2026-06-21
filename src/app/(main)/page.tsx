@@ -187,9 +187,18 @@ export default async function HomePage({
           </div>
           <div className="category-grid" aria-label="カテゴリ一覧">
             {CATEGORY_TILES.map((c) => (
-              <Link key={c.label} className="category-tile" href={c.href}>
-                <span className="category-icon">{c.icon}</span>
-                {c.label}
+              <Link
+                key={c.label}
+                className={`category-tile${c.img ? " has-img" : ""}`}
+                href={c.href}
+              >
+                {c.img ? (
+                  // ラベル文字込みのカテゴリロゴ画像（アイコン＋名称が一体）。
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img className="category-img" src={c.img} alt={c.label} />
+                ) : (
+                  c.label
+                )}
               </Link>
             ))}
           </div>
@@ -323,12 +332,32 @@ export default async function HomePage({
 
 /* ---------- データ ---------- */
 const CATEGORY_TILES = [
-  { label: "教科書・参考書", icon: "本", href: "/stock?category=textbook" },
-  { label: "家具・家電", icon: "椅", href: "/stock?category=appliance" },
-  { label: "生活用品", icon: "器", href: "/stock?category=daily" },
-  { label: "自転車・スポーツ", icon: "輪", href: "/stock?category=sports" },
-  { label: "服・雑貨", icon: "衣", href: "/stock?category=fashion" },
-  { label: "その他", icon: "他", href: "/stock?category=other" },
+  {
+    label: "教科書・参考書",
+    img: "/brand/categories/textbook.webp",
+    href: "/stock?category=textbook",
+  },
+  {
+    label: "家具・家電",
+    img: "/brand/categories/appliance.webp",
+    href: "/stock?category=appliance",
+  },
+  {
+    label: "生活用品",
+    img: "/brand/categories/daily.webp",
+    href: "/stock?category=daily",
+  },
+  {
+    label: "自転車・スポーツ",
+    img: "/brand/categories/sports.webp",
+    href: "/stock?category=sports",
+  },
+  {
+    label: "服・雑貨",
+    img: "/brand/categories/fashion.webp",
+    href: "/stock?category=fashion",
+  },
+  { label: "その他", img: null, href: "/stock?category=other" },
 ] as const;
 
 const SAMPLE_PRODUCTS = [
