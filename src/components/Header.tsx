@@ -27,11 +27,11 @@ export async function Header() {
       className="sticky top-0 z-30 border-b border-line-soft"
       style={{ background: "rgba(251,253,247,.86)", backdropFilter: "blur(10px)" }}
     >
-      <div className="mx-auto flex w-full max-w-[1180px] items-center gap-3 px-6 py-3">
+      <div className="mx-auto flex w-full max-w-[1180px] items-center gap-2 px-3 py-3 md:gap-3 md:px-6">
         <Link
           href="/"
           aria-label="ガタフィー ホーム"
-          className="flex min-w-0 items-center gap-2.5"
+          className="flex min-w-0 items-center gap-1.5 md:gap-2.5"
         >
           <Logo />
           {/* ブランド表記（ロゴの右）。スマホでも常に表示。1行・縦棒区切り。
