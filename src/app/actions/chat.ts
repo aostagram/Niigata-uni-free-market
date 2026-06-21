@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { fetchInventoryItem } from "@/lib/inventory";
 import { sendMail, mailLayout } from "@/lib/mail";
 
 /** チャット相手に「新着メッセージ」メールを送る（best-effort）。 */
@@ -103,6 +104,66 @@ export async function startChatRoom(itemId: string) {
       .single();
     if (createErr || !created)
       return { error: "チャットルームの作成に失敗しました。" };
+    roomId = created.id;
+  }
+
+  redirect(`/chat/${roomId}`);
+}
+
+/**
+ * 在庫(スプレッドシート)商品で、購入希望者が出品者アカウントに直接連絡する。
+ * 出品者がアプリに登録済みなら chat_rooms(stock_id 方式)を作成/取得して遷移。
+ * 未登録ならエラー文言を返し、画面側で購入フォームへ誘導する。
+ */
+export async function startStockChat(stockId: string) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
+
+  const item = await fetchInventoryItem(stockId);
+  if (!item) return { error: "商品が見つかりません。" };
+
+  const sellerEmail = (item.sellerEmail ?? "").toLowerCase();
+  if (!sellerEmail)
+    return { error: "この商品には出品者情報が登録されていません。" };
+  if ((user.email ?? "").toLowerCase() === sellerEmail)
+    return { error: "自分の出品には連絡できません。" };
+
+  // 出品者のアプリ内アカウント(メール一致)を探す。
+  const { data: seller } = await supabase
+    .from("profiles")
+    .select("id")
+    .eq("email", sellerEmail)
+    .maybeSingle();
+  if (!seller)
+    return {
+      error:
+        "この出品者はまだガタフィーに登録していないため、チャットを開始できません。下の「この商品を購入する」からご連絡ください。",
+    };
+
+  // 在庫番号×購入者で1ルーム。既存があれば再利用。
+  const { data: existing } = await supabase
+    .from("chat_rooms")
+    .select("id")
+    .eq("stock_id", item.stockId)
+    .eq("buyer_id", user.id)
+    .maybeSingle();
+
+  let roomId = existing?.id;
+  if (!roomId) {
+    const { data: created, error: createErr } = await supabase
+      .from("chat_rooms")
+      .insert({
+        stock_id: item.stockId,
+        buyer_id: user.id,
+        seller_id: seller.id,
+      })
+      .select("id")
+      .single();
+    if (createErr || !created)
+      return { error: "チャットの開始に失敗しました。時間をおいて再度お試しください。" };
     roomId = created.id;
   }
 

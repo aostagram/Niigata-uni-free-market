@@ -6,11 +6,12 @@ import {
   MapPin,
   Handshake,
   TriangleAlert,
-  MessageSquare,
+  ShoppingBag,
   CheckCircle2,
   Store,
   Package,
 } from "lucide-react";
+import { ContactSellerButton } from "@/components/ContactSellerButton";
 import {
   fetchInventoryItem,
   fetchSellerListingStats,
@@ -153,27 +154,14 @@ export default async function StockDetailPage({
             </div>
           ) : (
             <div className="mt-5 flex flex-col gap-2.5">
-              {/* 購入・出品者へ連絡（待ち合わせ場所もここで相談） */}
-              <a
-                href={buyUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn btn-primary w-full py-4 text-base"
-              >
-                <MessageSquare size={18} />
-                購入・出品者に連絡する
-              </a>
+              {/* 出品者へ連絡（アプリ内チャット）。待ち合わせ場所もここで相談。 */}
+              {!isOwnItem && <ContactSellerButton stockId={item.stockId} />}
               <p className="text-center text-[12.5px] text-ink-soft">
-                在庫番号・お名前は自動入力されます。受け取り場所や日時の相談もこちらから。
+                出品者のアカウントへ直接メッセージを送れます。受け取り場所や日時の相談もこちらから。
               </p>
-              <a
-                href={doneUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn btn-ghost w-full py-3 text-sm"
-              >
-                取引完了を報告する（購入者）
-              </a>
+              <p className="text-center text-[12px] text-ink-faint">
+                購入のお申し込みは、下の「この商品を購入する」からどうぞ。
+              </p>
             </div>
           )}
         </div>
@@ -252,6 +240,38 @@ export default async function StockDetailPage({
           </div>
         </div>
       </div>
+
+      {/* 購入（スクロールした先に配置）。在庫商品はフォームで購入希望を受け付ける。 */}
+      {!item.sold && (
+        <div className="ds-card mt-6 p-6">
+          <div className="heading-row mb-3">
+            <ShoppingBag size={18} className="text-brand" />
+            <h3 className="font-round text-[16px] font-bold text-brand-deep">
+              この商品を購入する
+            </h3>
+          </div>
+          <a
+            href={buyUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn btn-primary w-full py-4 text-base"
+          >
+            <ShoppingBag size={18} />
+            この商品を購入する
+          </a>
+          <p className="mt-2.5 text-center text-[12.5px] text-ink-soft">
+            在庫番号・お名前は自動入力されます。フォームから購入希望を送信してください。
+          </p>
+          <a
+            href={doneUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn btn-ghost mt-2.5 w-full py-3 text-sm"
+          >
+            取引完了を報告する（購入者）
+          </a>
+        </div>
+      )}
 
       <div className="mt-6 text-center">
         <span className="nav-link inline-flex items-center gap-1.5 text-ink-faint">
