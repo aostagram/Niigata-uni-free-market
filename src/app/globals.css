@@ -746,10 +746,18 @@ body {
 }
 .lp-home .trust-item {
   display: grid;
-  grid-template-columns: 58px 1fr;
+  grid-template-columns: 84px 1fr;
   gap: 16px;
-  align-items: start;
+  align-items: center;
   padding: 21px;
+}
+/* 内容に合う写真サムネ（アイコン枠の代わり） */
+.lp-home .trust-photo {
+  width: 84px;
+  height: 84px;
+  border-radius: 16px;
+  object-fit: cover;
+  border: 1px solid var(--line);
 }
 .lp-home .trust-icon,
 .lp-home .step-num {

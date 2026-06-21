@@ -189,16 +189,12 @@ export default async function HomePage({
             {CATEGORY_TILES.map((c) => (
               <Link
                 key={c.label}
-                className={`category-tile${c.img ? " has-img" : ""}`}
+                className="category-tile has-img"
                 href={c.href}
               >
-                {c.img ? (
-                  // ラベル文字込みのカテゴリロゴ画像（アイコン＋名称が一体）。
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img className="category-img" src={c.img} alt={c.label} />
-                ) : (
-                  c.label
-                )}
+                {/* ラベル文字込みのカテゴリロゴ画像（アイコン＋名称が一体）。 */}
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img className="category-img" src={c.img} alt={c.label} />
               </Link>
             ))}
           </div>
@@ -220,8 +216,10 @@ export default async function HomePage({
           <div className="trust-layout">
             <div className="trust-list">
               {TRUST.map((t) => (
-                <article key={t.icon} className="paint-card trust-item">
-                  <div className="trust-icon">{t.icon}</div>
+                <article key={t.title} className="paint-card trust-item">
+                  {/* 内容に合う写真をアイコン枠に表示 */}
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img className="trust-photo" src={t.img} alt={t.title} />
                   <div>
                     <h3>{t.title}</h3>
                     <p className="lead">{t.desc}</p>
@@ -357,7 +355,11 @@ const CATEGORY_TILES = [
     img: "/brand/categories/fashion.webp",
     href: "/stock?category=fashion",
   },
-  { label: "その他", img: null, href: "/stock?category=other" },
+  {
+    label: "その他",
+    img: "/brand/categories/other.webp",
+    href: "/stock?category=other",
+  },
 ] as const;
 
 const SAMPLE_PRODUCTS = [
@@ -386,17 +388,17 @@ const SAMPLE_PRODUCTS = [
 
 const TRUST = [
   {
-    icon: "認",
+    img: "/brand/trust/verify.webp",
     title: "大学メールで本人確認",
     desc: "@mail.cc.niigata-u.ac.jp の学生だけが登録できます。",
   },
   {
-    icon: "所",
+    img: "/brand/trust/handover.webp",
     title: "学内の明るい場所で手渡し",
     desc: "附属図書館前や第一食堂前など、人目のある場所を選べます。",
   },
   {
-    icon: "守",
+    img: "/brand/trust/safety.webp",
     title: "ブロック・通報でトラブルを抑える",
     desc: "不安な相手や禁止商品に対応できる導線を用意します。",
   },
