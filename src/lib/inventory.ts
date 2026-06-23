@@ -27,6 +27,8 @@ export type InventoryItem = {
   category: string;
   /** 出品者の学内gmail（出品数・レビュー紐付け用。UIには表示しない）。 */
   sellerEmail: string;
+  /** 受け渡し場所（管理シート「受け渡し場所（仮）」列。無ければ空文字）。 */
+  pickup: string;
   /** 1枚目の画像（カード表示用）。無ければ空文字。 */
   imageUrl: string;
   /** 全画像（詳細ページのギャラリー用、1〜3枚） */
@@ -135,6 +137,7 @@ async function fetchAllItems(): Promise<InventoryItem[]> {
       status: find((h) => h.includes("ステータス")),
       category: find((h) => h.includes("カテゴリ")),
       sellerEmail: find((h) => h.includes("出品者") && h.includes("gmail")),
+      pickup: find((h) => h.includes("受け渡し") || h.includes("受渡")),
     };
     const imageCols = header
       .map((h, i) => (h.includes("画像") ? i : -1))
@@ -159,6 +162,7 @@ async function fetchAllItems(): Promise<InventoryItem[]> {
           description: get(r, ci.description),
           category: categoryKeyFromText(get(r, ci.category)),
           sellerEmail: get(r, ci.sellerEmail).toLowerCase(),
+          pickup: get(r, ci.pickup),
           imageUrl: images[0] ?? "",
           images,
           reserved: /予約/.test(status),

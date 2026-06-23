@@ -234,6 +234,11 @@ export default async function StockDetailPage({
               <Handshake size={18} className="text-brand" />
               キャンパス内での手渡し
             </p>
+            {item.pickup && (
+              <p className="mt-1 text-[13.5px] font-medium text-ink">
+                出品者の希望場所：{item.pickup}
+              </p>
+            )}
             <p className="mt-1 text-[13px] leading-[1.7] text-ink-soft">
               受け渡しは附属図書館前・第一食堂前など、日中の人目のある学内の場所で。支払いは対面で行ってください。
             </p>
