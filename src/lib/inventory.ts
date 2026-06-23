@@ -36,6 +36,8 @@ export type InventoryItem = {
   reserved: boolean;
   /** 取引完了（売却済）。一覧では除外、詳細では「取引完了」表示に使う。 */
   sold: boolean;
+  /** テスト・購入禁止などの非公開商品（一覧/詳細から除外）。 */
+  hidden: boolean;
 };
 
 /** ホーム/一覧で使うカテゴリー定義（フォームの選択肢に対応）。 */
@@ -118,6 +120,12 @@ function parseCsv(text: string): string[][] {
 
 const SOLD = /(売却|売り切れ|売切|取引完了|完了|終了|sold)/i;
 
+/**
+ * テスト・ダミー・購入禁止などの「本番に出したくない出品」を判定する印。
+ * 商品名・説明に含まれていれば一覧/詳細から除外する。価格「非売品」も除外。
+ */
+const HIDE = /削除予定|購入禁止|購入しないで|本物では|※本物|ダミー|テスト用|テストです|仮商品|仮テスト|仮の|仮_/;
+
 /** 全在庫を取得（売却済も sold=true で含む）。失敗時は空配列。 */
 async function fetchAllItems(): Promise<InventoryItem[]> {
   try {
@@ -150,16 +158,19 @@ async function fetchAllItems(): Promise<InventoryItem[]> {
       .slice(1)
       .map((r) => {
         const status = get(r, ci.status);
+        const title = get(r, ci.title);
+        const description = get(r, ci.description);
+        const price = get(r, ci.price);
         const images = imageCols
           .map((i) => get(r, i))
           .filter((v) => v.length > 0)
           .map(normalizeImageUrl);
         return {
           stockId: get(r, ci.stockId),
-          title: get(r, ci.title),
-          price: get(r, ci.price),
+          title,
+          price,
           condition: get(r, ci.condition),
-          description: get(r, ci.description),
+          description,
           category: categoryKeyFromText(get(r, ci.category)),
           sellerEmail: get(r, ci.sellerEmail).toLowerCase(),
           pickup: get(r, ci.pickup),
@@ -167,6 +178,7 @@ async function fetchAllItems(): Promise<InventoryItem[]> {
           images,
           reserved: /予約/.test(status),
           sold: SOLD.test(status),
+          hidden: HIDE.test(title) || HIDE.test(description) || /非売品/.test(price),
         };
       })
       .filter((it) => it.stockId && it.title);
@@ -175,16 +187,18 @@ async function fetchAllItems(): Promise<InventoryItem[]> {
   }
 }
 
-/** 在庫一覧（販売中のみ。売却済は除外、予約済は表示）。 */
+/** 在庫一覧（販売中のみ。売却済・非公開は除外、予約済は表示）。 */
 export async function fetchInventory(): Promise<InventoryItem[]> {
-  return (await fetchAllItems()).filter((it) => !it.sold);
+  return (await fetchAllItems()).filter((it) => !it.sold && !it.hidden);
 }
 
-/** 在庫番号から1件取得（詳細ページ用。売却済も返す→「取引完了」表示用）。 */
+/** 在庫番号から1件取得（詳細ページ用。売却済も返す→「取引完了」表示用。
+ *  非公開（テスト/購入禁止）は直リンクでも出さない）。 */
 export async function fetchInventoryItem(
   stockId: string,
 ): Promise<InventoryItem | null> {
-  return (await fetchAllItems()).find((it) => it.stockId === stockId) ?? null;
+  const it = (await fetchAllItems()).find((x) => x.stockId === stockId);
+  return it && !it.hidden ? it : null;
 }
 
 /** 全在庫を取得（売却済も含む。出品数の集計用）。 */
