@@ -126,6 +126,15 @@ const SOLD = /(売却|売り切れ|売切|取引完了|完了|終了|sold)/i;
  */
 const HIDE = /削除予定|購入禁止|購入しないで|本物では|※本物|ダミー|テスト用|テストです|仮商品|仮テスト|仮の|仮_/;
 
+/** ステータス列にこの語があれば非表示（シート側で出品を取り下げる手段）。 */
+const HIDE_STATUS = /非表示|取り下げ|取下げ|下書き|保留|削除/;
+
+/**
+ * キーワードに引っかからない単発の非公開商品を商品名で明示除外する。
+ * 例: 運営テスト用の「歯はよく磨こう」。新しく隠したい商品名はここに追加。
+ */
+const HIDE_TITLES = new Set(["歯はよく磨こう"]);
+
 /** 全在庫を取得（売却済も sold=true で含む）。失敗時は空配列。 */
 async function fetchAllItems(): Promise<InventoryItem[]> {
   try {
@@ -178,7 +187,12 @@ async function fetchAllItems(): Promise<InventoryItem[]> {
           images,
           reserved: /予約/.test(status),
           sold: SOLD.test(status),
-          hidden: HIDE.test(title) || HIDE.test(description) || /非売品/.test(price),
+          hidden:
+            HIDE.test(title) ||
+            HIDE.test(description) ||
+            /非売品/.test(price) ||
+            HIDE_STATUS.test(status) ||
+            HIDE_TITLES.has(title.trim()),
         };
       })
       .filter((it) => it.stockId && it.title);

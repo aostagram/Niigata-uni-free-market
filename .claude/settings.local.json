@@ -26,7 +26,8 @@
       "Bash(node -p \"require\\('next/package.json'\\).version\")",
       "mcp__0702b14c-ebc1-4f76-a68a-fcce0ff9ec60__get_account_type",
       "mcp__8f6ba843-6602-4737-bd79-c391dfe4ba84__search_files",
-      "mcp__8f6ba843-6602-4737-bd79-c391dfe4ba84__list_recent_files"
+      "mcp__8f6ba843-6602-4737-bd79-c391dfe4ba84__list_recent_files",
+      "mcp__8f6ba843-6602-4737-bd79-c391dfe4ba84__read_file_content"
     ]
   }
 }

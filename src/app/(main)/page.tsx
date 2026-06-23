@@ -144,9 +144,9 @@ export default async function HomePage({
           <div className="section-head">
             <div>
               <p className="eyebrow">新大生に便利な検索</p>
-              <h2>キャンパスとカテゴリから、すぐ探せる。</h2>
+              <h2>カテゴリから、すぐ探せる。</h2>
               <p className="lead">
-                実際の待ち合わせスポットを見ながら、安心して取引を始められます。
+                受け渡し場所は利用者どうしで自由に相談して決められます（下記は一例です）。
               </p>
             </div>
             <Link className="btn btn-outline" href="#listings">
@@ -162,10 +162,10 @@ export default async function HomePage({
                 alt="新潟大学附属図書館前"
               />
               <div className="card-body">
-                <span className="tag">五十嵐キャンパス</span>
-                <h3>附属図書館前</h3>
+                <span className="tag">場所の一例</span>
+                <h3>図書館前のような場所</h3>
                 <p className="lead">
-                  人目があり、落ち着いて待ち合わせしやすい入口まわり。
+                  人目があり、落ち着いて待ち合わせしやすい場所の一例です。
                 </p>
               </div>
             </article>
@@ -177,10 +177,10 @@ export default async function HomePage({
                 alt="新潟大学第一食堂前"
               />
               <div className="card-body">
-                <span className="tag">五十嵐キャンパス</span>
-                <h3>第一食堂前</h3>
+                <span className="tag">場所の一例</span>
+                <h3>食堂前のような場所</h3>
                 <p className="lead">
-                  広場があり、手渡し場所として相談しやすいスポット。
+                  広場があり、手渡し場所として相談しやすい場所の一例です。
                 </p>
               </div>
             </article>

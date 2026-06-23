@@ -12,6 +12,7 @@ import {
   Package,
 } from "lucide-react";
 import { ContactSellerButton } from "@/components/ContactSellerButton";
+import { PurchaseActions } from "@/components/PurchaseActions";
 import {
   fetchInventoryItem,
   fetchSellerListingStats,
@@ -232,15 +233,19 @@ export default async function StockDetailPage({
           <div>
             <p className="flex items-center gap-2 font-medium text-ink">
               <Handshake size={18} className="text-brand" />
-              キャンパス内での手渡し
+              手渡しでの受け渡し
             </p>
             {item.pickup && (
               <p className="mt-1 text-[13.5px] font-medium text-ink">
-                出品者の希望場所：{item.pickup}
+                出品者の希望（目安）：{item.pickup}
               </p>
             )}
             <p className="mt-1 text-[13px] leading-[1.7] text-ink-soft">
-              受け渡しは附属図書館前・第一食堂前など、日中の人目のある学内の場所で。支払いは対面で行ってください。
+              受け渡しの<b>日時・場所は、利用者どうしで相談して決めてください</b>。
+              安全のため、日中の人目のある場所を各自でお選びください。支払いは対面で行ってください。
+            </p>
+            <p className="mt-1 text-[12px] leading-[1.6] text-ink-faint">
+              ガタフィーは特定の待ち合わせ場所の指定・提供は行いません。場所は当事者の自由な合意で決まります。
             </p>
           </div>
         </div>
@@ -255,26 +260,7 @@ export default async function StockDetailPage({
               この商品を購入する
             </h3>
           </div>
-          <a
-            href={buyUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn btn-primary w-full py-4 text-base"
-          >
-            <ShoppingBag size={18} />
-            この商品を購入する
-          </a>
-          <p className="mt-2.5 text-center text-[12.5px] text-ink-soft">
-            在庫番号・お名前は自動入力されます。フォームから購入希望を送信してください。
-          </p>
-          <a
-            href={doneUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn btn-ghost mt-2.5 w-full py-3 text-sm"
-          >
-            取引完了を報告する（購入者）
-          </a>
+          <PurchaseActions buyUrl={buyUrl} doneUrl={doneUrl} loggedIn={!!user} />
         </div>
       )}
 

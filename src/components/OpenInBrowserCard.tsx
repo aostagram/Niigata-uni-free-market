@@ -1,28 +1,21 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ExternalLink, TriangleAlert } from "lucide-react";
-import {
-  detectInApp,
-  openInExternalBrowser,
-  type InAppKind,
-} from "@/lib/in-app-browser";
+import { openInExternalBrowser, type InAppKind } from "@/lib/in-app-browser";
 
 /**
- * ログイン画面用。LINE/Instagram 等のアプリ内ブラウザを検知し、
- * 外部ブラウザで開くよう案内する（Google ログインの 403 対策）。
+ * アプリ内ブラウザ(LINE等)で「購入」「出品者への連絡」など、ログインが必要な
+ * 操作をブロックし、外部ブラウザで開き直すよう促すカード。
  */
-export function InAppBrowserNotice() {
-  const [kind, setKind] = useState<InAppKind>(null);
+export function OpenInBrowserCard({
+  kind,
+  action,
+}: {
+  kind: InAppKind;
+  action: string;
+}) {
   const [copied, setCopied] = useState(false);
-
-  useEffect(() => {
-    // navigator はクライアントのみ。マウント後に判定する必要がある。
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setKind(detectInApp(navigator.userAgent || ""));
-  }, []);
-
-  if (!kind) return null;
 
   const onOpen = () => {
     if (openInExternalBrowser(kind) === "copied") {
@@ -32,14 +25,14 @@ export function InAppBrowserNotice() {
   };
 
   return (
-    <div className="mb-4 w-full rounded-xl border border-coral-line bg-coral-bg p-4">
+    <div className="rounded-xl border border-coral-line bg-coral-bg p-4">
       <p className="flex items-center gap-2 font-bold text-coral">
         <TriangleAlert size={18} className="flex-none" />
-        このアプリ内ブラウザではログインできません
+        ブラウザで開いてください
       </p>
       <p className="mt-1.5 text-[13px] leading-[1.7] text-ink-soft">
-        Googleの安全ポリシーにより、LINE等のアプリ内ブラウザではログインがブロックされます。
-        <b>Safari / Chrome</b> で開いてからログインしてください。
+        {action}にはログインが必要です。LINE等のアプリ内ブラウザではログインできないため、
+        <b>Safari / Chrome</b> で開き直してから操作してください。
       </p>
       <button
         type="button"
