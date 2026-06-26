@@ -168,7 +168,18 @@ async function fetchAllItems(): Promise<InventoryItem[]> {
       description: find((h) => h === "説明"),
       status: find((h) => h.includes("ステータス")),
       category: find((h) => h.includes("カテゴリ")),
-      sellerEmail: find((h) => h.includes("出品者") && h.includes("gmail")),
+      // 出品者メール列。見出しが「学内gmail」「メールアドレス」等いずれでも
+      // 拾えるよう緩めに検出する（厳しすぎると全行のメールが空＝出品数が常に0に
+      // なり、マイページの出品数が増えない/チャット相手が見つからない原因になる）。
+      sellerEmail: (() => {
+        const i = find(
+          (h) =>
+            h.includes("出品者") &&
+            (/gmail|mail|メール|アドレス/i.test(h)),
+        );
+        // 「出品者」を含むメール列が無ければ、メール系の列を最後の手段で拾う。
+        return i >= 0 ? i : find((h) => /gmail|e-?mail|メールアドレス/i.test(h));
+      })(),
       pickup: find((h) => h.includes("受け渡し") || h.includes("受渡")),
     };
     const imageCols = header
