@@ -1,9 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { Check, AlertCircle } from "lucide-react";
+import { AlertCircle } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { ALLOWED_EMAIL_DOMAIN, CONSENT_VERSION } from "@/lib/constants";
+import { ConsentDocBox } from "@/components/ConsentDocBox";
+import { TERMS, PRIVACY } from "@/lib/legal";
 
 function GoogleG() {
   return (
@@ -25,34 +27,6 @@ function GoogleG() {
         d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"
       />
     </svg>
-  );
-}
-
-function Checkbox({
-  checked,
-  onToggle,
-  children,
-}: {
-  checked: boolean;
-  onToggle: () => void;
-  children: React.ReactNode;
-}) {
-  return (
-    <label className="flex cursor-pointer items-center gap-3 py-1">
-      <button
-        type="button"
-        onClick={onToggle}
-        aria-pressed={checked}
-        className="flex h-6 w-6 flex-none items-center justify-center rounded-[7px] border-2 transition"
-        style={{
-          borderColor: checked ? "var(--brand)" : "#cfd8bf",
-          background: checked ? "var(--brand)" : "#fff",
-        }}
-      >
-        {checked && <Check size={15} strokeWidth={3} className="text-white" />}
-      </button>
-      <span className="text-[15px] text-ink">{children}</span>
-    </label>
   );
 }
 
@@ -92,36 +66,24 @@ export function LoginButton() {
   return (
     <div>
       <div className="rounded-[var(--radius-ds)] border-[1.5px] border-line bg-white/60 p-5">
-        <p className="font-round mb-2.5 text-sm font-medium text-brand-deep">
-          ログインするには、以下の両方にチェックを入れてください。
+        <p className="font-round mb-3 text-sm font-medium text-brand-deep">
+          ログインするには、利用規約とプライバシーポリシーを
+          <b>それぞれ一番下まで読んで</b>、両方に同意してください。
         </p>
-        <Checkbox checked={agreeTerms} onToggle={() => setAgreeTerms((v) => !v)}>
-          <a
-            href="/terms"
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={(e) => e.stopPropagation()}
-            className="text-brand-deep underline"
-          >
-            利用規約
-          </a>{" "}
-          に同意します
-        </Checkbox>
-        <Checkbox
+        <ConsentDocBox
+          doc={TERMS}
+          fullHref="/terms"
+          label="利用規約に同意します"
+          checked={agreeTerms}
+          onChange={setAgreeTerms}
+        />
+        <ConsentDocBox
+          doc={PRIVACY}
+          fullHref="/privacy"
+          label="プライバシーポリシーに同意します"
           checked={agreePrivacy}
-          onToggle={() => setAgreePrivacy((v) => !v)}
-        >
-          <a
-            href="/privacy"
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={(e) => e.stopPropagation()}
-            className="text-brand-deep underline"
-          >
-            プライバシーポリシー
-          </a>{" "}
-          に同意します
-        </Checkbox>
+          onChange={setAgreePrivacy}
+        />
 
         <button
           onClick={handleLogin}
