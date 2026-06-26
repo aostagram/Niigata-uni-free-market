@@ -8,7 +8,7 @@ import { ALLOWED_EMAIL_DOMAIN, SERVICE_DISCLAIMER } from "@/lib/constants";
 export const metadata: Metadata = {
   title: "ログイン",
   description:
-    "新潟大学のメールアドレスでログインして、ガタフィーで学内フリマを始めましょう。",
+    "新潟大学のメールアドレスでログインして、ガタフィーの学内掲示板を使ってみましょう。",
   alternates: { canonical: "/login" },
 };
 
@@ -55,7 +55,7 @@ export default async function LoginPage({
         <p className="mb-6 text-center text-[15px] leading-[1.8] text-ink-soft">
           新潟大学の学生のための
           <br />
-          フリマアプリです。
+          掲示板アプリです。
         </p>
 
         {errorMessage && (

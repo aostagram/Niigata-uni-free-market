@@ -30,7 +30,7 @@ export function Footer() {
           ))}
         </div>
         <p className="mt-4 text-center text-xs text-ink-faint">
-          © {new Date().getFullYear()} ガタフィー — Niigata Free Market
+          © {new Date().getFullYear()} ガタフィー — Niigata Campus Board
         </p>
       </div>
     </footer>

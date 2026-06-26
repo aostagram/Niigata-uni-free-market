@@ -65,7 +65,7 @@ export function mailLayout(title: string, bodyHtml: string): string {
     <h1 style="font-size:18px;color:#3c4a2e">${title}</h1>
     <div style="font-size:14px;line-height:1.9">${bodyHtml}</div>
     <p style="margin-top:24px;font-size:12px;color:#9aa48d">
-      このメールはガタフィー（新潟大学生限定フリマ）の自動通知です。<br/>
+      このメールはガタフィー（新潟大学生限定の掲示板）の自動通知です。<br/>
       心当たりがない場合は破棄してください。
     </p>
   </div>`;

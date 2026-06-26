@@ -42,11 +42,11 @@ export default async function HomePage({
         <div className="hero-content">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img className="hero-logo" src="/brand/logo.png" alt="ガタフィー" />
-          <p className="eyebrow">新潟大学の学生限定マーケット</p>
+          <p className="eyebrow">新潟大学の学生限定の掲示板</p>
           <h1>
             新大生だけの、
             <br />
-            安心して、すぐ手に入るフリマ。
+            安心して使える学内掲示板。
           </h1>
           <p className="hero-copy">
             教科書も、家具も、生活用品も。新潟大学の仲間どうしで、学内の明るい場所を選んで手渡しできます。
@@ -92,7 +92,7 @@ export default async function HomePage({
           <div className="products-layout">
             <div className="paint-card visual-fill">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/brand/market-items.webp" alt="フリマ商品イメージ" />
+              <img src="/brand/market-items.webp" alt="掲示板の出品イメージ" />
             </div>
             <div className="product-grid">
               {inventory.length > 0
@@ -310,7 +310,7 @@ export default async function HomePage({
         <div className="container">
           <div className="cta-band">
             <div>
-              <h2>新大生だけのフリマを、まずは無料で。</h2>
+              <h2>新大生だけの掲示板を、まずは無料で。</h2>
               <p>出品・検索・チャット・学内手渡しまで、シンプルに。</p>
             </div>
             <a
