@@ -61,7 +61,7 @@ export function LegalDocumentView({ doc }: { doc: LegalDocument }) {
         </div>
 
         <p className="mt-6 text-center text-xs text-ink-faint">
-          © 2026 ガタフィー — Niigata Campus Board
+          © 2026 ガタフィー — Niigata Flea Market Board
         </p>
       </div>
     </main>

@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { ArrowLeft } from "lucide-react";
 import { StockCard } from "@/components/StockCard";
+import { CategoryFilterBar } from "@/components/CategoryFilterBar";
 import { CATEGORIES, fetchInventory } from "@/lib/inventory";
 import { getCurrentUser } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
@@ -63,24 +64,11 @@ export default async function StockListPage({
         </div>
       </div>
 
-      {/* カテゴリ絞り込みバー */}
-      <div className="mb-6 flex flex-wrap gap-2">
-        <Link
-          href="/stock"
-          className={`btn ${!category || category === "all" ? "btn-primary" : "btn-ghost"} px-4 py-2 text-sm`}
-        >
-          すべて
-        </Link>
-        {CATEGORIES.map((c) => (
-          <Link
-            key={c.key}
-            href={`/stock?category=${c.key}`}
-            className={`btn ${category === c.key ? "btn-primary" : "btn-ghost"} px-4 py-2 text-sm`}
-          >
-            {c.label}
-          </Link>
-        ))}
-      </div>
+      {/* カテゴリ絞り込みバー（実験運用中: 教科書以外は準備中） */}
+      <CategoryFilterBar
+        categories={CATEGORIES.map((c) => ({ key: c.key, label: c.label }))}
+        active={category}
+      />
 
       {items.length === 0 ? (
         <p className="ds-card border-dashed py-16 text-center text-sm text-ink-soft">

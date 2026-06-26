@@ -44,7 +44,7 @@ export async function Header() {
               |
             </span>
             <span className="truncate text-[10px] text-brand-deep sm:text-[11px]">
-              新潟発の掲示板アプリ
+              新潟発のフリマ掲示板
             </span>
           </span>
         </Link>

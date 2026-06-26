@@ -124,7 +124,7 @@ const SOLD = /(売却|売り切れ|売切|取引完了|完了|終了|sold)/i;
  * テスト・ダミー・購入禁止などの「本番に出したくない出品」を判定する印。
  * 商品名・説明に含まれていれば一覧/詳細から除外する。価格「非売品」も除外。
  */
-const HIDE = /削除予定|購入禁止|購入しないで|本物では|※本物|ダミー|テスト用|テストです|仮商品|仮テスト|仮の|仮_/;
+const HIDE = /削除予定|購入禁止|購入しないで|本物では|※本物|ダミー|テスト用|テストです|仮商品|仮テスト|仮の商品|仮のテスト|仮_/;
 
 /** ステータス列にこの語があれば非表示（シート側で出品を取り下げる手段）。 */
 const HIDE_STATUS = /非表示|取り下げ|取下げ|下書き|保留|削除/;
@@ -211,7 +211,10 @@ export async function fetchInventory(): Promise<InventoryItem[]> {
 export async function fetchInventoryItem(
   stockId: string,
 ): Promise<InventoryItem | null> {
-  const it = (await fetchAllItems()).find((x) => x.stockId === stockId);
+  const id = stockId.trim();
+  const matches = (await fetchAllItems()).filter((x) => x.stockId === id);
+  // 同一在庫IDが複数行ある場合に備え、表示できる行（非公開でない）を優先する。
+  const it = matches.find((m) => !m.hidden) ?? matches[0];
   return it && !it.hidden ? it : null;
 }
 
