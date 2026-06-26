@@ -84,6 +84,21 @@ function normalizeImageUrl(url: string): string {
   return u;
 }
 
+/**
+ * 1つの画像セルを個別URLへ分割する。Google フォームで「複数ファイルを許可」した
+ * 写真質問は、1セルに複数のDriveリンクが ", " 区切り（や改行区切り）で入るため、
+ * これを分割しないと2枚目以降（例: 3枚目）がサイトに表示されない。
+ * URL境界（http の直前のカンマ／改行）でのみ分割し、単一URLはそのまま返す。
+ */
+function splitImageCell(cell: string): string[] {
+  const v = cell.trim();
+  if (!v) return [];
+  return v
+    .split(/[\r\n]+|,\s*(?=https?:\/\/)/)
+    .map((s) => s.trim())
+    .filter((s) => s.length > 0);
+}
+
 /** 最小限の CSV パーサ（引用符・改行入りセル・""エスケープ対応）。 */
 function parseCsv(text: string): string[][] {
   const rows: string[][] = [];
@@ -170,10 +185,14 @@ async function fetchAllItems(): Promise<InventoryItem[]> {
         const title = get(r, ci.title);
         const description = get(r, ci.description);
         const price = get(r, ci.price);
-        const images = imageCols
-          .map((i) => get(r, i))
-          .filter((v) => v.length > 0)
-          .map(normalizeImageUrl);
+        const images = Array.from(
+          new Set(
+            imageCols
+              .flatMap((i) => splitImageCell(get(r, i)))
+              .map(normalizeImageUrl)
+              .filter((v) => v.length > 0),
+          ),
+        );
         return {
           stockId: get(r, ci.stockId),
           title,
