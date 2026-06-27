@@ -56,7 +56,10 @@ export default async function ChatRoomPage({
   const messages = ((messageData ?? []) as Message[]).reverse();
 
   return (
-    <div className="flex h-[calc(100dvh-13rem)] flex-col">
+    // チャット会話画面はヘッダー直下〜画面最下部までを使い切り、入力欄を
+    // 画面下にぴったり固定する。フッター/ボトムタブはこの画面では非表示
+    // (ConditionalChrome)。-mb で親レイアウトの下パディングを相殺する。
+    <div className="-mb-28 flex h-[calc(100dvh-5.5rem)] flex-col md:-mb-10">
       {/* チャット相手 + 対象商品 */}
       <div className="flex shrink-0 items-center gap-3 border-b border-line pb-3">
         <Link

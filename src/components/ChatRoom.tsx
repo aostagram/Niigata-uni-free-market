@@ -1,10 +1,9 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { ShieldCheck, Send } from "lucide-react";
+import { Send } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { sendMessage } from "@/app/actions/chat";
-import { SAFETY_GUIDELINE } from "@/lib/constants";
 import type { Message } from "@/lib/types";
 
 export function ChatRoom({
@@ -80,13 +79,9 @@ export function ChatRoom({
   }
 
   return (
-    <div className="flex flex-1 flex-col overflow-hidden">
-      {/* 安全な取引ガイドライン(常時表示) */}
-      <div className="flex shrink-0 items-start gap-2 rounded-xl border border-line bg-panel px-3 py-2.5 text-xs leading-relaxed text-ink-soft">
-        <ShieldCheck size={16} className="mt-0.5 shrink-0 text-brand" />
-        <span>{SAFETY_GUIDELINE}</span>
-      </div>
-
+    <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
+      {/* 安全な取引ガイドラインはチャット内には表示しない(嵩張るため)。
+         安全な取引の案内は各商品ページの「受け渡しについて」に集約している。 */}
       <div className="thin-scroll flex-1 space-y-3.5 overflow-y-auto py-4">
         {messages.length === 0 && (
           <p className="py-8 text-center text-sm text-ink-faint">
@@ -109,9 +104,11 @@ export function ChatRoom({
         <div ref={bottomRef} />
       </div>
 
+      {/* 入力欄は画面下にぴったり固定(flex の最後尾＝列の最下部)。
+         iPhone のホームバー分の余白も確保する。 */}
       <form
         onSubmit={handleSend}
-        className="sticky bottom-0 flex shrink-0 items-center gap-2.5 border-t border-line bg-background py-3"
+        className="flex shrink-0 items-center gap-2.5 border-t border-line bg-background pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]"
       >
         <input
           value={text}
