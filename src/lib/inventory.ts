@@ -85,16 +85,21 @@ function normalizeImageUrl(url: string): string {
 }
 
 /**
- * 1つの画像セルを個別URLへ分割する。Google フォームで「複数ファイルを許可」した
+ * 1つの画像セルから個別URLを取り出す。Google フォームで「複数ファイルを許可」した
  * 写真質問は、1セルに複数のDriveリンクが ", " 区切り（や改行区切り）で入るため、
- * これを分割しないと2枚目以降（例: 3枚目）がサイトに表示されない。
- * URL境界（http の直前のカンマ／改行）でのみ分割し、単一URLはそのまま返す。
+ * これを取りこぼすと2枚目以降（例: 3枚目）がサイトに表示されない。
+ * まずセル内の http(s) URL を全て抽出し（カンマ・改行・スペースのどれで区切られて
+ * いても確実に拾える）、URL形式が無いときだけ従来どおり区切りで分割する。
  */
 function splitImageCell(cell: string): string[] {
   const v = cell.trim();
   if (!v) return [];
+  // セル内の全 URL を抽出。Drive リンクにカンマ・空白は含まれないため安全。
+  const urls = v.match(/https?:\/\/[^\s,、]+/g);
+  if (urls && urls.length > 0) return urls.map((s) => s.trim());
+  // URL でなければ（裸のファイルIDなど）区切りで分割する。
   return v
-    .split(/[\r\n]+|,\s*(?=https?:\/\/)/)
+    .split(/[\r\n,;、]+/)
     .map((s) => s.trim())
     .filter((s) => s.length > 0);
 }
@@ -149,6 +154,25 @@ const HIDE_STATUS = /非表示|取り下げ|取下げ|下書き|保留|削除/;
  * 例: 運営テスト用の「歯はよく磨こう」。新しく隠したい商品名はここに追加。
  */
 const HIDE_TITLES = new Set(["歯はよく磨こう"]);
+
+/**
+ * 公開する商品を、ここに挙げたキーワード（商品名の部分一致）だけに限定する
+ * allowlist（許可リスト）。空配列にすると従来どおり全件（HIDE 等のみ適用）。
+ *
+ * 運営の指示により、現在は下記2点のみを掲載する:
+ *   - 「大学で初めて学ぶデータサイエンス」（→「データサイエンス」で一致）
+ *   - 「ニューエクスプレスラテン語」（→「ラテン語」で一致）
+ * これにより「仮」付きのテスト商品や「歯はよく磨こう」などは、シート側に
+ * 残っていてもサイトには一切表示されない（一覧・詳細・直リンクすべて）。
+ */
+const SHOW_ONLY_TITLES = ["データサイエンス", "ラテン語"];
+
+/** allowlist が有効なとき、その商品名が掲載対象かどうか。 */
+function isAllowedTitle(title: string): boolean {
+  if (SHOW_ONLY_TITLES.length === 0) return true;
+  const t = (title ?? "").trim();
+  return SHOW_ONLY_TITLES.some((kw) => t.includes(kw));
+}
 
 /** 全在庫を取得（売却済も sold=true で含む）。失敗時は空配列。 */
 async function fetchAllItems(): Promise<InventoryItem[]> {
@@ -218,6 +242,7 @@ async function fetchAllItems(): Promise<InventoryItem[]> {
           reserved: /予約/.test(status),
           sold: SOLD.test(status),
           hidden:
+            !isAllowedTitle(title) ||
             HIDE.test(title) ||
             HIDE.test(description) ||
             /非売品/.test(price) ||

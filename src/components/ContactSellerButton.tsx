@@ -43,7 +43,10 @@ export function ContactSellerButton({ stockId }: { stockId: string }) {
       onClick={() =>
         startTransition(async () => {
           const res = await startStockChat(stockId);
+          // チャットへ遷移できた場合は res は返らない（redirect）。
+          // 連絡できないときは error、メールで取り次げたときは message を表示。
           if (res?.error) alert(res.error);
+          else if (res?.message) alert(res.message);
         })
       }
       className="btn btn-primary w-full py-4 text-base"

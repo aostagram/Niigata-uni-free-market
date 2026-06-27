@@ -30,10 +30,13 @@ export async function sendMail({
   to,
   subject,
   html,
+  replyTo,
 }: {
   to: string;
   subject: string;
   html: string;
+  /** 返信先（例: 購入希望者のメール）。出品者がそのまま返信できるようにする。 */
+  replyTo?: string;
 }): Promise<{ ok: boolean; skipped?: boolean }> {
   const t = getTransporter();
   if (!t) {
@@ -48,6 +51,7 @@ export async function sendMail({
       to,
       subject,
       html,
+      ...(replyTo ? { replyTo } : {}),
     });
     return { ok: true };
   } catch (e) {
