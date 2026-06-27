@@ -6,13 +6,11 @@ import {
   MapPin,
   Handshake,
   TriangleAlert,
-  ShoppingBag,
   CheckCircle2,
   Store,
   Package,
 } from "lucide-react";
 import { ContactSellerButton } from "@/components/ContactSellerButton";
-import { PurchaseActions } from "@/components/PurchaseActions";
 import {
   fetchInventoryItem,
   fetchSellerListingStats,
@@ -26,7 +24,6 @@ import { StarRating } from "@/components/StarRating";
 import { FollowButton } from "@/components/FollowButton";
 import { getCurrentUser } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
-import { buyerInquiryUrl, completeBuyerUrl } from "@/lib/links";
 
 /** 在庫（スプレッドシート）から1商品の詳細。メルカリ風に画像複数＋購入/連絡導線。 */
 export default async function StockDetailPage({
@@ -38,22 +35,7 @@ export default async function StockDetailPage({
   const item = await fetchInventoryItem(decodeURIComponent(stockId));
   if (!item) notFound();
 
-  // ログイン情報でフォームを自動入力（在庫ID・名前・メールの再入力をなくす）
   const user = await getCurrentUser();
-  let name: string | undefined;
-  let email: string | undefined;
-  if (user) {
-    const supabase = await createClient();
-    const { data: prof } = await supabase
-      .from("profiles")
-      .select("nickname, full_name, email")
-      .eq("id", user.id)
-      .single();
-    name = prof?.nickname ?? prof?.full_name ?? undefined;
-    email = prof?.email ?? user.email ?? undefined;
-  }
-  const buyUrl = buyerInquiryUrl({ stockId: item.stockId, name, email });
-  const doneUrl = completeBuyerUrl({ stockId: item.stockId, email });
 
   // 出品者情報（在庫の出品者gmailで集計）。
   const sellerEmail = item.sellerEmail;
@@ -155,13 +137,10 @@ export default async function StockDetailPage({
             </div>
           ) : (
             <div className="mt-5 flex flex-col gap-2.5">
-              {/* 出品者へ連絡（アプリ内チャット）。待ち合わせ場所もここで相談。 */}
+              {/* 出品者へ直接連絡（アプリ内チャット）。購入の相談・受け渡しもここから。 */}
               {!isOwnItem && <ContactSellerButton stockId={item.stockId} />}
               <p className="text-center text-[12.5px] text-ink-soft">
-                出品者のアカウントへ直接メッセージを送れます。受け取り場所や日時の相談もこちらから。
-              </p>
-              <p className="text-center text-[12px] text-ink-faint">
-                購入のお申し込みは、下の「この商品を購入する」からどうぞ。
+                出品者のアカウントへ直接メッセージを送れます。購入の相談・受け取り場所・日時の相談もこちらから。
               </p>
             </div>
           )}
@@ -250,19 +229,6 @@ export default async function StockDetailPage({
           </div>
         </div>
       </div>
-
-      {/* 購入（スクロールした先に配置）。在庫商品はフォームで購入希望を受け付ける。 */}
-      {!item.sold && (
-        <div className="ds-card mt-6 p-6">
-          <div className="heading-row mb-3">
-            <ShoppingBag size={18} className="text-brand" />
-            <h3 className="font-round text-[16px] font-bold text-brand-deep">
-              この商品を購入する
-            </h3>
-          </div>
-          <PurchaseActions buyUrl={buyUrl} doneUrl={doneUrl} loggedIn={!!user} />
-        </div>
-      )}
 
       <div className="mt-6 text-center">
         <span className="nav-link inline-flex items-center gap-1.5 text-ink-faint">

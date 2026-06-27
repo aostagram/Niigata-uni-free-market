@@ -113,7 +113,7 @@ export async function startChatRoom(itemId: string) {
 /**
  * 在庫(スプレッドシート)商品で、購入希望者が出品者アカウントに直接連絡する。
  * 出品者がアプリに登録済みなら chat_rooms(stock_id 方式)を作成/取得して遷移。
- * 未登録ならエラー文言を返し、画面側で購入フォームへ誘導する。
+ * 未登録ならエラー文言を返す。
  */
 export async function startStockChat(stockId: string) {
   const supabase = await createClient();
@@ -140,7 +140,7 @@ export async function startStockChat(stockId: string) {
   if (!seller)
     return {
       error:
-        "この出品者はまだガタフィーに登録していないため、チャットを開始できません。下の「この商品を購入する」からご連絡ください。",
+        "この出品者はまだガタフィーに登録していないため、チャットを開始できません。時間をおいて再度お試しください。",
     };
 
   // 在庫番号×購入者で1ルーム。既存があれば再利用。

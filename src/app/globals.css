@@ -121,7 +121,8 @@ body {
 /* 全ページ共通の固定背景レイヤー（body 直下の div）。
    PC は従来どおり横長の水彩を全面に敷く。スマホは @media で縦長へ差し替え。 */
 .page-bg-layer {
-  background: url("/brand/page-bg.png") center center / 100% 100% no-repeat;
+  /* cover で原画の比率を保つ（100% 100% は画面に合わせて引き伸ばすため水彩が潰れる） */
+  background: url("/brand/page-bg.png") center center / cover no-repeat;
 }
 
 .font-round {
@@ -983,13 +984,6 @@ body {
   }
   .lp-home .hero::before {
     background: url("/brand/hero-bg-mobile.webp") center top / 100% auto no-repeat;
-  }
-  /* ヒーローの「出品を始める」を「商品を探す」と同じ緑塗りにして視認性を上げる */
-  .lp-home .hero-actions .btn-outline {
-    border-color: transparent;
-    color: #fff;
-    background: linear-gradient(135deg, var(--brand-grad-from), var(--brand));
-    box-shadow: 0 18px 36px -24px rgba(95, 129, 40, 0.82);
   }
   .lp-home .hero-content {
     width: min(100% - 36px, 520px);

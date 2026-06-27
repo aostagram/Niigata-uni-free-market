@@ -210,12 +210,7 @@ export default async function ProfilePage() {
           <div className="lp-home">
             <div className="product-grid">
               {myItems.map((it) => (
-                <StockCard
-                  key={it.stockId}
-                  item={it}
-                  buyerName={profile.nickname ?? undefined}
-                  buyerEmail={email}
-                />
+                <StockCard key={it.stockId} item={it} />
               ))}
             </div>
           </div>

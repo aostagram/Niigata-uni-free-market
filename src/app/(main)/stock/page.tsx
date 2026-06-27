@@ -4,8 +4,6 @@ import { ArrowLeft } from "lucide-react";
 import { StockCard } from "@/components/StockCard";
 import { CategoryFilterBar } from "@/components/CategoryFilterBar";
 import { CATEGORIES, fetchInventory } from "@/lib/inventory";
-import { getCurrentUser } from "@/lib/auth";
-import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
   title: "商品一覧",
@@ -26,21 +24,6 @@ export default async function StockListPage({
       ? all.filter((it) => it.category === category)
       : all;
 
-  // フォーム自動入力用（未ログインでも動く）。
-  const user = await getCurrentUser();
-  let buyerName: string | undefined;
-  let buyerEmail: string | undefined;
-  if (user) {
-    const supabase = await createClient();
-    const { data: prof } = await supabase
-      .from("profiles")
-      .select("nickname, full_name, email")
-      .eq("id", user.id)
-      .single();
-    buyerName = prof?.nickname ?? prof?.full_name ?? undefined;
-    buyerEmail = prof?.email ?? user.email ?? undefined;
-  }
-
   const activeLabel =
     CATEGORIES.find((c) => c.key === category)?.label ?? "すべての商品";
 
@@ -59,7 +42,7 @@ export default async function StockListPage({
           <p className="eyebrow">商品一覧</p>
           <h2>{activeLabel}</h2>
           <p className="lead">
-            購入・取引完了フォームには、各商品の<b>「在庫番号」</b>を入力してください。
+            気になる商品は<b>「くわしく見る」</b>から、出品者に直接チャットで連絡できます。
           </p>
         </div>
       </div>
@@ -77,12 +60,7 @@ export default async function StockListPage({
       ) : (
         <div className="product-grid">
           {items.map((it) => (
-            <StockCard
-              key={it.stockId}
-              item={it}
-              buyerName={buyerName}
-              buyerEmail={buyerEmail}
-            />
+            <StockCard key={it.stockId} item={it} />
           ))}
         </div>
       )}

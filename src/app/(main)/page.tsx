@@ -4,8 +4,6 @@ import { StockCard } from "@/components/StockCard";
 import { CategoryTiles } from "@/components/CategoryTiles";
 import { FORMS } from "@/lib/links";
 import { fetchInventory } from "@/lib/inventory";
-import { getCurrentUser } from "@/lib/auth";
-import { createClient } from "@/lib/supabase/server";
 
 /** ホーム新着に出す件数（これ以上は「もっと見る」→ /stock）。 */
 const HOME_NEW_LIMIT = 6;
@@ -20,21 +18,6 @@ export default async function HomePage({
 
   // 管理スプレッドシートの在庫タブから商品一覧を取得（在庫番号付き）。
   const inventory = await fetchInventory();
-
-  // ログイン中ならフォーム自動入力用の名前・メールを取得（未ログインでも動く）。
-  const user = await getCurrentUser();
-  let buyerName: string | undefined;
-  let buyerEmail: string | undefined;
-  if (user) {
-    const supabase = await createClient();
-    const { data: prof } = await supabase
-      .from("profiles")
-      .select("nickname, full_name, email")
-      .eq("id", user.id)
-      .single();
-    buyerName = prof?.nickname ?? prof?.full_name ?? undefined;
-    buyerEmail = prof?.email ?? user.email ?? undefined;
-  }
 
   return (
     <div className="lp-home">
@@ -57,7 +40,7 @@ export default async function HomePage({
               商品を探す
             </Link>
             <a
-              className="btn btn-outline"
+              className="btn btn-primary"
               href={FORMS.sellerListing}
               target="_blank"
               rel="noopener noreferrer"
@@ -82,8 +65,8 @@ export default async function HomePage({
               <p className="eyebrow">新着商品</p>
               <h2>新生活にちょうどいいものを、学内で。</h2>
               <p className="lead">
-                購入・取引完了フォームには、各商品の
-                <b>「在庫番号」</b>を入力してください。
+                気になる商品は<b>「くわしく見る」</b>から、
+                出品者に直接チャットで連絡できます。
               </p>
             </div>
             <Link className="btn btn-outline" href="/stock">
@@ -99,14 +82,7 @@ export default async function HomePage({
               {inventory.length > 0
                 ? inventory
                     .slice(0, HOME_NEW_LIMIT)
-                    .map((it) => (
-                      <StockCard
-                        key={it.stockId}
-                        item={it}
-                        buyerName={buyerName}
-                        buyerEmail={buyerEmail}
-                      />
-                    ))
+                    .map((it) => <StockCard key={it.stockId} item={it} />)
                 : SAMPLE_PRODUCTS.map((p) => (
                     <article key={p.title} className="product-card">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -116,14 +92,6 @@ export default async function HomePage({
                         <h3>{p.title}</h3>
                         <p className="product-price">{p.price}</p>
                         <p className="product-meta">{p.meta}</p>
-                        <a
-                          className="btn btn-primary mt-3 w-full"
-                          href={FORMS.buyerInquiry}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          購入する
-                        </a>
                       </div>
                     </article>
                   ))}
