@@ -6,7 +6,6 @@ import {
   MapPin,
   Handshake,
   TriangleAlert,
-  MessageSquare,
   CheckCircle2,
   Store,
   Package,
@@ -22,6 +21,7 @@ import { isFollowing } from "@/lib/follows";
 import { StockGallery } from "@/components/StockGallery";
 import { StarRating } from "@/components/StarRating";
 import { FollowButton } from "@/components/FollowButton";
+import { StockDetailActions } from "@/components/StockDetailActions";
 import { getCurrentUser } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { buyerInquiryUrl, completeBuyerUrl } from "@/lib/links";
@@ -152,29 +152,12 @@ export default async function StockDetailPage({
               </div>
             </div>
           ) : (
-            <div className="mt-5 flex flex-col gap-2.5">
-              {/* 購入・出品者へ連絡（待ち合わせ場所もここで相談） */}
-              <a
-                href={buyUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn btn-primary w-full py-4 text-base"
-              >
-                <MessageSquare size={18} />
-                購入・出品者に連絡する
-              </a>
-              <p className="text-center text-[12.5px] text-ink-soft">
-                在庫番号・お名前は自動入力されます。受け取り場所や日時の相談もこちらから。
-              </p>
-              <a
-                href={doneUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn btn-ghost w-full py-3 text-sm"
-              >
-                取引完了を報告する（購入者）
-              </a>
-            </div>
+            <StockDetailActions
+              stockId={item.stockId}
+              buyUrl={buyUrl}
+              doneUrl={doneUrl}
+              loggedIn={!!user}
+            />
           )}
         </div>
       </div>
@@ -244,10 +227,10 @@ export default async function StockDetailPage({
           <div>
             <p className="flex items-center gap-2 font-medium text-ink">
               <Handshake size={18} className="text-brand" />
-              キャンパス内での手渡し
+              個人間での直接手渡し
             </p>
             <p className="mt-1 text-[13px] leading-[1.7] text-ink-soft">
-              受け渡しは附属図書館前・第一食堂前など、日中の人目のある学内の場所で。支払いは対面で行ってください。
+              ガタフィーは個人間の取引をサポートするための掲示板です。受け渡し場所・日時は出品者と購入者で自由に決めていただきます。支払いは対面で行ってください。
             </p>
           </div>
         </div>

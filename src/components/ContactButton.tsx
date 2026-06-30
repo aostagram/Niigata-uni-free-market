@@ -1,22 +1,34 @@
 "use client";
 
-import { useTransition } from "react";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { MessageSquare } from "lucide-react";
 import { startChatRoom } from "@/app/actions/chat";
 
 export function ContactButton({ itemId }: { itemId: string }) {
-  const [pending, startTransition] = useTransition();
+  const router = useRouter();
+  const [pending, setPending] = useState(false);
+
+  async function handleClick() {
+    if (pending) return;
+    setPending(true);
+    try {
+      const res = await startChatRoom(itemId);
+      if ("error" in res) {
+        alert(res.error);
+      } else {
+        router.push(`/chat/${res.roomId}`);
+      }
+    } finally {
+      setPending(false);
+    }
+  }
 
   return (
     <button
       type="button"
       disabled={pending}
-      onClick={() =>
-        startTransition(async () => {
-          const res = await startChatRoom(itemId);
-          if (res?.error) alert(res.error);
-        })
-      }
+      onClick={handleClick}
       className="btn btn-primary w-full py-4 text-base"
     >
       <MessageSquare size={19} />

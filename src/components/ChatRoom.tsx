@@ -1,10 +1,9 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { ShieldCheck, Send } from "lucide-react";
+import { Send } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { sendMessage } from "@/app/actions/chat";
-import { SAFETY_GUIDELINE } from "@/lib/constants";
 import type { Message } from "@/lib/types";
 
 export function ChatRoom({
@@ -41,9 +40,14 @@ export function ChatRoom({
         },
         (payload) => {
           const msg = payload.new as Message;
-          setMessages((prev) =>
-            prev.some((m) => m.id === msg.id) ? prev : [...prev, msg],
-          );
+          setMessages((prev) => {
+            if (prev.some((m) => m.id === msg.id)) return prev;
+            if (msg.sender_id === currentUserId) {
+              // 楽観的更新の仮メッセージを本物に差し替え
+              return [...prev.filter((m) => !m.id.startsWith("tmp-")), msg];
+            }
+            return [...prev, msg];
+          });
         },
       )
       .subscribe();
@@ -81,13 +85,7 @@ export function ChatRoom({
 
   return (
     <div className="flex flex-1 flex-col overflow-hidden">
-      {/* 安全な取引ガイドライン(常時表示) */}
-      <div className="flex shrink-0 items-start gap-2 rounded-xl border border-line bg-panel px-3 py-2.5 text-xs leading-relaxed text-ink-soft">
-        <ShieldCheck size={16} className="mt-0.5 shrink-0 text-brand" />
-        <span>{SAFETY_GUIDELINE}</span>
-      </div>
-
-      <div className="thin-scroll flex-1 space-y-3.5 overflow-y-auto py-4">
+      <div className="chat-messages-area thin-scroll flex-1 space-y-3.5 overflow-x-hidden overflow-y-auto py-4">
         {messages.length === 0 && (
           <p className="py-8 text-center text-sm text-ink-faint">
             最初のメッセージを送ってみましょう。
@@ -111,7 +109,7 @@ export function ChatRoom({
 
       <form
         onSubmit={handleSend}
-        className="sticky bottom-0 flex shrink-0 items-center gap-2.5 border-t border-line bg-background py-3"
+        className="chat-input-bar sticky bottom-0 flex shrink-0 items-center gap-2.5 border-t border-line bg-background py-3"
       >
         <input
           value={text}

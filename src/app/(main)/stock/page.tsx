@@ -3,8 +3,6 @@ import type { Metadata } from "next";
 import { ArrowLeft } from "lucide-react";
 import { StockCard } from "@/components/StockCard";
 import { CATEGORIES, fetchInventory } from "@/lib/inventory";
-import { getCurrentUser } from "@/lib/auth";
-import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
   title: "商品一覧",
@@ -25,30 +23,12 @@ export default async function StockListPage({
       ? all.filter((it) => it.category === category)
       : all;
 
-  // フォーム自動入力用（未ログインでも動く）。
-  const user = await getCurrentUser();
-  let buyerName: string | undefined;
-  let buyerEmail: string | undefined;
-  if (user) {
-    const supabase = await createClient();
-    const { data: prof } = await supabase
-      .from("profiles")
-      .select("nickname, full_name, email")
-      .eq("id", user.id)
-      .single();
-    buyerName = prof?.nickname ?? prof?.full_name ?? undefined;
-    buyerEmail = prof?.email ?? user.email ?? undefined;
-  }
-
   const activeLabel =
     CATEGORIES.find((c) => c.key === category)?.label ?? "すべての商品";
 
   return (
     <div className="lp-home fade-up">
-      <Link
-        href="/"
-        className="nav-link mb-4 inline-flex items-center gap-2"
-      >
+      <Link href="/" className="nav-link mb-4 inline-flex items-center gap-2">
         <ArrowLeft size={18} />
         ホームに戻る
       </Link>
@@ -58,7 +38,7 @@ export default async function StockListPage({
           <p className="eyebrow">商品一覧</p>
           <h2>{activeLabel}</h2>
           <p className="lead">
-            購入・取引完了フォームには、各商品の<b>「在庫番号」</b>を入力してください。
+            気になった商品は「くわしく見る」から詳細を確認し、出品者にチャットで相談できます。
           </p>
         </div>
       </div>
@@ -89,12 +69,7 @@ export default async function StockListPage({
       ) : (
         <div className="product-grid">
           {items.map((it) => (
-            <StockCard
-              key={it.stockId}
-              item={it}
-              buyerName={buyerName}
-              buyerEmail={buyerEmail}
-            />
+            <StockCard key={it.stockId} item={it} />
           ))}
         </div>
       )}

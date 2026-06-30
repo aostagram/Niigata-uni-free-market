@@ -38,3 +38,16 @@
 - 確認: package.json/src/最新編集(page.tsx 12:01)/node_modules/git(design-reference-night) すべて無事。dev起動OK・login200・/api/drive-image 200 image/jpeg。GitHubバックアップあり。
 - 画像表示: 管理人がDriveの「ファイルの回答」フォルダを公開→画像プロキシ /api/drive-image を PUBLIC_PATHS に追加＋fetchをno-store+UA化で実写真が表示されるように。写真無し出品は /brand/no-image.svg「画像準備中」。
 - 注意(次セッション): 作業ディレクトリは今後 ~/dev/gatafee。Desktopの旧パスは使わない。ディスクは依然99%(Library/Caches 6.7G/Downloads 6.3G が大)→要整理。
+  ※訂正: ~/dev/gatafee は実在せず、実体はiCloudパス(.../素人がアプリ開発/gatafee)が最新。移設は未反映だった。
+
+## 本番公開（Vercel新規プロジェクト gatafee）＋独自ドメイン furima.gatabottle.com
+- 経緯: オーナー「無料で公開したい。潟ボトル(gatabottle.com, Xserver管理)と紐付けて0円で」。Vercelアカウント(saao)に既存の `static-site`(生成画像モック=オーナーが"ダメ"と言ったやつ)と `gatabottle`(www.gatabottle.com 稼働中)があり、本物Next.jsアプリのプロジェクトは未存在だった。
+- 対応: main に design-reference-night をff merge＆push(14e1ae7)。クリーンclone(~/gatafee-deploy)から Vercel CLI で新規プロジェクト `gatafee` 作成・本番デプロイ。本番URL=https://gatafee.vercel.app。
+- 環境変数(production): NEXT_PUBLIC_SUPABASE_URL / ANON_KEY / NEXT_PUBLIC_SITE_URL(=https://furima.gatabottle.com) / GMAIL_USER / GMAIL_APP_PASSWORD を投入(preview登録は失敗したが公開には本番だけで十分)。
+- ハマり1: `vercel project add`で素プロジェクトを作ったため framework=None→全ルート404。API で framework=nextjs にPATCH＋再デプロイで解消。
+- ハマり2: ssoProtection=all_except_custom_domains で *.vercel.app が401。API で ssoProtection=null(完全公開)に変更。独自ドメインは元々公開対象。
+- ドメイン: `furima.gatabottle.com` を gatafee プロジェクトに追加済み。gatabottle.com の NS は Xserver(ns1-3.xdomain.ne.jp)のため Vercel から自動設定不可。
+- ★要オーナー(残作業, これをやれば公開完了):
+  1) Xserver DNSレコード設定で gatabottle.com に Aレコード追加: ホスト名 `furima` / 種別 A / 内容 `76.76.21.21`。数十分でHTTPS自動発行。
+  2) Supabase Auth→URL Configuration: Site URL=https://furima.gatabottle.com / Redirect URLs に同URLを追加(これをしないと新ドメインでGoogleログインが戻れない)。
+- 自動デプロイ(GitHub連携)は安全分類でブロック→未設定。今後の更新は ~/gatafee-deploy で `vercel --prod` 再デプロイ、もしくはVercel管理画面でGit Importを1回設定すれば自動化可。

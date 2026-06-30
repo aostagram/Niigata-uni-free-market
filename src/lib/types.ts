@@ -34,7 +34,8 @@ export type ItemWithSeller = Item & {
 
 export type ChatRoom = {
   id: string;
-  item_id: string;
+  item_id: string | null;
+  stock_id: string | null;
   buyer_id: string;
   seller_id: string;
   created_at: string;

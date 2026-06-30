@@ -134,7 +134,15 @@ async function fetchAllItems(): Promise<InventoryItem[]> {
       description: find((h) => h === "説明"),
       status: find((h) => h.includes("ステータス")),
       category: find((h) => h.includes("カテゴリ")),
-      sellerEmail: find((h) => h.includes("出品者") && h.includes("gmail")),
+      sellerEmail: find(
+        (h) =>
+          h.includes("出品者") &&
+          (h.toLowerCase().includes("gmail") || h.includes("メール")),
+      ),
+      // フォーム「確認のため、もう一度gmailを記入してください」列をフォールバックに
+      sellerEmailAlt: find(
+        (h) => h.includes("確認") && h.toLowerCase().includes("gmail"),
+      ),
     };
     // "画像" を含む列を左から順に最大3つ取得（[1 行目] はGoogleフォームが付ける余分な接尾辞なので除外）
     const imageCols = header
@@ -148,22 +156,29 @@ async function fetchAllItems(): Promise<InventoryItem[]> {
     return rows
       .slice(1)
       .map((r) => {
-        const status = get(r, ci.status);
+        // ステータス列に在庫ID（K001等）が誤入力された場合、直前の列を参照して補正
+        const rawStatus = get(r, ci.status);
+        const status = /^K\d+$/i.test(rawStatus)
+          ? get(r, ci.status - 1)
+          : rawStatus;
         const rawImages = imageCols
           .map((i) => get(r, i))
           .filter((v) => v.length > 0);
-        
-        let sellerEmail = get(r, ci.sellerEmail).toLowerCase();
-        let images = rawImages.map(normalizeImageUrl);
 
-        // 救済措置: 列のズレにより画像列にメールアドレスが入ってしまい、出品者gmailが空になっている場合の自動補正
+        let sellerEmail = get(r, ci.sellerEmail).toLowerCase();
+
+        // 画像列にメールアドレスが混入している場合は常に除外（列ズレ対策）
+        const emailsInImageCols = rawImages.filter((img) => img.includes("@"));
+        let images = rawImages
+          .filter((img) => !img.includes("@"))
+          .map(normalizeImageUrl);
+
+        // 出品者メール列が空のとき: 画像列混入 → 確認gmail列 の順でフォールバック
         if (!sellerEmail) {
-          const emailInImages = rawImages.find((img) => img.includes("@"));
-          if (emailInImages) {
-            sellerEmail = emailInImages.toLowerCase().trim();
-            images = rawImages
-              .filter((img) => !img.includes("@"))
-              .map(normalizeImageUrl);
+          if (emailsInImageCols.length > 0) {
+            sellerEmail = emailsInImageCols[0].toLowerCase().trim();
+          } else {
+            sellerEmail = get(r, ci.sellerEmailAlt).toLowerCase();
           }
         }
 
@@ -187,9 +202,11 @@ async function fetchAllItems(): Promise<InventoryItem[]> {
   }
 }
 
-/** 在庫一覧（販売中のみ。売却済は除外、予約済は表示）。 */
+/** 在庫一覧（販売中のみ。売却済・テスト用「仮」商品は除外）。 */
 export async function fetchInventory(): Promise<InventoryItem[]> {
-  return (await fetchAllItems()).filter((it) => !it.sold);
+  return (await fetchAllItems()).filter(
+    (it) => !it.sold && !/^仮/.test(it.title) && !/^\[仮\]/.test(it.title),
+  );
 }
 
 /** 在庫番号から1件取得（詳細ページ用。売却済も返す→「取引完了」表示用）。 */

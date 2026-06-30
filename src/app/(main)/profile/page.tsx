@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { requireProfile, getCurrentUser } from "@/lib/auth";
 import { ProfileForm } from "@/components/ProfileForm";
+import { AvatarUpload } from "@/components/AvatarUpload";
 import { StockCard } from "@/components/StockCard";
 import { StarRating } from "@/components/StarRating";
 import { signOut } from "@/app/actions/auth";
@@ -55,23 +56,7 @@ export default async function ProfilePage() {
           </span>
         </div>
         <div className="flex items-center gap-5">
-          {profile.avatar_url ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={profile.avatar_url}
-              alt={profile.full_name}
-              className="h-[88px] w-[88px] flex-none rounded-full object-cover"
-            />
-          ) : (
-            <span
-              className="flex h-[88px] w-[88px] flex-none items-center justify-center rounded-full"
-              style={{
-                background: "radial-gradient(circle,#eef5dd,#d6e7b6)",
-              }}
-            >
-              <Sprout size={42} className="text-brand-deep" />
-            </span>
-          )}
+          <AvatarUpload currentUrl={profile.avatar_url} />
           <div className="min-w-0 flex-1">
             <h1 className="font-round truncate text-2xl font-bold text-ink">
               {profile.nickname ?? profile.full_name}
@@ -82,7 +67,6 @@ export default async function ProfilePage() {
                 {profile.grade && <span className="tag">{profile.grade}</span>}
               </div>
             )}
-            <p className="mt-1.5 truncate text-sm text-ink-soft">{user?.email}</p>
           </div>
           <form action={signOut} className="ml-auto self-start">
             <button type="submit" className="btn btn-ghost px-4 py-2.5 text-sm">
@@ -195,7 +179,7 @@ export default async function ProfilePage() {
 
       {/* 出品中の商品（在庫スプレッドシートから、自分のgmailの出品） */}
       <div className="mt-6">
-        <div className="heading-row mb-4">
+        <div className="heading-row mb-6">
           <Camera size={20} className="text-brand-deep" />
           <h2 className="font-round text-lg font-bold text-ink">
             出品中の商品
@@ -210,12 +194,7 @@ export default async function ProfilePage() {
           <div className="lp-home">
             <div className="product-grid">
               {myItems.map((it) => (
-                <StockCard
-                  key={it.stockId}
-                  item={it}
-                  buyerName={profile.nickname ?? undefined}
-                  buyerEmail={email}
-                />
+                <StockCard key={it.stockId} item={it} />
               ))}
             </div>
           </div>

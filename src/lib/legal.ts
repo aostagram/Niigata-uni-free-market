@@ -16,6 +16,8 @@ export type LegalSection = {
 
 export type LegalDocument = {
   title: string;
+  /** localStorage フラグキー（利用規約は "terms"、プライバシーは "privacy"） */
+  storageKey: string;
   /** 制定日などのメタ表示 */
   effectiveDate: string;
   /** 冒頭の注意書き */
@@ -25,6 +27,7 @@ export type LegalDocument = {
 
 export const TERMS: LegalDocument = {
   title: "ガタフィー 利用規約",
+  storageKey: "terms",
   effectiveDate: "制定日：2026年6月8日",
   lead: "本サービスは新潟大学の学生を対象とした非公式の学生向けサービスです。新潟大学・新潟大学生協その他の大学関係機関が運営・公認・後援・監修するものではありません。",
   sections: [
@@ -180,6 +183,7 @@ export const TERMS: LegalDocument = {
 
 export const PRIVACY: LegalDocument = {
   title: "ガタフィー プライバシーポリシー",
+  storageKey: "privacy",
   effectiveDate: "制定日：2026年6月8日",
   lead: "本ポリシーは、大学Googleアカウントでのログイン、学生限定確認、出品・チャット・通報機能を前提に、利用者の個人情報の取扱いを定めるものです。",
   sections: [

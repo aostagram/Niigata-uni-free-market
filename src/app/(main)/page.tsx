@@ -3,8 +3,6 @@ import { CaseGallery } from "@/components/CaseGallery";
 import { StockCard } from "@/components/StockCard";
 import { FORMS } from "@/lib/links";
 import { fetchInventory } from "@/lib/inventory";
-import { getCurrentUser } from "@/lib/auth";
-import { createClient } from "@/lib/supabase/server";
 
 /** ホーム新着に出す件数（これ以上は「もっと見る」→ /stock）。 */
 const HOME_NEW_LIMIT = 6;
@@ -20,21 +18,6 @@ export default async function HomePage({
   // 管理スプレッドシートの在庫タブから商品一覧を取得（在庫番号付き）。
   const inventory = await fetchInventory();
 
-  // ログイン中ならフォーム自動入力用の名前・メールを取得（未ログインでも動く）。
-  const user = await getCurrentUser();
-  let buyerName: string | undefined;
-  let buyerEmail: string | undefined;
-  if (user) {
-    const supabase = await createClient();
-    const { data: prof } = await supabase
-      .from("profiles")
-      .select("nickname, full_name, email")
-      .eq("id", user.id)
-      .single();
-    buyerName = prof?.nickname ?? prof?.full_name ?? undefined;
-    buyerEmail = prof?.email ?? user.email ?? undefined;
-  }
-
   return (
     <div className="lp-home">
       {/* ===== ヒーロー ===== */}
@@ -42,11 +25,11 @@ export default async function HomePage({
         <div className="hero-content">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img className="hero-logo" src="/brand/logo.png" alt="ガタフィー" />
-          <p className="eyebrow">新潟大学の学生限定マーケット</p>
+          <p className="eyebrow">新潟大学の学生限定のフリマ掲示板</p>
           <h1>
             新大生だけの、
             <br />
-            安心して、すぐ手に入るフリマ。
+            安心して使える学内フリマ掲示板。
           </h1>
           <p className="hero-copy">
             教科書も、家具も、生活用品も。新潟大学の仲間どうしで、学内の明るい場所を選んで手渡しできます。
@@ -99,12 +82,7 @@ export default async function HomePage({
                 ? inventory
                     .slice(0, HOME_NEW_LIMIT)
                     .map((it) => (
-                      <StockCard
-                        key={it.stockId}
-                        item={it}
-                        buyerName={buyerName}
-                        buyerEmail={buyerEmail}
-                      />
+                      <StockCard key={it.stockId} item={it} />
                     ))
                 : SAMPLE_PRODUCTS.map((p) => (
                     <article key={p.title} className="product-card">
@@ -121,7 +99,7 @@ export default async function HomePage({
                           target="_blank"
                           rel="noopener noreferrer"
                         >
-                          購入する
+                          購入希望を提出する
                         </a>
                       </div>
                     </article>
@@ -144,9 +122,9 @@ export default async function HomePage({
           <div className="section-head">
             <div>
               <p className="eyebrow">新大生に便利な検索</p>
-              <h2>キャンパスとカテゴリから、すぐ探せる。</h2>
+              <h2>カテゴリから、すぐ探せる。</h2>
               <p className="lead">
-                実際の待ち合わせスポットを見ながら、安心して取引を始められます。
+                受け渡し場所は利用者どうしで自由に相談して決められます（下記は一例です）。
               </p>
             </div>
             <Link className="btn btn-outline" href="#listings">
@@ -162,10 +140,10 @@ export default async function HomePage({
                 alt="新潟大学附属図書館前"
               />
               <div className="card-body">
-                <span className="tag">五十嵐キャンパス</span>
-                <h3>附属図書館前</h3>
+                <span className="tag">場所の一例</span>
+                <h3>図書館前のような場所</h3>
                 <p className="lead">
-                  人目があり、落ち着いて待ち合わせしやすい入口まわり。
+                  人目があり、落ち着いて待ち合わせしやすい場所の一例です。
                 </p>
               </div>
             </article>
@@ -177,20 +155,31 @@ export default async function HomePage({
                 alt="新潟大学第一食堂前"
               />
               <div className="card-body">
-                <span className="tag">五十嵐キャンパス</span>
-                <h3>第一食堂前</h3>
+                <span className="tag">場所の一例</span>
+                <h3>食堂前のような場所</h3>
                 <p className="lead">
-                  広場があり、手渡し場所として相談しやすいスポット。
+                  広場があり、手渡し場所として相談しやすい場所の一例です。
                 </p>
               </div>
             </article>
           </div>
           <div className="category-grid" aria-label="カテゴリ一覧">
-            {CATEGORY_TILES.map((c) => (
-              <Link key={c.label} className="category-tile" href={c.href}>
-                <span className="category-icon">{c.icon}</span>
-                {c.label}
-              </Link>
+            <Link className="category-tile has-img" href="/stock?category=textbook">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img className="category-img" src="/brand/categories/textbook.webp" alt="教科書・参考書" />
+            </Link>
+            {(["appliance", "daily", "sports", "fashion", "other"] as const).map((cat) => (
+              <button
+                key={cat}
+                type="button"
+                aria-disabled="true"
+                className="category-tile has-img relative cursor-not-allowed"
+                style={{ opacity: 0.5 }}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img className="category-img" src={`/brand/categories/${cat}.webp`} alt={cat} />
+                <span className="absolute right-1.5 top-1.5 rounded-full bg-ink/75 px-2 py-0.5 text-[10px] font-bold text-white">準備中</span>
+              </button>
             ))}
           </div>
         </div>
@@ -211,8 +200,9 @@ export default async function HomePage({
           <div className="trust-layout">
             <div className="trust-list">
               {TRUST.map((t) => (
-                <article key={t.icon} className="paint-card trust-item">
-                  <div className="trust-icon">{t.icon}</div>
+                <article key={t.title} className="paint-card trust-item">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img className="trust-photo" src={t.img} alt={t.title} />
                   <div>
                     <h3>{t.title}</h3>
                     <p className="lead">{t.desc}</p>
@@ -322,15 +312,6 @@ export default async function HomePage({
 }
 
 /* ---------- データ ---------- */
-const CATEGORY_TILES = [
-  { label: "教科書・参考書", icon: "本", href: "/stock?category=textbook" },
-  { label: "家具・家電", icon: "椅", href: "/stock?category=appliance" },
-  { label: "生活用品", icon: "器", href: "/stock?category=daily" },
-  { label: "自転車・スポーツ", icon: "輪", href: "/stock?category=sports" },
-  { label: "服・雑貨", icon: "衣", href: "/stock?category=fashion" },
-  { label: "その他", icon: "他", href: "/stock?category=other" },
-] as const;
-
 const SAMPLE_PRODUCTS = [
   {
     img: "/brand/market-items.webp",
@@ -357,17 +338,17 @@ const SAMPLE_PRODUCTS = [
 
 const TRUST = [
   {
-    icon: "認",
+    img: "/brand/trust/verify.webp",
     title: "大学メールで本人確認",
     desc: "@mail.cc.niigata-u.ac.jp の学生だけが登録できます。",
   },
   {
-    icon: "所",
+    img: "/brand/trust/handover.webp",
     title: "学内の明るい場所で手渡し",
     desc: "附属図書館前や第一食堂前など、人目のある場所を選べます。",
   },
   {
-    icon: "守",
+    img: "/brand/trust/safety.webp",
     title: "ブロック・通報でトラブルを抑える",
     desc: "不安な相手や禁止商品に対応できる導線を用意します。",
   },

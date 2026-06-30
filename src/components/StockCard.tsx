@@ -4,24 +4,15 @@ import {
   categoryLabel,
   formatStockPrice,
 } from "@/lib/inventory";
-import { buyerInquiryUrl } from "@/lib/links";
 
 /**
  * 在庫商品カード（ホーム新着・全商品一覧で共通使用）。
  * 在庫番号・カテゴリ・状態・予約バッジを表示し、詳細/購入へ導線。
  */
-export function StockCard({
-  item,
-  buyerName,
-  buyerEmail,
-}: {
-  item: InventoryItem;
-  buyerName?: string;
-  buyerEmail?: string;
-}) {
+export function StockCard({ item }: { item: InventoryItem }) {
   const detail = `/stock/${encodeURIComponent(item.stockId)}`;
   return (
-    <article className="product-card">
+    <article className="product-card flex flex-col">
       <Link href={detail} aria-label={`${item.title} の詳細`}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
@@ -30,7 +21,7 @@ export function StockCard({
           alt={item.title}
         />
       </Link>
-      <div className="card-body">
+      <div className="card-body flex flex-1 flex-col">
         <div className="mb-1 flex flex-wrap items-center gap-1.5">
           <span className="tag" style={{ background: "#eef6dd" }}>
             在庫番号 {item.stockId}
@@ -52,21 +43,9 @@ export function StockCard({
         {item.description && (
           <p className="product-meta clamp-2">{item.description}</p>
         )}
-        <Link className="btn btn-ghost mt-3 w-full" href={detail}>
+        <Link className="btn btn-primary mt-auto w-full" href={detail}>
           くわしく見る
         </Link>
-        <a
-          className="btn btn-primary mt-2 w-full"
-          href={buyerInquiryUrl({
-            stockId: item.stockId,
-            name: buyerName,
-            email: buyerEmail,
-          })}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          購入する
-        </a>
       </div>
     </article>
   );
