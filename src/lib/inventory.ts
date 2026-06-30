@@ -136,9 +136,11 @@ async function fetchAllItems(): Promise<InventoryItem[]> {
       category: find((h) => h.includes("カテゴリ")),
       sellerEmail: find((h) => h.includes("出品者") && h.includes("gmail")),
     };
+    // "画像" を含む列を左から順に最大3つ取得（[1 行目] はGoogleフォームが付ける余分な接尾辞なので除外）
     const imageCols = header
-      .map((h, i) => (h.includes("画像") ? i : -1))
-      .filter((i) => i >= 0);
+      .map((h, i) => (h.includes("画像") && !h.includes("[1 行目]") ? i : -1))
+      .filter((i) => i >= 0)
+      .slice(0, 3);
     if (ci.stockId < 0 || ci.title < 0) return [];
 
     const get = (r: string[], i: number) => (i >= 0 ? (r[i] ?? "").trim() : "");
@@ -147,10 +149,24 @@ async function fetchAllItems(): Promise<InventoryItem[]> {
       .slice(1)
       .map((r) => {
         const status = get(r, ci.status);
-        const images = imageCols
+        const rawImages = imageCols
           .map((i) => get(r, i))
-          .filter((v) => v.length > 0)
-          .map(normalizeImageUrl);
+          .filter((v) => v.length > 0);
+        
+        let sellerEmail = get(r, ci.sellerEmail).toLowerCase();
+        let images = rawImages.map(normalizeImageUrl);
+
+        // 救済措置: 列のズレにより画像列にメールアドレスが入ってしまい、出品者gmailが空になっている場合の自動補正
+        if (!sellerEmail) {
+          const emailInImages = rawImages.find((img) => img.includes("@"));
+          if (emailInImages) {
+            sellerEmail = emailInImages.toLowerCase().trim();
+            images = rawImages
+              .filter((img) => !img.includes("@"))
+              .map(normalizeImageUrl);
+          }
+        }
+
         return {
           stockId: get(r, ci.stockId),
           title: get(r, ci.title),
@@ -158,7 +174,7 @@ async function fetchAllItems(): Promise<InventoryItem[]> {
           condition: get(r, ci.condition),
           description: get(r, ci.description),
           category: categoryKeyFromText(get(r, ci.category)),
-          sellerEmail: get(r, ci.sellerEmail).toLowerCase(),
+          sellerEmail,
           imageUrl: images[0] ?? "",
           images,
           reserved: /予約/.test(status),

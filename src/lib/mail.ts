@@ -1,29 +1,12 @@
 import "server-only";
-import nodemailer from "nodemailer";
-import { OFFICIAL_EMAIL } from "@/lib/links";
+import { Resend } from "resend";
 
-/**
- * ガタフィー公式 Gmail（gatafeefurima@gmail.com）からの通知メール送信。
- *
- * 必要な環境変数（.env.local と Vercel の両方に設定）:
- *   GMAIL_USER          送信元アドレス（= gatafeefurima@gmail.com）
- *   GMAIL_APP_PASSWORD  Google アカウントの「アプリ パスワード」(16桁)
- *
- * 未設定のときは送信せずログだけ出す（アプリは壊さない）。
- */
-let transporter: nodemailer.Transporter | null = null;
+const FROM_ADDRESS = "ガタフィー <noreply@furima.gatabottle.com>";
 
-function getTransporter(): nodemailer.Transporter | null {
-  const user = process.env.GMAIL_USER;
-  const pass = process.env.GMAIL_APP_PASSWORD;
-  if (!user || !pass) return null;
-  if (!transporter) {
-    transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: { user, pass },
-    });
-  }
-  return transporter;
+function getResend(): Resend | null {
+  const key = process.env.RESEND_API_KEY;
+  if (!key) return null;
+  return new Resend(key);
 }
 
 export async function sendMail({
@@ -35,20 +18,24 @@ export async function sendMail({
   subject: string;
   html: string;
 }): Promise<{ ok: boolean; skipped?: boolean }> {
-  const t = getTransporter();
-  if (!t) {
+  const resend = getResend();
+  if (!resend) {
     console.warn(
-      `[mail] GMAIL_USER / GMAIL_APP_PASSWORD 未設定のため送信スキップ → to=${to} subject=${subject}`,
+      `[mail] RESEND_API_KEY 未設定のため送信スキップ → to=${to} subject=${subject}`,
     );
     return { ok: false, skipped: true };
   }
   try {
-    await t.sendMail({
-      from: `"ガタフィー" <${process.env.GMAIL_USER ?? OFFICIAL_EMAIL}>`,
+    const { error } = await resend.emails.send({
+      from: FROM_ADDRESS,
       to,
       subject,
       html,
     });
+    if (error) {
+      console.error("[mail] 送信失敗:", error.message);
+      return { ok: false };
+    }
     return { ok: true };
   } catch (e) {
     console.error("[mail] 送信失敗:", e instanceof Error ? e.message : e);
