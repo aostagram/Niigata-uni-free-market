@@ -1,9 +1,16 @@
 "use client";
 
+<<<<<<< HEAD
 import { useEffect, useState } from "react";
 import { Check, AlertCircle, ExternalLink } from "lucide-react";
+=======
+import { useState } from "react";
+import { AlertCircle } from "lucide-react";
+>>>>>>> origin/main
 import { createClient } from "@/lib/supabase/client";
 import { ALLOWED_EMAIL_DOMAIN, CONSENT_VERSION } from "@/lib/constants";
+import { ConsentDocBox } from "@/components/ConsentDocBox";
+import { TERMS, PRIVACY } from "@/lib/legal";
 
 function readFlag(key: string): boolean {
   try { return localStorage.getItem(`gatafee_read_${key}`) === "1"; } catch { return false; }
@@ -20,6 +27,7 @@ function GoogleG() {
   );
 }
 
+<<<<<<< HEAD
 function Checkbox({
   checked,
   disabled,
@@ -52,6 +60,8 @@ function Checkbox({
   );
 }
 
+=======
+>>>>>>> origin/main
 export function LoginButton() {
   const [loading, setLoading] = useState(false);
   const [agreeTerms, setAgreeTerms] = useState(false);
@@ -99,6 +109,7 @@ export function LoginButton() {
     <div>
       <div className="rounded-[var(--radius-ds)] border-[1.5px] border-line bg-white/60 p-5">
         <p className="font-round mb-3 text-sm font-medium text-brand-deep">
+<<<<<<< HEAD
           ログインするには、全文を読んでから両方にチェックを入れてください。
         </p>
 
@@ -155,6 +166,25 @@ export function LoginButton() {
             </span>
           </Checkbox>
         </div>
+=======
+          ログインするには、利用規約とプライバシーポリシーを
+          <b>それぞれ一番下まで読んで</b>、両方に同意してください。
+        </p>
+        <ConsentDocBox
+          doc={TERMS}
+          fullHref="/terms"
+          label="利用規約に同意します"
+          checked={agreeTerms}
+          onChange={setAgreeTerms}
+        />
+        <ConsentDocBox
+          doc={PRIVACY}
+          fullHref="/privacy"
+          label="プライバシーポリシーに同意します"
+          checked={agreePrivacy}
+          onChange={setAgreePrivacy}
+        />
+>>>>>>> origin/main
 
         <button
           onClick={handleLogin}

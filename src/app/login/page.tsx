@@ -2,12 +2,13 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Sprout, GraduationCap } from "lucide-react";
 import { LoginButton } from "@/components/LoginButton";
+import { InAppBrowserNotice } from "@/components/InAppBrowserNotice";
 import { ALLOWED_EMAIL_DOMAIN, SERVICE_DISCLAIMER } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: "ログイン",
   description:
-    "新潟大学のメールアドレスでログインして、ガタフィーで学内フリマを始めましょう。",
+    "新潟大学のメールアドレスでログインして、ガタフィーの学内フリマ掲示板を使ってみましょう。",
   alternates: { canonical: "/login" },
 };
 
@@ -54,7 +55,7 @@ export default async function LoginPage({
         <p className="mb-6 text-center text-[15px] leading-[1.8] text-ink-soft">
           新潟大学の学生のための
           <br />
-          フリマアプリです。
+          フリマ掲示板アプリです。
         </p>
 
         {errorMessage && (
@@ -78,6 +79,11 @@ export default async function LoginPage({
               ガタフィーは、新潟大学の学生による学生のための非公式団体です。教職員の方はご利用いただけません。
             </p>
           </div>
+        </div>
+
+        {/* アプリ内ブラウザ(LINE等)では Google ログイン不可 → 外部ブラウザ案内 */}
+        <div className="w-full">
+          <InAppBrowserNotice />
         </div>
 
         {/* ログイン(同意 + Google) */}

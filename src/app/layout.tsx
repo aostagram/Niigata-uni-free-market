@@ -7,22 +7,23 @@ const SITE_URL =
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "ガタフィー | 新潟大学生のキャンパス内フリマアプリ",
+    default: "ガタフィー | 新潟大学生のキャンパス内フリマ掲示板アプリ",
     template: "%s | ガタフィー",
   },
   description:
-    "新潟大学生限定のフリマアプリ「ガタフィー」。教科書・家具・家電・自転車などをキャンパス内で直接手渡し、安心して売買・譲渡・交換できます。新大生どうしだから安心。",
+    "新潟大学生限定のフリマ掲示板アプリ「ガタフィー」。教科書・家具・家電・自転車などをキャンパス内で直接手渡し、学生どうしで安心してやり取りできます。新大生どうしだから安心。",
   keywords: [
     "ガタフィー",
     "新潟大学",
     "新大",
     "フリマ",
-    "フリマアプリ",
+    "フリマ掲示板",
+    "フリマ掲示板アプリ",
     "教科書",
     "中古",
     "学生",
     "キャンパス",
-    "売買",
+    "譲渡",
     "新潟",
   ],
   applicationName: "ガタフィー",
@@ -34,23 +35,23 @@ export const metadata: Metadata = {
     siteName: "ガタフィー",
     locale: "ja_JP",
     url: SITE_URL,
-    title: "ガタフィー | 新潟大学生のキャンパス内フリマアプリ",
+    title: "ガタフィー | 新潟大学生のキャンパス内フリマ掲示板アプリ",
     description:
-      "新潟大学生限定のフリマアプリ。教科書・家具・家電などをキャンパス内で直接手渡し、安心して売買できます。",
+      "新潟大学生限定のフリマ掲示板アプリ。教科書・家具・家電などをキャンパス内で直接手渡し、安心してやり取りできます。",
     images: [
       {
         url: "/brand/campus-hero.webp",
         width: 1200,
         height: 630,
-        alt: "ガタフィー — 新潟大学生のキャンパス内フリマアプリ",
+        alt: "ガタフィー — 新潟大学生のキャンパス内フリマ掲示板アプリ",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "ガタフィー | 新潟大学生のキャンパス内フリマアプリ",
+    title: "ガタフィー | 新潟大学生のキャンパス内フリマ掲示板アプリ",
     description:
-      "新潟大学生限定のフリマアプリ。教科書・家具・家電などをキャンパス内で安心して売買。",
+      "新潟大学生限定のフリマ掲示板アプリ。教科書・家具・家電などをキャンパス内で安心してやり取り。",
     images: ["/brand/campus-hero.webp"],
   },
   robots: {
@@ -85,7 +86,7 @@ export default function RootLayout({
         url: SITE_URL,
         name: "ガタフィー",
         description:
-          "新潟大学生限定のフリマアプリ。キャンパス内で安心して売買・譲渡できます。",
+          "新潟大学生限定のフリマ掲示板アプリ。キャンパス内で安心して譲渡・売買のやり取りができます。",
         inLanguage: "ja",
       },
       {
@@ -124,15 +125,7 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-dvh antialiased relative">
-        <div
-          className="fixed inset-0 -z-50 pointer-events-none"
-          style={{
-            backgroundImage: "url('/brand/page-bg.png')",
-            backgroundPosition: "center center",
-            backgroundSize: "100% 100%",
-            backgroundRepeat: "no-repeat",
-          }}
-        />
+        <div className="page-bg-layer fixed inset-0 -z-50 pointer-events-none" />
         {children}
       </body>
     </html>

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { CaseGallery } from "@/components/CaseGallery";
 import { StockCard } from "@/components/StockCard";
+import { CategoryTiles } from "@/components/CategoryTiles";
 import { FORMS } from "@/lib/links";
 import { fetchInventory } from "@/lib/inventory";
 
@@ -75,7 +76,7 @@ export default async function HomePage({
           <div className="products-layout">
             <div className="paint-card visual-fill">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/brand/market-items.webp" alt="フリマ商品イメージ" />
+              <img src="/brand/market-items.webp" alt="フリマ掲示板の出品イメージ" />
             </div>
             <div className="product-grid">
               {inventory.length > 0
@@ -163,6 +164,7 @@ export default async function HomePage({
               </div>
             </article>
           </div>
+<<<<<<< HEAD
           <div className="category-grid" aria-label="カテゴリ一覧">
             <Link className="category-tile has-img" href="/stock?category=textbook">
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -182,6 +184,10 @@ export default async function HomePage({
               </button>
             ))}
           </div>
+=======
+          {/* 実験運用中: 教科書以外は「準備中」でタップ時に案内を表示 */}
+          <CategoryTiles tiles={CATEGORY_TILES} />
+>>>>>>> origin/main
         </div>
       </section>
 
@@ -201,6 +207,10 @@ export default async function HomePage({
             <div className="trust-list">
               {TRUST.map((t) => (
                 <article key={t.title} className="paint-card trust-item">
+<<<<<<< HEAD
+=======
+                  {/* 内容に合う写真をアイコン枠に表示 */}
+>>>>>>> origin/main
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img className="trust-photo" src={t.img} alt={t.title} />
                   <div>
@@ -293,7 +303,7 @@ export default async function HomePage({
         <div className="container">
           <div className="cta-band">
             <div>
-              <h2>新大生だけのフリマを、まずは無料で。</h2>
+              <h2>新大生だけのフリマ掲示板を、まずは無料で。</h2>
               <p>出品・検索・チャット・学内手渡しまで、シンプルに。</p>
             </div>
             <a
@@ -312,6 +322,42 @@ export default async function HomePage({
 }
 
 /* ---------- データ ---------- */
+<<<<<<< HEAD
+=======
+const CATEGORY_TILES = [
+  {
+    label: "教科書・参考書",
+    img: "/brand/categories/textbook.webp",
+    href: "/stock?category=textbook",
+  },
+  {
+    label: "家具・家電",
+    img: "/brand/categories/appliance.webp",
+    href: "/stock?category=appliance",
+  },
+  {
+    label: "生活用品",
+    img: "/brand/categories/daily.webp",
+    href: "/stock?category=daily",
+  },
+  {
+    label: "自転車・スポーツ",
+    img: "/brand/categories/sports.webp",
+    href: "/stock?category=sports",
+  },
+  {
+    label: "服・雑貨",
+    img: "/brand/categories/fashion.webp",
+    href: "/stock?category=fashion",
+  },
+  {
+    label: "その他",
+    img: "/brand/categories/other.webp",
+    href: "/stock?category=other",
+  },
+] as const;
+
+>>>>>>> origin/main
 const SAMPLE_PRODUCTS = [
   {
     img: "/brand/market-items.webp",

@@ -32,14 +32,29 @@ export async function Header() {
           aria-label="ガタフィー ホーム"
           className="flex min-w-0 items-center gap-1.5 md:gap-2.5"
         >
+<<<<<<< HEAD
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/brand/logo.png" alt="ガタフィー" className="h-9 w-auto object-contain sm:h-11" />
+=======
+          <Logo />
+          {/* ブランド表記（ロゴの右）。スマホでも常に表示。1行・縦棒区切り。
+             狭い画面では説明文が省略されるが、ロゴ名とボタンは崩れない。 */}
+>>>>>>> origin/main
           <span className="flex min-w-0 items-baseline gap-1.5">
             <span className="font-round shrink-0 text-[15px] font-bold text-brand-deeper sm:text-[17px]">
               ガタフィー
             </span>
+<<<<<<< HEAD
             <span className="shrink-0 text-[11px] text-brand-deep/50 sm:text-[12px]">|</span>
             <span className="truncate text-[10px] text-brand-deep sm:text-[11px]">新潟発のフリマ掲示板</span>
+=======
+            <span className="shrink-0 text-[11px] text-brand-deep/50 sm:text-[12px]">
+              |
+            </span>
+            <span className="truncate text-[10px] text-brand-deep sm:text-[11px]">
+              新潟発のフリマ掲示板
+            </span>
+>>>>>>> origin/main
           </span>
         </Link>
 
@@ -57,6 +72,10 @@ export async function Header() {
             </Link>
           </nav>
 
+<<<<<<< HEAD
+=======
+          {/* チャット: スマホはボトムタブに集約するため PC のみ表示 */}
+>>>>>>> origin/main
           <Link
             href="/chat"
             aria-label="チャット"
@@ -75,6 +94,12 @@ export async function Header() {
             </Link>
           )}
 
+<<<<<<< HEAD
+=======
+          {/* 出品: スマホはボトムタブに集約するため PC のみ表示。
+             .btn{display:inline-flex} が hidden を上書きするため、
+             .btn ではないラッパー側で表示制御する。 */}
+>>>>>>> origin/main
           <span className="hidden md:inline-flex">
             <a
               href={FORMS.sellerListing}
@@ -83,7 +108,11 @@ export async function Header() {
               className="btn btn-primary px-5 py-2.5 text-sm"
             >
               <Plus size={17} />
+<<<<<<< HEAD
               出品する
+=======
+              <span>出品する</span>
+>>>>>>> origin/main
             </a>
           </span>
 
@@ -93,6 +122,7 @@ export async function Header() {
             </Link>
           )}
 
+<<<<<<< HEAD
           {profile && <div className="group relative">
             <button className="flex items-center rounded-full" aria-label="アカウント">
               {profile.avatar_url ? (
@@ -128,6 +158,48 @@ export async function Header() {
               </form>
             </div>
           </div>}
+=======
+          {profile && (
+            <div className="group relative">
+              <button
+                className="flex items-center rounded-full"
+                aria-label="アカウント"
+              >
+                {profile.avatar_url ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={profile.avatar_url}
+                    alt={profile.full_name}
+                    className="h-9 w-9 rounded-full object-cover ring-2 ring-white"
+                  />
+                ) : (
+                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-panel-2 text-sm font-bold text-brand-deep">
+                    {profile.full_name.charAt(0)}
+                  </span>
+                )}
+              </button>
+              <div className="invisible absolute right-0 top-full z-10 w-44 overflow-hidden rounded-xl border border-line bg-white py-1 opacity-0 shadow-lg transition group-hover:visible group-hover:opacity-100">
+                <div className="border-b border-line-soft px-4 py-2 text-xs text-ink-faint">
+                  {profile.full_name}
+                </div>
+                <Link
+                  href="/profile"
+                  className="block px-4 py-2 text-sm hover:bg-panel"
+                >
+                  マイページ
+                </Link>
+                <form action={signOut}>
+                  <button
+                    type="submit"
+                    className="block w-full px-4 py-2 text-left text-sm text-coral hover:bg-panel"
+                  >
+                    ログアウト
+                  </button>
+                </form>
+              </div>
+            </div>
+          )}
+>>>>>>> origin/main
         </div>
       </div>
     </header>
