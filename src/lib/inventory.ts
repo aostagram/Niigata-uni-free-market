@@ -27,8 +27,6 @@ export type InventoryItem = {
   category: string;
   /** 出品者の学内gmail（出品数・レビュー紐付け用。UIには表示しない）。 */
   sellerEmail: string;
-  /** 受け渡し場所（管理シート「受け渡し場所（仮）」列。無ければ空文字）。 */
-  pickup: string;
   /** 1枚目の画像（カード表示用）。無ければ空文字。 */
   imageUrl: string;
   /** 全画像（詳細ページのギャラリー用、1〜3枚） */
@@ -36,8 +34,6 @@ export type InventoryItem = {
   reserved: boolean;
   /** 取引完了（売却済）。一覧では除外、詳細では「取引完了」表示に使う。 */
   sold: boolean;
-  /** テスト・購入禁止などの非公開商品（一覧/詳細から除外）。 */
-  hidden: boolean;
 };
 
 /** ホーム/一覧で使うカテゴリー定義（フォームの選択肢に対応）。 */
@@ -84,21 +80,6 @@ function normalizeImageUrl(url: string): string {
   return u;
 }
 
-/**
- * 1つの画像セルを個別URLへ分割する。Google フォームで「複数ファイルを許可」した
- * 写真質問は、1セルに複数のDriveリンクが ", " 区切り（や改行区切り）で入るため、
- * これを分割しないと2枚目以降（例: 3枚目）がサイトに表示されない。
- * URL境界（http の直前のカンマ／改行）でのみ分割し、単一URLはそのまま返す。
- */
-function splitImageCell(cell: string): string[] {
-  const v = cell.trim();
-  if (!v) return [];
-  return v
-    .split(/[\r\n]+|,\s*(?=https?:\/\/)/)
-    .map((s) => s.trim())
-    .filter((s) => s.length > 0);
-}
-
 /** 最小限の CSV パーサ（引用符・改行入りセル・""エスケープ対応）。 */
 function parseCsv(text: string): string[][] {
   const rows: string[][] = [];
@@ -135,21 +116,6 @@ function parseCsv(text: string): string[][] {
 
 const SOLD = /(売却|売り切れ|売切|取引完了|完了|終了|sold)/i;
 
-/**
- * テスト・ダミー・購入禁止などの「本番に出したくない出品」を判定する印。
- * 商品名・説明に含まれていれば一覧/詳細から除外する。価格「非売品」も除外。
- */
-const HIDE = /削除予定|購入禁止|購入しないで|本物では|※本物|ダミー|テスト用|テストです|実機テスト|仮商品|仮テスト|仮の商品|仮のテスト|仮_/;
-
-/** ステータス列にこの語があれば非表示（シート側で出品を取り下げる手段）。 */
-const HIDE_STATUS = /非表示|取り下げ|取下げ|下書き|保留|削除/;
-
-/**
- * キーワードに引っかからない単発の非公開商品を商品名で明示除外する。
- * 例: 運営テスト用の「歯はよく磨こう」。新しく隠したい商品名はここに追加。
- */
-const HIDE_TITLES = new Set(["歯はよく磨こう"]);
-
 /** 全在庫を取得（売却済も sold=true で含む）。失敗時は空配列。 */
 async function fetchAllItems(): Promise<InventoryItem[]> {
   try {
@@ -168,7 +134,6 @@ async function fetchAllItems(): Promise<InventoryItem[]> {
       description: find((h) => h === "説明"),
       status: find((h) => h.includes("ステータス")),
       category: find((h) => h.includes("カテゴリ")),
-<<<<<<< HEAD
       sellerEmail: find(
         (h) =>
           h.includes("出品者") &&
@@ -178,21 +143,6 @@ async function fetchAllItems(): Promise<InventoryItem[]> {
       sellerEmailAlt: find(
         (h) => h.includes("確認") && h.toLowerCase().includes("gmail"),
       ),
-=======
-      // 出品者メール列。見出しが「学内gmail」「メールアドレス」等いずれでも
-      // 拾えるよう緩めに検出する（厳しすぎると全行のメールが空＝出品数が常に0に
-      // なり、マイページの出品数が増えない/チャット相手が見つからない原因になる）。
-      sellerEmail: (() => {
-        const i = find(
-          (h) =>
-            h.includes("出品者") &&
-            (/gmail|mail|メール|アドレス/i.test(h)),
-        );
-        // 「出品者」を含むメール列が無ければ、メール系の列を最後の手段で拾う。
-        return i >= 0 ? i : find((h) => /gmail|e-?mail|メールアドレス/i.test(h));
-      })(),
-      pickup: find((h) => h.includes("受け渡し") || h.includes("受渡")),
->>>>>>> origin/main
     };
     // "画像" を含む列を左から順に最大3つ取得（[1 行目] はGoogleフォームが付ける余分な接尾辞なので除外）
     const imageCols = header
@@ -206,7 +156,6 @@ async function fetchAllItems(): Promise<InventoryItem[]> {
     return rows
       .slice(1)
       .map((r) => {
-<<<<<<< HEAD
         // ステータス列に在庫ID（K001等）が誤入力された場合、直前の列を参照して補正
         const rawStatus = get(r, ci.status);
         const status = /^K\d+$/i.test(rawStatus)
@@ -233,43 +182,18 @@ async function fetchAllItems(): Promise<InventoryItem[]> {
           }
         }
 
-=======
-        const status = get(r, ci.status);
-        const title = get(r, ci.title);
-        const description = get(r, ci.description);
-        const price = get(r, ci.price);
-        const images = Array.from(
-          new Set(
-            imageCols
-              .flatMap((i) => splitImageCell(get(r, i)))
-              .map(normalizeImageUrl)
-              .filter((v) => v.length > 0),
-          ),
-        );
->>>>>>> origin/main
         return {
           stockId: get(r, ci.stockId),
-          title,
-          price,
+          title: get(r, ci.title),
+          price: get(r, ci.price),
           condition: get(r, ci.condition),
-          description,
+          description: get(r, ci.description),
           category: categoryKeyFromText(get(r, ci.category)),
-<<<<<<< HEAD
           sellerEmail,
-=======
-          sellerEmail: get(r, ci.sellerEmail).toLowerCase(),
-          pickup: get(r, ci.pickup),
->>>>>>> origin/main
           imageUrl: images[0] ?? "",
           images,
           reserved: /予約/.test(status),
           sold: SOLD.test(status),
-          hidden:
-            HIDE.test(title) ||
-            HIDE.test(description) ||
-            /非売品/.test(price) ||
-            HIDE_STATUS.test(status) ||
-            HIDE_TITLES.has(title.trim()),
         };
       })
       .filter((it) => it.stockId && it.title);
@@ -278,29 +202,18 @@ async function fetchAllItems(): Promise<InventoryItem[]> {
   }
 }
 
-<<<<<<< HEAD
 /** 在庫一覧（販売中のみ。売却済・テスト用「仮」商品は除外）。 */
 export async function fetchInventory(): Promise<InventoryItem[]> {
   return (await fetchAllItems()).filter(
     (it) => !it.sold && !/^仮/.test(it.title) && !/^\[仮\]/.test(it.title),
   );
-=======
-/** 在庫一覧（販売中のみ。売却済・非公開は除外、予約済は表示）。 */
-export async function fetchInventory(): Promise<InventoryItem[]> {
-  return (await fetchAllItems()).filter((it) => !it.sold && !it.hidden);
->>>>>>> origin/main
 }
 
-/** 在庫番号から1件取得（詳細ページ用。売却済も返す→「取引完了」表示用。
- *  非公開（テスト/購入禁止）は直リンクでも出さない）。 */
+/** 在庫番号から1件取得（詳細ページ用。売却済も返す→「取引完了」表示用）。 */
 export async function fetchInventoryItem(
   stockId: string,
 ): Promise<InventoryItem | null> {
-  const id = stockId.trim();
-  const matches = (await fetchAllItems()).filter((x) => x.stockId === id);
-  // 同一在庫IDが複数行ある場合に備え、表示できる行（非公開でない）を優先する。
-  const it = matches.find((m) => !m.hidden) ?? matches[0];
-  return it && !it.hidden ? it : null;
+  return (await fetchAllItems()).find((it) => it.stockId === stockId) ?? null;
 }
 
 /** 全在庫を取得（売却済も含む。出品数の集計用）。 */

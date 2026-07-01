@@ -17,11 +17,7 @@ const CASES: Case[] = [
   {
     title: "教科書を図書館前で受け渡し",
     meta: "エリア：五十嵐 / 予算：〜1,000円",
-<<<<<<< HEAD
     img: "/brand/cases/trade4.jpg",
-=======
-    img: "/brand/cases/books.webp",
->>>>>>> origin/main
     alt: "教科書取引の事例",
     tags: ["学用品", "手渡し"],
     area: "ikarashi",
@@ -31,11 +27,7 @@ const CASES: Case[] = [
   {
     title: "椅子を第一食堂前で相談",
     meta: "エリア：五十嵐 / 予算：〜5,000円",
-<<<<<<< HEAD
     img: "/brand/cases/trade2.jpg",
-=======
-    img: "/brand/cases/chair.webp",
->>>>>>> origin/main
     alt: "オフィスチェア取引の事例",
     tags: ["家具", "チャット相談"],
     area: "ikarashi",
@@ -45,11 +37,7 @@ const CASES: Case[] = [
   {
     title: "ノートPCをキャンパス内で確認",
     meta: "エリア：旭町 / 予算：10,000円〜",
-<<<<<<< HEAD
     img: "/brand/cases/trade3.jpg",
-=======
-    img: "/brand/cases/laptop.webp",
->>>>>>> origin/main
     alt: "ノートPC取引の事例",
     tags: ["学用品", "状態確認"],
     area: "asahimachi",
@@ -59,11 +47,7 @@ const CASES: Case[] = [
   {
     title: "トートバッグを講義前に手渡し",
     meta: "エリア：五十嵐 / 予算：〜1,000円",
-<<<<<<< HEAD
     img: "/brand/cases/trade5.jpg",
-=======
-    img: "/brand/cases/tote.webp",
->>>>>>> origin/main
     alt: "トートバッグ取引の事例",
     tags: ["生活用品", "短時間"],
     area: "ikarashi",
@@ -73,11 +57,7 @@ const CASES: Case[] = [
   {
     title: "小型家電を明るい場所で確認",
     meta: "エリア：旭町 / 予算：〜5,000円",
-<<<<<<< HEAD
     img: "/brand/cases/trade1.jpg",
-=======
-    img: "/brand/cases/appliance.webp",
->>>>>>> origin/main
     alt: "小型家電取引の事例",
     tags: ["生活用品", "安全確認"],
     area: "asahimachi",

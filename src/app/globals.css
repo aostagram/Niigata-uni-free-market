@@ -118,12 +118,6 @@ body {
   box-sizing: border-box;
 }
 
-/* 全ページ共通の固定背景レイヤー（body 直下の div）。
-   PC は従来どおり横長の水彩を全面に敷く。スマホは @media で縦長へ差し替え。 */
-.page-bg-layer {
-  background: url("/brand/page-bg.png") center center / 100% 100% no-repeat;
-}
-
 .font-round {
   font-family: var(--font-round);
 }
@@ -686,7 +680,6 @@ body {
   border-radius: 999px;
   background: #fff;
 }
-<<<<<<< HEAD
 .lp-home .category-tile.has-img {
   background: #fff;
   padding: 6px;
@@ -696,18 +689,6 @@ body {
   object-fit: contain;
   width: 100%;
   height: 100%;
-=======
-/* カテゴリロゴ画像（アイコン＋名称が一体の画像）でタイル面を差し替える */
-.lp-home .category-tile.has-img {
-  padding: 6px;
-  overflow: hidden;
-  background: #fff;
-}
-.lp-home .category-img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
->>>>>>> origin/main
 }
 
 /* ---- 商品 / 安心 / 流れ ---- */
@@ -763,22 +744,12 @@ body {
   align-items: center;
   padding: 21px;
 }
-<<<<<<< HEAD
 .lp-home .trust-photo {
   object-fit: cover;
   border: 1px solid var(--line);
   border-radius: 16px;
   width: 84px;
   height: 84px;
-=======
-/* 内容に合う写真サムネ（アイコン枠の代わり） */
-.lp-home .trust-photo {
-  width: 84px;
-  height: 84px;
-  border-radius: 16px;
-  object-fit: cover;
-  border: 1px solid var(--line);
->>>>>>> origin/main
 }
 .lp-home .trust-icon,
 .lp-home .step-num {
@@ -944,11 +915,6 @@ body {
    可読性・タップしやすさ最優先。横並びは縦積み、サムネは正方形。
    ============================================================ */
 @media (max-width: 768px) {
-  /* ---- スクロール後の一律背景: 縦長の水彩を画面に合わせて表示（圧縮しない） ---- */
-  .page-bg-layer {
-    background: url("/brand/page-bg-mobile.webp") center top / cover no-repeat;
-  }
-
   /* ---- フォント: 極端な縮小を廃止し読みやすいサイズに ---- */
   .lp-home h1 {
     font-size: clamp(26px, 7.6vw, 34px);
@@ -994,32 +960,12 @@ body {
     margin-bottom: 18px;
   }
 
-<<<<<<< HEAD
   /* ---- ヒーロー: スマホ専用縦長背景を使用 ---- */
   .lp-home .hero {
     min-height: 100svh;
   }
   .lp-home .hero::before {
     background: url("/brand/hero-bg-sp.png") center top / cover no-repeat;
-=======
-  /* ---- ヒーロー: ユーザー提供の縦長キャンパス画像をそのまま使用。
-         上部の白い水彩エリアに見出しが乗り、下部にキャンパス。画像本来の
-         縦横比(941x1672)で全幅表示し、題名〜「アプリ内決済なし」が画像内に収まる。
-         はみ出しても下端が青くならないようクリーム色をフォールバックに敷く ---- */
-  .lp-home .hero {
-    min-height: calc(100vw * 1672 / 941);
-    background-color: #f4f7eb;
-  }
-  .lp-home .hero::before {
-    background: url("/brand/hero-bg-mobile.webp") center top / 100% auto no-repeat;
-  }
-  /* ヒーローの「出品を始める」を「商品を探す」と同じ緑塗りにして視認性を上げる */
-  .lp-home .hero-actions .btn-outline {
-    border-color: transparent;
-    color: #fff;
-    background: linear-gradient(135deg, var(--brand-grad-from), var(--brand));
-    box-shadow: 0 18px 36px -24px rgba(95, 129, 40, 0.82);
->>>>>>> origin/main
   }
   .lp-home .hero-content {
     width: min(100% - 36px, 520px);
