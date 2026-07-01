@@ -6,16 +6,10 @@ import {
   MapPin,
   Handshake,
   TriangleAlert,
-<<<<<<< HEAD
-=======
-  ShoppingBag,
->>>>>>> origin/main
   CheckCircle2,
   Store,
   Package,
 } from "lucide-react";
-import { ContactSellerButton } from "@/components/ContactSellerButton";
-import { PurchaseActions } from "@/components/PurchaseActions";
 import {
   fetchInventoryItem,
   fetchSellerListingStats,
@@ -158,25 +152,12 @@ export default async function StockDetailPage({
               </div>
             </div>
           ) : (
-<<<<<<< HEAD
             <StockDetailActions
               stockId={item.stockId}
               buyUrl={buyUrl}
               doneUrl={doneUrl}
               loggedIn={!!user}
             />
-=======
-            <div className="mt-5 flex flex-col gap-2.5">
-              {/* 出品者へ連絡（アプリ内チャット）。待ち合わせ場所もここで相談。 */}
-              {!isOwnItem && <ContactSellerButton stockId={item.stockId} />}
-              <p className="text-center text-[12.5px] text-ink-soft">
-                出品者のアカウントへ直接メッセージを送れます。受け取り場所や日時の相談もこちらから。
-              </p>
-              <p className="text-center text-[12px] text-ink-faint">
-                購入のお申し込みは、下の「この商品を購入する」からどうぞ。
-              </p>
-            </div>
->>>>>>> origin/main
           )}
         </div>
       </div>
@@ -246,44 +227,14 @@ export default async function StockDetailPage({
           <div>
             <p className="flex items-center gap-2 font-medium text-ink">
               <Handshake size={18} className="text-brand" />
-<<<<<<< HEAD
               個人間での直接手渡し
-=======
-              手渡しでの受け渡し
->>>>>>> origin/main
             </p>
-            {item.pickup && (
-              <p className="mt-1 text-[13.5px] font-medium text-ink">
-                出品者の希望（目安）：{item.pickup}
-              </p>
-            )}
             <p className="mt-1 text-[13px] leading-[1.7] text-ink-soft">
-<<<<<<< HEAD
               ガタフィーは個人間の取引をサポートするための掲示板です。受け渡し場所・日時は出品者と購入者で自由に決めていただきます。支払いは対面で行ってください。
-=======
-              受け渡しの<b>日時・場所は、利用者どうしで相談して決めてください</b>。
-              安全のため、日中の人目のある場所を各自でお選びください。支払いは対面で行ってください。
-            </p>
-            <p className="mt-1 text-[12px] leading-[1.6] text-ink-faint">
-              ガタフィーは特定の待ち合わせ場所の指定・提供は行いません。場所は当事者の自由な合意で決まります。
->>>>>>> origin/main
             </p>
           </div>
         </div>
       </div>
-
-      {/* 購入（スクロールした先に配置）。在庫商品はフォームで購入希望を受け付ける。 */}
-      {!item.sold && (
-        <div className="ds-card mt-6 p-6">
-          <div className="heading-row mb-3">
-            <ShoppingBag size={18} className="text-brand" />
-            <h3 className="font-round text-[16px] font-bold text-brand-deep">
-              この商品を購入する
-            </h3>
-          </div>
-          <PurchaseActions buyUrl={buyUrl} doneUrl={doneUrl} loggedIn={!!user} />
-        </div>
-      )}
 
       <div className="mt-6 text-center">
         <span className="nav-link inline-flex items-center gap-1.5 text-ink-faint">
