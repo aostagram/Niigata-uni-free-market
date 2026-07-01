@@ -5,7 +5,6 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { fetchInventoryItem } from "@/lib/inventory";
 import { sendMail, mailLayout } from "@/lib/mail";
-import { fetchInventoryItem } from "@/lib/inventory";
 
 /** チャット相手に「新着メッセージ」メールを送る（best-effort）。 */
 async function notifyChatRecipient(
