@@ -118,6 +118,12 @@ body {
   box-sizing: border-box;
 }
 
+/* 全ページ共通の固定背景レイヤー（body 直下の div）。
+   PC は従来どおり横長の水彩を全面に敷く。スマホは @media で縦長へ差し替え。 */
+.page-bg-layer {
+  background: url("/brand/page-bg.webp") center center / 100% 100% no-repeat;
+}
+
 .font-round {
   font-family: var(--font-round);
 }
@@ -453,23 +459,10 @@ body {
 
 .lp-home .section {
   position: relative;
-  isolation: isolate;
   padding-block: 72px;
 }
 .lp-home .section + .section {
   padding-top: 0;
-}
-/* ---- スクロール後の全セクション背景（ヒーロー以外・PC版）
-       背景を viewport に固定(fixed)することで、セクション境界の
-       繋ぎ目を出さずスクロール中もずっと同じ1枚の画像に見せる ---- */
-.lp-home .section::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background: url("/brand/page-bg.webp") center center / cover no-repeat fixed;
-  opacity: 0.55;
-  pointer-events: none;
 }
 
 .lp-home .section-head {
@@ -928,6 +921,11 @@ body {
    可読性・タップしやすさ最優先。横並びは縦積み、サムネは正方形。
    ============================================================ */
 @media (max-width: 768px) {
+  /* ---- スクロール後の一律背景: 縦長の水彩を画面に合わせて表示（圧縮しない） ---- */
+  .page-bg-layer {
+    background: url("/brand/page-bg-mobile.webp") center top / cover no-repeat;
+  }
+
   /* ---- フォント: 極端な縮小を廃止し読みやすいサイズに ---- */
   .lp-home h1 {
     font-size: clamp(26px, 7.6vw, 34px);
@@ -986,20 +984,6 @@ body {
     padding: 24px 0 32px;
   }
 
-  /* ---- スクロール後の全セクション背景（ヒーロー以外） ---- */
-  .lp-home .section {
-    position: relative;
-    isolation: isolate;
-  }
-  .lp-home .section::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    background: url("/brand/scroll-bg-sp.png") center / cover no-repeat;
-    opacity: 0.55;
-    pointer-events: none;
-  }
   .lp-home .hero-logo {
     height: 80px;
     margin-bottom: 10px;
