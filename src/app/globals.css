@@ -459,13 +459,15 @@ body {
 .lp-home .section + .section {
   padding-top: 0;
 }
-/* ---- スクロール後の全セクション背景（ヒーロー以外・PC版） ---- */
+/* ---- スクロール後の全セクション背景（ヒーロー以外・PC版）
+       背景を viewport に固定(fixed)することで、セクション境界の
+       繋ぎ目を出さずスクロール中もずっと同じ1枚の画像に見せる ---- */
 .lp-home .section::before {
   content: "";
   position: absolute;
   inset: 0;
   z-index: -1;
-  background: url("/brand/page-bg.webp") center / cover no-repeat;
+  background: url("/brand/page-bg.webp") center center / cover no-repeat fixed;
   opacity: 0.55;
   pointer-events: none;
 }
