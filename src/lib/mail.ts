@@ -13,10 +13,12 @@ export async function sendMail({
   to,
   subject,
   html,
+  replyTo,
 }: {
   to: string;
   subject: string;
   html: string;
+  replyTo?: string;
 }): Promise<{ ok: boolean; skipped?: boolean }> {
   const resend = getResend();
   if (!resend) {
@@ -31,6 +33,7 @@ export async function sendMail({
       to,
       subject,
       html,
+      ...(replyTo ? { replyTo } : {}),
     });
     if (error) {
       console.error("[mail] 送信失敗:", error.message);
@@ -56,4 +59,29 @@ export function mailLayout(title: string, bodyHtml: string): string {
       心当たりがない場合は破棄してください。
     </p>
   </div>`;
+}
+
+/** 初回ログイン完了時に送るウェルカムメール。 */
+export async function sendWelcomeEmail(to: string, nickname: string) {
+  const html = mailLayout(
+    "ご登録ありがとうございます！",
+    `
+    <p>${nickname} さん、ガタフィーへようこそ。</p>
+    <p>これで新潟大学生限定のフリマ掲示板を利用できるようになりました。<br/>
+    取引相手とのやり取りや通知は、今後このメールアドレス宛にお送りします。</p>
+    <p style="margin-top:16px;padding:12px 16px;background:#f3f6ec;border-radius:8px">
+      ⚠️ 大学のメールアドレスは迷惑メールフィルタが厳しく、
+      通知が届かないことがあります。<br/>
+      お手数ですが <strong>gatafeefurima@gmail.com</strong> を
+      連絡先（アドレス帳）に追加、または迷惑メールフォルダに入っていた場合は
+      「迷惑メールではない」に設定していただけると安心です。
+    </p>
+    `,
+  );
+  return sendMail({
+    to,
+    subject: "【ガタフィー】ご登録ありがとうございます",
+    html,
+    replyTo: "gatafeefurima@gmail.com",
+  });
 }

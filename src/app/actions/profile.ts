@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { sendWelcomeEmail } from "@/lib/mail";
 
 /** アバター画像をSupabase Storageにアップロードしてprofileを更新する。 */
 export async function uploadAvatar(formData: FormData): Promise<{ error?: string; url?: string }> {
@@ -56,6 +57,13 @@ export async function saveProfile(formData: FormData): Promise<{ error?: string 
   } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
+  const { data: existing } = await supabase
+    .from("profiles")
+    .select("nickname")
+    .eq("id", user.id)
+    .single();
+  const isFirstLogin = !existing?.nickname;
+
   const { error } = await supabase
     .from("profiles")
     .update({
@@ -66,6 +74,12 @@ export async function saveProfile(formData: FormData): Promise<{ error?: string 
     .eq("id", user.id);
 
   if (error) return { error: "保存に失敗しました。もう一度お試しください。" };
+
+  if (isFirstLogin && user.email) {
+    sendWelcomeEmail(user.email, nickname).catch((e) =>
+      console.error("[mail] ウェルカムメール送信失敗:", e),
+    );
+  }
 
   revalidatePath("/profile");
   revalidatePath("/");
