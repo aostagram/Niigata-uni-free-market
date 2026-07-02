@@ -453,10 +453,21 @@ body {
 
 .lp-home .section {
   position: relative;
+  isolation: isolate;
   padding-block: 72px;
 }
 .lp-home .section + .section {
   padding-top: 0;
+}
+/* ---- スクロール後の全セクション背景（ヒーロー以外・PC版） ---- */
+.lp-home .section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: url("/brand/page-bg.webp") center / cover no-repeat;
+  opacity: 0.55;
+  pointer-events: none;
 }
 
 .lp-home .section-head {
