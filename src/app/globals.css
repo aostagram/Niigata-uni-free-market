@@ -423,6 +423,35 @@ body {
   }
 }
 
+/* ---- ページ切り替え中のローディングスピナー ---- */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.page-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  min-height: 60vh;
+  color: var(--ink-soft);
+}
+.page-loading-spinner {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 3px solid var(--line-soft);
+  border-top-color: var(--brand);
+  animation: spin 0.7s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .page-loading-spinner {
+    animation-duration: 1.6s;
+  }
+}
+
 .clamp-2 {
   display: -webkit-box;
   -webkit-line-clamp: 2;
