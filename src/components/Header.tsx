@@ -1,9 +1,8 @@
 import Link from "next/link";
-import { Bell, Plus, MessageSquare } from "lucide-react";
+import { Bell, MessageSquare } from "lucide-react";
 import { getCurrentUser } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { signOut } from "@/app/actions/auth";
-import { FORMS } from "@/lib/links";
 import type { Profile } from "@/lib/types";
 
 export async function Header() {
@@ -44,16 +43,10 @@ export async function Header() {
         </Link>
 
         <div className="ml-auto flex shrink-0 items-center gap-3 md:gap-5">
-          {/* desktop nav */}
+          {/* desktop nav（公開終了により、商品を探す等の導線は撤去） */}
           <nav className="hidden items-center gap-7 md:flex">
             <Link href="/" className="nav-link">
               ホーム
-            </Link>
-            <Link href="/#listings" className="nav-link">
-              商品を探す
-            </Link>
-            <Link href="/#voices" className="nav-link">
-              お客様の声
             </Link>
           </nav>
 
@@ -74,18 +67,6 @@ export async function Header() {
               <Bell size={22} />
             </Link>
           )}
-
-          <span className="hidden md:inline-flex">
-            <a
-              href={FORMS.sellerListing}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn btn-primary px-5 py-2.5 text-sm"
-            >
-              <Plus size={17} />
-              出品する
-            </a>
-          </span>
 
           {!profile && (
             <Link href="/login" className="btn btn-ghost px-5 py-2.5 text-sm">

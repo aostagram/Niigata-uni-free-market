@@ -2,9 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { House, MessageSquare, Plus, User } from "lucide-react";
+import { House, MessageSquare, User } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import { FORMS } from "@/lib/links";
 
 type Tab = {
   href: string;
@@ -16,7 +15,7 @@ type Tab = {
 
 /**
  * モバイル用のボトムタブバー(デザイン準拠)。
- * 実アプリのルートに合わせた4タブ。md 以上では非表示にし、
+ * 公開終了に伴い出品タブを撤去した3タブ。md 以上では非表示にし、
  * 上部ヘッダーのナビに委ねる。
  */
 const TABS: Tab[] = [
@@ -26,13 +25,6 @@ const TABS: Tab[] = [
     label: "チャット",
     icon: MessageSquare,
     match: (p) => p.startsWith("/chat"),
-  },
-  {
-    href: FORMS.sellerListing,
-    label: "出品",
-    icon: Plus,
-    match: () => false,
-    external: true,
   },
   {
     href: "/profile",
