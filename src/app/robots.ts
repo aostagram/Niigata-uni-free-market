@@ -5,14 +5,19 @@ const SITE_URL =
 
 /**
  * 検索エンジン向けクロール設定。
- * 公開LP(トップ)・規約・プライバシーは許可し、ログイン必須の個人領域は除外する。
+ * 公開終了により、残っているのはお知らせ(トップ)・規約・プライバシーのみ。
+ * それ以外は全てトップへリダイレクトするので、クロール対象から外す。
  */
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: {
       userAgent: "*",
-      allow: "/",
+      allow: ["/", "/terms", "/privacy"],
       disallow: [
+        "/stock",
+        "/items",
+        "/users",
+        "/login",
         "/chat",
         "/profile",
         "/notifications",
