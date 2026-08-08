@@ -1,9 +1,8 @@
 import Link from "next/link";
 import { SERVICE_DISCLAIMER } from "@/lib/constants";
 
+// 公開終了により、商品一覧・お客様の声への導線は撤去。
 const LINKS: { label: string; href: string }[] = [
-  { label: "商品を探す", href: "/#listings" },
-  { label: "お客様の声", href: "/#voices" },
   { label: "利用規約", href: "/terms" },
   { label: "プライバシーポリシー", href: "/privacy" },
 ];
